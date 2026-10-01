@@ -1,0 +1,11 @@
+韭菜尖塔 / 音效来源与署名
+
+Casino Audio — Kenney
+https://kenney.nl/assets/casino-audio
+Creative Commons Zero (CC0 1.0 Universal)
+https://creativecommons.org/publicdomain/zero/1.0/
+Original license: KENNEY-LICENSE.txt
+Included: card-place-1, card-place-2, card-slide-1, card-shuffle,
+chips-stack-1, chips-handle-5, dice-throw-1, cards-pack-open-1.
+Converted from original OGG to MP3. Playback speed and pitch are varied for settlement feedback.
+BGM disabled. No newly generated or synthesized audio.
