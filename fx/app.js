@@ -1,8 +1,8 @@
-import {createGame, takeAction, advanceTick, finishSegment, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, reply, restoreGame, START, TARGET_PROFIT, BEATS_PER_DAY} from './engine.js';
-import {GameAudio} from '../audio.js';
-import {GameMotion} from '../feedback.js';
-import {showSettlement} from '../settlement.js';
-import {MOODS, PROPS} from './content.js';
+import {createGame, takeAction, advanceTick, finishSegment, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, reply, restoreGame, START, TARGET_PROFIT, BEATS_PER_DAY} from './engine.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
+import {GameAudio} from '../audio.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
+import {GameMotion} from '../feedback.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
+import {showSettlement} from '../settlement.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
+import {MOODS, PROPS} from './content.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
 
 const $ = id => document.getElementById(id);
 const yen = value => `${value<0?'−':''}¥${Math.abs(Math.round(value)).toLocaleString('zh-CN')}`;

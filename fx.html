@@ -6,7 +6,7 @@
   <meta name="description" content="持仓穿过连续蜡烛图，读突发消息、回应群友与朋友，和久留美一起经历外汇交易日。原创同人风模拟小游戏。">
   <title>外汇少女 · 今天也要回本</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f16f9f'/%3E%3Ctext x='16' y='24' text-anchor='middle' font-size='25' font-weight='bold' fill='%23231f2d'%3E¥%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./fx/style.css">
+  <link rel="stylesheet" href="./fx/style.css?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad">
 </head>
 <body>
 <header class="topbar">
@@ -18,7 +18,7 @@
   <section class="game-grid" aria-label="外汇交易游戏">
     <aside class="character-card" id="character-card">
       <div class="character-heading"><span>本话表情</span><b id="emotion-label">平静</b><button id="portrait-toggle">切换 Q 版</button></div>
-      <div class="portrait"><img id="portrait" src="./fx/expressions/kurumi-calm.webp" alt="久留美平静地看着屏幕"><span id="impact-stamp" class="impact-stamp" aria-hidden="true"></span><span class="portrait-name">福贺久留美 / 原创同人绘制</span></div>
+      <div class="portrait"><img id="portrait" src="./fx/expressions/kurumi-calm.webp?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad" alt="久留美平静地看着屏幕"><span id="impact-stamp" class="impact-stamp" aria-hidden="true"></span><span class="portrait-name">福贺久留美 / 原创同人绘制</span></div>
       <div class="speech" id="speech" aria-live="polite">“先看一下，不急。”</div>
       <div class="sanity-label"><span>心理承受力</span><b id="sanity-text">100 / 100</b></div><div class="sanity-meter"><span id="sanity-fill"></span></div>
       <p id="emotion-explain">看着行情，至少现在还能正常呼吸。</p><p id="mental-detail" class="mental-detail"></p>
@@ -57,9 +57,9 @@
 <dialog id="chat-dialog" class="chat-dialog"><div class="chat-head"><div><b>盘友通信</b><small>久留美 · 萌智子 · 芽吹 · 安子</small></div><button id="chat-close" aria-label="关闭聊天">×</button></div><div class="chat-tabs"><button data-channel="group" aria-selected="true">日元交易群 <span id="group-count"></span></button><button data-channel="friend" aria-selected="false">萌智子 · 单聊 <span id="friend-count"></span></button></div><div id="chat-messages" class="chat-messages"></div><div id="chat-replies" class="chat-replies"></div><p class="chat-note">群友只知道你主动晒出的账户；萌智子只记得你说过的话。</p></dialog>
 <dialog id="help-dialog" class="help-dialog"><button class="x-close" data-close="help-dialog" aria-label="关闭">×</button><span class="eyebrow">SURVIVAL GUIDE</span><h2>暂停时做决定，行情自己走。</h2><p>一个交易日有四次决策，每次操作后连续生成四根蜡烛。仓位会一直保留，直到你减仓、平仓、止损、强平或收盘。</p><ol><li>买入日元在日元升值时获利；卖出日元在日元贬值时获利。所有账户金额以日元记账。</li><li>止损和强平在价格碰线的那一刻执行，后面的反弹不会撤销。</li><li>持仓时可以继续持有、平一半或全部平仓。收盘自动平仓，下一天保留余额和聊天记录。</li><li>每天自动保护 ¥2,200 生活备用金，收盘返还。家庭注资单独记账，不计入交易利润。</li><li>理智耗尽会提前收工，隔天可以恢复；破产则结束这一章。</li></ol><blockquote class="canon-quote">「2000万円くらい、簡単に取り返せるようになってやる！」<cite><a href="https://fxkurumi-info.com/" target="_blank" rel="noopener">TV 动画官方简介中的久留美台词</a></cite></blockquote><p class="small-print">虚构行情。角色插画与其余对话为本作新绘、新写的非官方同人内容。生活备用金采用学生生活费数据的游戏取整值。</p><button class="primary" data-close="help-dialog">知道了，开盘</button></dialog>
 <dialog id="prop-dialog" class="prop-dialog"><span class="eyebrow">TURNING POINT / 这次的选择</span><h2 id="prop-title"></h2><div class="prop-visual" aria-hidden="true"><span class="prop-envelope">¥</span><span class="prop-spark">✦</span></div><strong id="prop-amount"></strong><p id="prop-line"></p><p id="prop-rule" class="small-print"></p><button id="prop-done" class="primary">回到交易室</button></dialog>
-<dialog id="day-dialog" class="day-dialog"><span class="eyebrow">DAY END / THE COMIC STRIP</span><h2 id="day-title">今天先到这里。</h2><p id="day-subtitle"></p><div class="three-panels"><div><img class="comic-face" src="./fx/chibi/kurumi-calm.webp" alt="久留美开盘前"><small>01 / 开盘前</small><p id="comic-first"></p></div><div><img id="comic-reaction" class="comic-face" src="./fx/chibi/kurumi-nervous.webp" alt="久留美今日表情"><small>02 / 惊险瞬间</small><p id="comic-second"></p></div><div><img class="comic-face" src="./fx/chibi/kurumi-relieved.webp" alt="久留美收盘后"><small>03 / 收盘后</small><p id="comic-third"></p></div></div><div class="day-total"><span>收盘资产</span><strong id="day-total"></strong><small id="day-net"></small></div><button id="next-day" class="primary">带着这笔钱，进入下一天</button><button id="day-close" class="secondary">先看一眼交易室</button></dialog>
+<dialog id="day-dialog" class="day-dialog"><span class="eyebrow">DAY END / THE COMIC STRIP</span><h2 id="day-title">今天先到这里。</h2><p id="day-subtitle"></p><div class="three-panels"><div><img class="comic-face" src="./fx/chibi/kurumi-calm.webp?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad" alt="久留美开盘前"><small>01 / 开盘前</small><p id="comic-first"></p></div><div><img id="comic-reaction" class="comic-face" src="./fx/chibi/kurumi-nervous.webp?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad" alt="久留美今日表情"><small>02 / 惊险瞬间</small><p id="comic-second"></p></div><div><img class="comic-face" src="./fx/chibi/kurumi-relieved.webp?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad" alt="久留美收盘后"><small>03 / 收盘后</small><p id="comic-third"></p></div></div><div class="day-total"><span>收盘资产</span><strong id="day-total"></strong><small id="day-net"></small></div><button id="next-day" class="primary">带着这笔钱，进入下一天</button><button id="day-close" class="secondary">先看一眼交易室</button></dialog>
 <dialog id="bankrupt-dialog" class="day-dialog"><span class="eyebrow">MARGIN CALL / 章节结束</span><h2>人还在，钱先退场了。</h2><p>账户不足 ¥1,000。游戏会保留最后一张战报，重新开始才会获得新的十万元。</p><div class="day-total"><span>最后的账户权益</span><strong id="bankrupt-money"></strong></div><button id="new-chapter" class="primary">重新开始章节</button></dialog>
 <dialog id="restart-dialog"><h2>真的要重新开局吗？</h2><p>本机保存的进度会被新章节替换。</p><button id="confirm-restart" class="primary">重新开始</button><button class="secondary" data-close="restart-dialog">继续这一局</button></dialog>
-<script type="module" src="./fx/app.js"></script>
+<script type="module" src="./fx/app.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad"></script>
 </body>
 </html>

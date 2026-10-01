@@ -1,4 +1,4 @@
-import {NEWS_CHAINS, initialChat, CHAT_REACTIONS} from './content.js';
+import {NEWS_CHAINS, initialChat, CHAT_REACTIONS} from './content.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
 export const VERSION = 3;
 export const LIVING_DAILY = 2200;
 export const FATHER_SAVINGS = 3000000;
