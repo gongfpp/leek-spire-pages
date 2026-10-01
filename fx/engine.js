@@ -1,4 +1,5 @@
-import {NEWS_CHAINS, initialChat, CHAT_REACTIONS} from './content.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
+import {NEWS_CHAINS} from './content.js?v=b98915729dc9912f10252044e5070a3dd1ebfb19';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=b98915729dc9912f10252044e5070a3dd1ebfb19';
 export const VERSION = 3;
 export const LIVING_DAILY = 2200;
 export const FATHER_SAVINGS = 3000000;
@@ -81,11 +82,12 @@ export function createGame(seed = Date.now()) {
   seed = seed >>> 0;
   const state = {version: VERSION, seed, day: 1, beat: 0, phase: 'decision', price: START_PRICE,
     cash: START-LIVING_DAILY, reserve: LIVING_DAILY, position: null, sanity: 100, dayOpening: START, candles: historyCandles(seed),
-    script: null, pending: null, history: [], recent: [], chat: initialChat(), promise: null,
+    script: null, pending: null, history: [], recent: [], chat: {group:[],friend:[]}, promise: null,
     relationship: 0, publicStance: null, promiseNoted:false, dinner:false, skills:{mochiko:false,yasuko:false},
     fatherUsed:false,externalFunding:0,dayOpeningFunding:0,stress:0,heat:0,peakPersonal:START,equityTrail:[START],nextStop:null,
     lastEvent:null, lastTrade:null, lastReaction:null, dayReport:null};
   state.script = planDay(seed, 1, state.price);
+  chapterChat(state);updateSpeech(state,'calm');state.dayOpeningLine=state.speech.text;
   return state;
 }
 export function unrealized(s) {
@@ -107,6 +109,7 @@ export function mentalState(s, sample=false){
   const recentDrawdown=Math.max(0,1-personal/recentPeak);
   const exposure=s.position ? Math.min(1,s.position.margin/Math.max(equity(s),1))*Math.min(1,s.position.leverage/50) : 0;
   s.sanity=Math.max(0,Math.min(100,Math.round(100-totalDrawdown*80-recentDrawdown*20-exposure*8-(s.stress||0)+(s.reserve>=LIVING_DAILY?2:0))));
+  updateSpeech(s,mood(s));
   return {value:s.sanity,totalDrawdown,recentDrawdown,exposure};
 }
 function experience(s, entry) {
@@ -158,7 +161,7 @@ export function useProp(s,id){
   if(id==='father'){
     if(s.fatherUsed)throw Error('这笔存款已经取过了');
     s.fatherUsed=true;s.cash+=FATHER_SAVINGS;s.externalFunding+=FATHER_SAVINGS;s.stress+=12;s.heat=Math.min(5,s.heat+2);
-    mentalState(s);return {id,amount:FATHER_SAVINGS};
+    mentalState(s);const line=chooseDialogue(s,'prop.father').lines[0].text;return {id,amount:FATHER_SAVINGS,line};
   }
   if(!['mochiko','yasuko'].includes(id)||s.skills[id])throw Error('今天已经用过了');
   s.skills[id]=true;
@@ -171,39 +174,27 @@ export function useProp(s,id){
     if(s.position)trade=closePosition(s,1,'yasuko');
     s.stress=Math.max(0,s.stress-12);s.heat=Math.max(0,s.heat-2);
   }
-  mentalState(s);return{id,trade,stop:s.position?.stop||s.nextStop};
+  mentalState(s);const line=chooseDialogue(s,'prop.'+id).lines[0].text;return{id,trade,stop:s.position?.stop||s.nextStop,line};
 }
 export function reply(s, channel, choice) {
-  if(s.phase!=='decision'||!['group','friend'].includes(channel)) throw Error('行情播放时不能聊天');
-  const list=s.chat[channel],append=(from,text)=>list.push({from,text,kind:from==='久留美'?'self':channel});
+  if(s.phase!=='decision'||!['group','friend'].includes(channel))throw Error('行情播放时不能聊天');
   if(channel==='group'){
-    if(choice==='ask'){
-      append('久留美','日元刚才那一段，你们怎么看？');
-      append('芽吹',s.price>=s.candles.at(-1).open?'我觉得还会涨！前辈也这么想，对吧？':'跌了这么多，接下来总该涨了吧？');
-      append('安子','你俩先别互相壮胆。群里没有人能替你按平仓。');
-    }else if(choice==='stance'){
+    if(choice==='ask')return appendDialogue(s,channel,'group.ask');
+    if(choice==='stance'){
       const direction=s.position?.direction||1;s.publicStance={day:s.day,beat:s.beat,direction};
-      append('久留美',direction===1?'这次我看日元升值。不是凭感觉，我有看数据。':'这次我看日元贬值。就算不太想承认，也得顺着走势。');
-      append('萌智子','那就把退出的位置也记下来。方向说得再响，保证金也不会变多。');
-    }else if(choice==='share'){
-      const risk=(s.position?.margin||0)/Math.max(equity(s),1);
-      append('久留美',`现在账户是 ¥${Math.round(equity(s)).toLocaleString('zh-CN')}。日元仓位 ${Math.round(risk*100)}%。`);
-      append('芽吹',tradingProfit(s)>0?'好厉害！我也想把打工的钱赚回来……':'那、那只要下一笔赚回来就好了吧？');
-      append('安子',risk>.7?'别拿全仓当练习。亏的是钱，又不是作业本。':risk>.25?'仓位已经不小了。别等跌了才找理由。':'至少你还留了退路。别一开心又改成全仓。');
-    }else throw Error('不支持的群聊回复');
-  }else{
-    if(choice==='promise'){
-      s.promise='break_even';s.promiseNoted=false;append('久留美','把今天亏掉的赚回来，我就停。');
-      append('萌智子','回本是你的愿望，又不是汇率的目的地。你准备在哪里认错？');
-    }else if(choice==='small'){
-      s.promise='small';s.promiseNoted=false;append('久留美','今天最多四分之一仓。这样总算够冷静了吧？');
-      append('萌智子','仓位小，不代表理由正确。不过比你刚才那个表情要好。');
-    }else if(choice==='dinner'){
-      s.relationship++;s.dinner=true;append('久留美','收盘后一起去吃饭？我想先离开这个数字一会儿。');
-      append('萌智子',s.relationship%2?'可以。那家店的新甜点挺可爱。别在门口又打开账户。':'行。你负责准时到，我不想对着一张空椅子点菜。');
-    }else throw Error('不支持的单聊回复');
+      return appendDialogue(s,channel,direction===1?'group.stance.long':'group.stance.short');
+    }
+    if(choice==='share'){
+      const profit=tradingProfit(s),risk=Math.round((s.position?.margin||0)/Math.max(equity(s),1)*100);
+      const yen=n=>(n<0?'−':'')+'¥'+Math.abs(Math.round(n)).toLocaleString('zh-CN');
+      return appendDialogue(s,channel,'group.share.'+(profit>1?'win':profit< -1?'loss':'flat'),{equity:yen(equity(s)),risk:risk+'%',profit:(profit>0?'+':'')+yen(profit)});
+    }
+    throw Error('不支持的群聊回复');
   }
-  s.chat[channel]=list.slice(-60);return list.slice(-3);
+  if(choice==='promise'){s.promise='break_even';s.promiseNoted=false;return appendDialogue(s,channel,'friend.promise');}
+  if(choice==='small'){s.promise='small';s.promiseNoted=false;return appendDialogue(s,channel,'friend.small');}
+  if(choice==='dinner'){s.relationship++;s.dinner=true;return appendDialogue(s,channel,'friend.dinner');}
+  throw Error('不支持的单聊回复');
 }
 function validateAction(s, action) {
   if(s.phase!=='decision') throw Error('请等待下一个决策点');
@@ -238,26 +229,26 @@ export function takeAction(s, action) {
 }
 function appendChatAfterBeat(s){
   const first=s.candles.at(-CANDLES_PER_BEAT),delta=s.price/(first?.open||s.price)-1;
-  const [from,text]=CHAT_REACTIONS[Math.abs(delta)<.0005?'flat':delta>0?'up':'down'];
-  s.chat.group.push({from,text,kind:'group'});
+  appendDialogue(s,'group','group.market.'+(Math.abs(delta)<.0005?'flat':delta>0?'up':'down'));
   if(s.publicStance?.day===s.day&&s.publicStance.beat===s.beat-1){
     const correct=s.publicStance.direction===(delta>=0?1:-1);
-    s.chat.group.push({from:'萌智子',text:correct?'方向对了。你现在是打算兑现，还是开始舍不得？':'刚才的判断已经过去了。你要改计划，还是替它找借口？',kind:'group'});
+    appendDialogue(s,'group','group.stance.'+(correct?'correct':'wrong'));
   }
   if(s.promise&&!s.promiseNoted){
     s.promiseNoted=true;
-    s.chat.friend.push({from:'萌智子',text:s.promise==='small'?'你说过四分之一仓。别把新的理由当成改数字的许可。':'你说回本就停。我记得。别把“回本”改成“再赚一点”。',kind:'friend'});
+    appendDialogue(s,'friend','friend.remind.'+(s.promise==='small'?'small':'break_even'));
   }
-  for(const c of ['group','friend'])s.chat[c]=s.chat[c].slice(-60);
+  updateSpeech(s,mood(s),true);
 }
 function endDay(s) {
   if(s.position)closePosition(s,1,'closing');
   s.cash+=s.reserve;s.reserve=0;
-  if(s.dinner)s.chat.friend.push({from:'萌智子',text:'收盘了。甜点我先点了，别带着一张还没平掉的单过来。',kind:'friend'});
+  if(s.dinner)appendDialogue(s,'friend','friend.day.end');
   mentalState(s,true);
   const closing=equity(s),funding=s.externalFunding-s.dayOpeningFunding;
   s.dayReport={day:s.day,opening:s.dayOpening,closing,net:closing-s.dayOpening-funding,funding,
     trades:s.history.filter(t=>t.day===s.day), mood:mood(s), promise:s.promise,externalFunding:s.externalFunding,
+    openingLine:s.dayOpeningLine,closingLine:s.speech.text,
     peak:s.history.filter(t=>t.day===s.day).reduce((a,t)=>!a||Math.abs(t.pnl||0)>Math.abs(a.pnl||0)?t:a,null)};
   s.phase=closing<MIN_EQUITY?'bankrupt':'day_end';
 }
@@ -299,8 +290,8 @@ export function nextDay(s) {
   const living=Math.min(LIVING_DAILY,s.cash);s.cash-=living;s.reserve=living;
   s.script=planDay(s.seed,s.day,s.price);s.skills={mochiko:false,yasuko:false};s.nextStop=null;
   s.lastEvent=null;s.lastReaction=null;s.pending=null;s.promise=null;s.promiseNoted=false;s.dinner=false;s.publicStance=null;
-  s.chat.friend.push({from:'萌智子',text:`第 ${s.day} 天了。昨天的理由先放下，今天这张日元单又是为什么？`,kind:'friend'});
-  mentalState(s);return s;
+  appendDialogue(s,'friend','friend.day.start');updateSpeech(s,mood(s),true);
+  mentalState(s);s.dayOpeningLine=s.speech.text;return s;
 }
 export function restoreGame(raw) {
   try {
@@ -309,7 +300,8 @@ export function restoreGame(raw) {
     if(s.phase==='playing'&&(!s.pending||!Number.isInteger(s.pending.beat)||!Number.isInteger(s.pending.candle)||!Number.isInteger(s.pending.tick)))return null;
     if(s.version===2)s=migrateV2(s);
     if(!Number.isFinite(s.reserve)||s.reserve<0||!Number.isFinite(s.externalFunding)||!Array.isArray(s.equityTrail)||!s.chat?.group||!s.chat?.friend)return null;
-    mentalState(s);
+    if(!s.dialogueMemory){s.archivedChat=s.chat;chapterChat(s);s.speech=null;}
+    ensureDialogue(s);mentalState(s);s.dayOpeningLine ||= s.speech.text;
     return s;
   }catch{return null;}
 }
@@ -333,8 +325,8 @@ function migrateV2(s){
   if(s.phase==='decision'||s.phase==='playing'){s.reserve=Math.min(LIVING_DAILY,s.cash);s.cash-=s.reserve;}
   s.externalFunding=0;s.dayOpeningFunding=0;s.fatherUsed=false;s.stress=0;s.heat=0;s.nextStop=null;
   s.peakPersonal=Math.max(START,equity(s));s.equityTrail=[START,equity(s)];s.skills={mochiko:false,yasuko:false};
-  s.archivedChat=s.chat;s.chat=initialChat();
-  if(s.promise)s.chat.friend.push({from:'萌智子',text:s.promise==='small'?'你刚才说想轻仓。那就把数字写下来，别临时改口。':'你刚才说回本就停。我还记着。',kind:'friend'});
+  s.archivedChat=s.chat;chapterChat(s);
+  if(s.promise)appendDialogue(s,'friend','friend.remind.'+(s.promise==='small'?'small':'break_even'));
   if(s.dayReport){s.dayReport.funding=0;s.dayReport.externalFunding=0;for(const t of s.dayReport.trades||[])convertTrade(t);convertTrade(s.dayReport.peak);}
   return s;
 }

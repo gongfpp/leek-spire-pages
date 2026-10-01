@@ -34,32 +34,13 @@ export const NEWS_CHAINS = [
 ];
 
 export const MOODS = {
-  calm:['平静','calm','“先看清日元这边的走势。急着下单，才容易看错。”','账户与近期波动还在能接受的范围。'],
-  smug:['得意','smug','“分析果然没错……再多拿一点，也不算贪心吧？”','最近的盈利让久留美开始相信自己的判断。'],
-  nervous:['紧张','nervous','“只是回调。判断还没变，为什么手在抖？”','仓位、杠杆和浮亏正在增加压力。'],
-  anxious:['焦虑','anxious','“我知道该平仓。再等一下，再一下就好。”','近期亏损与累计回撤正在压低心理承受力。'],
-  ecstatic:['亢奋','ecstatic','“两千万……好像没有想象中那么远了！”','高风险盈利点燃了下一笔交易的冲动。'],
-  despair:['绝望','shocked','“那是我攒了多久的钱……不许再掉了。”','账户的大幅缩水已造成强烈冲击。'],
-  regretful:['懊恼','regretful','“刚才明明能卖的。我为什么又想多赚一点？”','看见过的浮盈回吐，比普通亏损更难放下。'],
-  relieved:['如释重负','relieved','“出来了……今天先活下来，才有明天。”','风险已经释放，呼吸终于慢了下来。']
+  calm:['平静','calm'],smug:['得意','smug'],nervous:['紧张','nervous'],anxious:['焦虑','anxious'],
+  ecstatic:['亢奋','ecstatic'],despair:['绝望','shocked'],regretful:['懊恼','regretful'],relieved:['如释重负','relieved']
 };
 
 export const CANON_QUOTE = {text:'2000万円くらい、簡単に取り返せるようになってやる！',source:'TV 动画官方简介',url:'https://fxkurumi-info.com/'};
 export const PROPS = {
-  father:{name:'父亲的柜中存款',caption:'¥3,000,000 · 整章一次',copy:'这笔钱可以补进账户，却不能变成已经赚到的利润。',speaker:'久留美',line:'先撑过这一次……之后，我会把钱放回去。'},
-  mochiko:{name:'萌智子的止损提醒',caption:'收紧止损 · 每天一次',copy:'持仓止损收紧至保证金的 25%；空仓时作用于下一笔。',speaker:'萌智子',line:'方向可以猜错，退出的位置总得先想好吧。'},
-  yasuko:{name:'安子的停手卡',caption:'立即平仓 · 每天一次',copy:'按现价退出持仓，让累积压力缓下来。',speaker:'安子',line:'够了。先把这张单关掉，别拿下一次涨跌当借口。'}
-};
-
-export function initialChat(){return {
-  group:[{from:'芽吹',text:'久留美前辈！今天日元会涨吗？我也想赚到不用打工的钱。',kind:'group'},{from:'安子',text:'先别叫前辈。你们两个把杠杆看清楚再说。',kind:'group'},{from:'萌智子',text:'群里的热闹跟账户余额，是两回事。',kind:'group'}],
-  friend:[{from:'萌智子',text:'日元涨，你才赚钱吗？先把自己的方向说清楚。',kind:'friend'}]
-};}
-
-export const CHAT_REACTIONS = {
-  up:['芽吹','日元又涨了！现在进去，还来得及吗？'],
-  down:['芽吹','怎么又往下走……不是刚刚才说要涨吗？'],
-  flat:['安子','别把每一小格都当成信号。'],
-  win:['萌智子','赚到是一回事，肯不肯平仓是另一回事。'],
-  loss:['安子','喂。先看你还剩多少钱，再想下一笔。']
+  father:{name:'父亲的柜中存款',caption:'¥3,000,000 · 整章一次',copy:'这笔钱可以补进账户，却不能变成已经赚到的利润。',speaker:'久留美'},
+  mochiko:{name:'萌智子的止损提醒',caption:'收紧止损 · 每天一次',copy:'持仓止损收紧至保证金的 25%；空仓时作用于下一笔。',speaker:'萌智子'},
+  yasuko:{name:'安子的停手卡',caption:'立即平仓 · 每天一次',copy:'按现价退出持仓，让累积压力缓下来。',speaker:'安子'}
 };

@@ -1,6 +1,6 @@
-import {stage} from './progression.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
-import {CARD} from './data.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
-import {effectSummary,design} from './card-design.js?v=dd90ed26b2c0dbfaf2ad21aa7d7b3322278393ad';
+import {stage} from './progression.js?v=b98915729dc9912f10252044e5070a3dd1ebfb19';
+import {CARD} from './data.js?v=b98915729dc9912f10252044e5070a3dd1ebfb19';
+import {effectSummary,design} from './card-design.js?v=b98915729dc9912f10252044e5070a3dd1ebfb19';
 // Feedback is derived from settled state; it cannot affect game economics.
 export function feedback(before,after,action){
   const delta=after.hp-before.hp,block=(after.combat?.block||0)-(before.combat?.block||0);

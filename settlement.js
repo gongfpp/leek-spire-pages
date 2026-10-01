@@ -1,8 +1,9 @@
 const yen=n=>(n<0?'−':'')+'¥'+Math.abs(Math.round(n)).toLocaleString('zh-CN');
-export function showSettlement(report,{audio,motion,onDone,onSkip}){
+export function showSettlement(report,{audio,motion,onDone,onSkip,intro}){
  const d=document.createElement('dialog');d.className='settlement-dialog';d.setAttribute('aria-label','收盘结算');
  d.innerHTML='<div class="settlement-head"><span>15:00 / CLOSING BELL</span><h2>今天，赚明白了吗？</h2><p>从开盘资产开始，逐笔回放实际入账。不会重复加钱。</p></div><div class="settlement-ledger"></div><div class="settlement-total"><span>账户总资产</span><strong></strong><small></small></div><button class="primary settlement-next">快进结算 →</button>';
  if(report.closingLabel)d.querySelector('.settlement-head span').textContent=report.closingLabel;
+ if(intro!==undefined)d.querySelector('.settlement-head p').textContent=intro;
  document.body.append(d);d.showModal();
  const list=d.querySelector('.settlement-ledger'),total=d.querySelector('.settlement-total strong'),note=d.querySelector('.settlement-total small'),button=d.querySelector('button');
  let timers=[],frames=[],index=0,value=report.opening,finished=false,closed=false;
