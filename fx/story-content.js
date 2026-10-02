@@ -1,5 +1,6 @@
+import {ITEM_SCENES} from './item-events.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
 // Simulated market information is separate from user-approved character dialogue.
-import {approvedQuote,dialogueFacts} from './dialogue.js?v=82a207dddc89cc59d55628ea99b6c3bf74157539';
+import {approvedQuote,dialogueFacts} from './dialogue.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
 // Market directions refer to JPY valued in USD: positive = stronger yen, negative = weaker yen.
 // Historical market incidents inspire scenarios only; headlines, timing and moves are fictional.
 
@@ -138,12 +139,15 @@ export function getStory(s,key){
   if(key==='fatherFound'&&(!s.fatherUsed||!family.outstanding||family.informed||family.discovered))return null;
   if(key==='repayPartial'&&(!family.lastRepayment||!(family.outstanding>0)))return null;
   if(key==='repayFull'&&(!family.lastRepayment||family.outstanding!==0||family.lastRepayment.outstanding!==0))return null;
+  if(key==='recovery'&&!s.story?.flags?.receiptWinDay)return null;
   const state=['fatherFound','fatherUnlock'].includes(key)?{...s,storyContext:key}:s;
   const lines=ids=>ids.map(id=>approvedQuote(id,state)).filter(Boolean).map(q=>[q.from,q.text]);
   const event={...base,key,lines:[],choices:base.choices.map(c=>({...c,lines:[]}))};
   if(key==='threshold75')event.lines=lines(['Q07']);
   if(key==='threshold50')event.lines=lines(['Q14']);
-  if(['threshold75','threshold50'].includes(key)&&!event.lines.some(([from])=>from!=='久留美'))event.choices=event.choices.filter(c=>c.label!=='回应消息');
+  if(key==='threshold75'){event.original=true;event.lines.push(['萌智子','休市了。给你留一本复盘本，需要止损提醒的时候就发消息。'],['久留美','你别把我写成反面教材啊。']);event.choices[0].lines=[['久留美','本子我收下。提醒也先留着。'],['萌智子','好，下次提醒你的是约定，不是行情预言。']];event.choices[1].lines=[['久留美','我先休息。本子明天再看。'],['萌智子','可以，提醒不会因为你睡一觉就过期。']];}
+  if(key==='threshold50'){event.original=true;event.lines.push(['安子','先休息。停手卡和飞行模式都给你留着，想暂停时用得上。'],['久留美','你这张卡上怎么没有一个买入按钮。']);event.choices[0].lines=[['久留美','我收下了。今晚先听你说。'],['安子','很好，我也没打算拿聊天时间给你报点位。']];event.choices[1].lines=[['久留美','我想安静一会儿，卡留下。'],['安子','好。想停下来的时候，不用先向我解释。']];}
+  if(ITEM_SCENES[key]){const scene=ITEM_SCENES[key];event.original=true;event.lines=scene.lines.map(line=>[...line]);for(const c of event.choices)c.lines=(scene.choices[c.id]||[]).map(line=>[...line]);}
   if(key==='fatherUnlock'){
     event.lines=lines(['V2-E03-01']);
     event.choices.find(c=>c.id==='look_at_savings').lines=lines(['V2-E03-02']);

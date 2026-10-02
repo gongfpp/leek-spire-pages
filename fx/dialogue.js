@@ -1,6 +1,7 @@
-import {DIALOGUE_BANK} from './dialogue-bank.js?v=82a207dddc89cc59d55628ea99b6c3bf74157539';
+import {DIALOGUE_BANK} from './dialogue-bank.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {ORIGINAL_DIALOGUE_BANK,originalCandidates} from './original-dialogue.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
 
-export const DIALOGUE_VERSION=4;
+export const DIALOGUE_VERSION=5;
 const quotes=new Map(DIALOGUE_BANK.flatMap(q=>[[q.id,q],[q.alias,q]]));
 const n=value=>Number.isFinite(value)?value:0;
 const money=value=>Math.round(n(value)).toLocaleString('zh-CN');
@@ -83,7 +84,7 @@ const routes={
   'prop.father':['V2-E03-06'],'prop.mochiko':[['W04','W05']],
   'ending.crisis':['Q16']
 };
-export const dialogueStats={entries:DIALOGUE_BANK.length,lines:DIALOGUE_BANK.length,pools:Object.keys(routes).length};
+export const dialogueStats={entries:DIALOGUE_BANK.length,lines:DIALOGUE_BANK.length,pools:Object.keys(routes).length,originalScenes:ORIGINAL_DIALOGUE_BANK.length,originalLines:ORIGINAL_DIALOGUE_BANK.reduce((sum,q)=>sum+q.lines.length,0)};
 const rawTexts=new Set(DIALOGUE_BANK.filter(q=>!['Q23','Q24'].includes(q.alias)).map(q=>q.lines[0][1]));
 const historicalText=text=>typeof text==='string'&&(rawTexts.has(text)||/^这里是 ¥[\d,]+。我先放回来。$/.test(text)||/^还差 ¥[\d,]+，我记着。$/.test(text));
 export function ensureDialogue(s){
@@ -92,8 +93,8 @@ export function ensureDialogue(s){
   if(memory.version!==DIALOGUE_VERSION){
     s.chat ||= {};for(const channel of ['group','friend','campus'])s.chat[channel]=(s.chat[channel]||[]).filter(line=>quotes.has(line.dialogueId)&&historicalText(line.text));
     delete s.archivedChat; // Retired text must not remain in a migrated save or return to UI.
-    s.speech=null;s.dayOpeningLine='';
-    if(s.dayReport){s.dayReport.openingLine='';s.dayReport.closingLine='';}
+    s.speech=null;if(!historicalText(s.dayOpeningLine))s.dayOpeningLine='';
+    if(s.dayReport){if(!historicalText(s.dayReport.openingLine))s.dayReport.openingLine='';if(!historicalText(s.dayReport.closingLine))s.dayReport.closingLine='';}
     if(s.story?.log)s.story.log=s.story.log.map(entry=>Object.fromEntries(['id','day','beat','choice'].filter(key=>entry[key]!==undefined).map(key=>[key,entry[key]])));
     memory.turn=0;memory.lastUsed={};memory.version=DIALOGUE_VERSION;
   }
@@ -102,12 +103,14 @@ export function ensureDialogue(s){
   return memory;
 }
 function candidates(s,trigger){
-  return (routes[trigger]||[]).map(ids=>{
+  const approved=(routes[trigger]||[]).map(ids=>{
     const lines=(Array.isArray(ids)?ids:[ids]).map(id=>approvedQuote(id,s)).filter(Boolean);
     // These conversations cannot lose the knowledge gate and leave only a self line.
     if(trigger==='friend.greed'&&!lines.some(q=>q.id==='V2-F01-02'))return empty();
     return {id:lines.length?lines.map(q=>q.id).join('+'):null,lines};
   }).filter(entry=>entry.lines.length);
+  if(trigger.startsWith('speech.')&&approved.length)return approved;
+  return [...approved,...originalCandidates(s,trigger,dialogueFacts(s))];
 }
 function hash(value){let n=2166136261;for(const c of value)n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0;}
 export function chooseDialogue(s,trigger){
@@ -130,7 +133,7 @@ export function updateSpeech(s,emotion,force=false){
   const selected=chooseDialogue(s,'speech.'+emotion);
   s.speech={id:selected.id,mood:emotion,text:selected.lines[0]?.text||'',facts:key};
 }
-export function chapterChat(s){s.chat={group:[],friend:[],campus:[]};ensureDialogue(s);}
+export function chapterChat(s){s.chat={group:[],friend:[],campus:[]};ensureDialogue(s);appendDialogue(s,'friend','friend.intro');}
 export function comicCaptions(id,s){
   const key=({million:'C01',walkaway:'C02',broke:'C03',crisis:'C04',father:'C05',friend:'C06'})[id]||id;
   const q=id=>approvedQuote(id,s)?.text||'';

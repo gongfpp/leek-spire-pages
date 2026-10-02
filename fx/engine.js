@@ -1,8 +1,9 @@
-import {NEWS_CHAINS,PROPS} from './content.js?v=82a207dddc89cc59d55628ea99b6c3bf74157539';
-import {BLACK_SWANS} from './story-content.js?v=82a207dddc89cc59d55628ea99b6c3bf74157539';
-import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=82a207dddc89cc59d55628ea99b6c3bf74157539';
-export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=82a207dddc89cc59d55628ea99b6c3bf74157539';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=82a207dddc89cc59d55628ea99b6c3bf74157539';
+import {itemUnlocked} from './item-events.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {NEWS_CHAINS,PROPS} from './content.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {BLACK_SWANS} from './story-content.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
 export const VERSION = 3;
 export const LIVING_DAILY = 2200;
 export const FATHER_SAVINGS = 3000000;
@@ -175,6 +176,7 @@ export function useProp(s,id){
   ensureStory(s);
   if(!['decision','day_end','resting','bankrupt'].includes(s.phase)||s.phase!=='decision'&&id!=='father')throw Error('请等行情暂停');
   if(!PROPS[id])throw Error('没有这个物品');
+  if(!itemUnlocked(s,id))throw Error('先完成对应的休市事件，才能获得这个道具');
   if(id==='father'){
     if(!s.family.unlocked)throw Error('柜子的钥匙还没有出现');
     if(s.fatherUsed)throw Error('这笔存款已经取过了');
@@ -198,7 +200,7 @@ export function useProp(s,id){
   else if(id==='notebook'){addEffect(s,'notes',2);s.emotionBias={mood:'focused',until:(s.day-1)*4+s.beat+2};}
   else if(id==='amulet'){addEffect(s,'lucky',2);s.emotionBias={mood:'hopeful',until:(s.day-1)*4+s.beat+2};}
   else if(id==='receipt'){trade=closePosition(s,.5,'receipt');s.stress=Math.max(0,s.stress-6);addEffect(s,'ego',2);s.emotionBias={mood:'embarrassed',until:(s.day-1)*4+s.beat+2};}
-  mentalState(s);const line=chooseDialogue(s,'prop.'+id).lines[0]?.text||'';return{id,trade,cost,stop:s.position?.stop||s.nextStop,line};
+  mentalState(s);const messages=appendDialogue(s,['mochiko','yasuko'].includes(id)?'friend':'campus','prop.'+id);const line=messages[0]?.text||'';return{id,trade,cost,stop:s.position?.stop||s.nextStop,line,messages};
 }
 function refreshReport(s){if(!s.dayReport)return;const funding=s.externalFunding-s.dayOpeningFunding,costs=s.expenses-s.dayOpeningExpenses;s.dayReport.closing=equity(s);s.dayReport.funding=funding;s.dayReport.costs=costs;s.dayReport.net=equity(s)-s.dayOpening-funding+costs;s.dayReport.externalFunding=s.externalFunding;}
 export function repayFather(s,amount){ensureStory(s);if(!['decision','day_end','resting'].includes(s.phase))throw Error('请等行情暂停');if(!Number.isFinite(amount)||amount<=0||amount>s.cash||amount>s.family.outstanding)throw Error('归还金额超过可用资金或欠款');const wasInformed=s.family.informed||s.family.discovered;s.cash-=amount;s.externalFunding-=amount;s.family.outstanding-=amount;s.family.repaid+=amount;s.family.lastRepayment={amount,outstanding:s.family.outstanding,wasInformed,day:s.day,beat:s.beat};s.family.informed=true;s.story.queue=s.story.queue.filter(id=>id!=='fatherFound');s.family.trust+=amount/FATHER_SAVINGS;

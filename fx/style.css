@@ -46,3 +46,7 @@ dialog{border:2px solid var(--ink);border-radius:7px;background:#fffcfe;color:va
 .developer-note,.developer-actions,#developer-error{grid-column:1/-1}.developer-note{margin:0;font-size:13px;line-height:1.6}.developer-actions{display:flex;flex-wrap:wrap;gap:10px}#developer-error{color:#a5224c;margin:0;min-height:1.5em}
 .comic-captions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.comic-captions p{font-size:14px;line-height:1.55;margin:0;white-space:pre-wrap}.comic-captions p:empty{display:none}
 @media(max-width:600px){.developer-form{grid-template-columns:1fr}.developer-dialog{padding:20px}.comic-captions{gap:8px}}
+
+.item-locked{opacity:.65}.item-locked small{line-height:1.5}.item-unlock-notice{padding:12px;border:2px solid #bd4c80;background:#fff1d4;font-weight:700}.image-unavailable{font-size:12px;color:#816777;background:#f6e7ed;min-height:160px}
+
+#prop-line{white-space:pre-line;line-height:1.8}
