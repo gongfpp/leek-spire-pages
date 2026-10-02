@@ -1,5 +1,5 @@
-import {DIALOGUE_BANK} from './dialogue-bank.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
-import {ORIGINAL_DIALOGUE_BANK,originalCandidates} from './original-dialogue.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {DIALOGUE_BANK} from './dialogue-bank.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {ORIGINAL_DIALOGUE_BANK,originalCandidates} from './original-dialogue.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
 
 export const DIALOGUE_VERSION=5;
 const quotes=new Map(DIALOGUE_BANK.flatMap(q=>[[q.id,q],[q.alias,q]]));
@@ -7,8 +7,9 @@ const n=value=>Number.isFinite(value)?value:0;
 const money=value=>Math.round(n(value)).toLocaleString('zh-CN');
 const empty=()=>({id:null,lines:[]});
 export function dialogueFacts(s){
-  const p=s.position,unrealized=p?n(p.margin)*n(p.leverage)*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1):0;
-  const equity=Math.max(0,n(s.cash)+n(s.reserve)+(p?Math.max(0,n(p.margin)+unrealized):0));
+  const positions=Array.isArray(s.positions)&&s.positions.length?s.positions:s.position?[s.position]:[];
+  const p=positions[0],unrealized=positions.reduce((sum,p)=>sum+n(p.margin)*n(p.leverage)*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1),0);
+  const equity=Math.max(0,n(s.cash)+positions.reduce((sum,p)=>sum+n(p.margin),0)+unrealized)+n(s.reserve);
   const profit=equity-100000-n(s.externalFunding)+n(s.expenses)-n(s.developer?.profitOffset);
   const trades=(s.history||[]).filter(t=>Number.isFinite(t.pnl));
   const loss=profit<-.01||unrealized<-.01||trades.some(t=>t.pnl<-.01);
@@ -27,7 +28,7 @@ function permitted(q,s){
   switch(alias){
     case 'Q01':case 'Q02':return f.profit<20000000;
     case 'Q03':return f.profit>0||f.unrealized>0;
-    case 'Q04':return !!f.p&&f.p.leverage===100;
+    case 'Q04':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>p.leverage===100);
     case 'Q05':case 'Q10':return f.unrealized>0||f.profit>0||(s.lastTrade?.pnl>0&&s.lastTrade.day===s.day);
     case 'Q06':return !!f.p&&f.unrealized<0;
     case 'Q07':return f.loss;
@@ -36,15 +37,15 @@ function permitted(q,s){
     case 'Q11':return true;
     case 'Q12':return f.p?.direction===1||s.intent==='long';
     case 'Q13':return s.publicMarketSpeaker?.direction===1&&s.publicMarketSpeaker?.losing===true;
-    case 'Q15':return !!f.p&&n(f.p.maxUnrealized)>0&&f.unrealized<=0;
+    case 'Q15':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>n(p.maxUnrealized)>0&&n(p.margin)*n(p.leverage)*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1)<=0);
     case 'Q16':return s.ending?.id==='crisis'||s.pendingEnding==='crisis';
-    case 'Q17':return !!f.p&&(n(f.p.risk)>=25||n(s.sanity)<=20);
+    case 'Q17':return !!f.p&&(n(s.sanity)<=20||(s.positions?.length?s.positions:[f.p]).some(p=>n(p.risk)>=25));
     case 'Q18':return (s.history||[]).some(t=>t.day<s.day&&t.pnl<=-30000);
     case 'Q19':return currentDisclosure('greed')&&(f.unrealized>0||f.profit>0||(s.lastTrade?.pnl>0&&s.lastTrade.day===s.day));
     case 'Q20':case 'Q21':case 'Q22':return !!disclosed.debt&&hasDebt;
     case 'Q23':case 'Q24':return false; // No approved prerequisite scene exists yet.
     case 'Q25':return !!disclosed.debt&&hasDebt&&family.opposed===true;
-    case 'W01':return f.p?.direction===1&&f.unrealized<0;
+    case 'W01':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>p.direction===1&&n(s.price)<n(p.entry));
     case 'W03':return !!f.p&&f.unrealized<0;
     case 'W04':case 'W05':return !!f.p&&currentDisclosure('position');
     case 'W06':return taken&&!family.informed;

@@ -1,4 +1,4 @@
-import {EXTRA_NEWS_CHAINS} from './story-content.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {EXTRA_NEWS_CHAINS} from './story-content.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
 // Simulated market information and functional UI copy, separate from approved character dialogue.
 const BASE_NEWS_CHAINS = [
   {id:'boj',name:'日本央行会议',bias:1,vol:2,source:'东京政策快讯',

@@ -1,5 +1,5 @@
-import {description} from './card-design.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
-import {MARKETS,TRADE_TEXT} from './data.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {description} from './card-design.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {MARKETS,TRADE_TEXT} from './data.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
 export const STAGES=[
 {at:0,title:'先做一个小决定',description:'上午 09:30、下午 13:00 各出一张牌。先试探、后加仓；点击按钮才推进时间，可以慢慢想。',next:'再收盘两次，开放补牌与三张手牌。',hand:2,energy:2,cards:[]},
 {at:2,title:'多一张牌，多一个选择',description:'开放 10:30：一天可以操作三次，每个时段一张牌。「观望」补牌不增加当前时段次数。',next:'再收盘两次，观察市场情绪。',hand:3,energy:3,cards:['add','watch']},

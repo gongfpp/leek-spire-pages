@@ -1,6 +1,6 @@
-import {ITEM_SCENES} from './item-events.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {ITEM_SCENES} from './item-events.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
 // Simulated market information is separate from user-approved character dialogue.
-import {approvedQuote,dialogueFacts} from './dialogue.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {approvedQuote,dialogueFacts} from './dialogue.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
 // Market directions refer to JPY valued in USD: positive = stronger yen, negative = weaker yen.
 // Historical market incidents inspire scenarios only; headlines, timing and moves are fictional.
 

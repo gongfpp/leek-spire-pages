@@ -1,5 +1,5 @@
-import {ITEM_EVENTS,itemUnlocked} from './item-events.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
-import {STORIES,getStory} from './story-content.js?v=562e206c043660a7c11ae8309a6e46854a36be05';
+import {ITEM_EVENTS,itemUnlocked} from './item-events.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {STORIES,getStory} from './story-content.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
 export const DEBUFFS={guilt:{name:'抽屉里的声音',copy:'未归还的存款让压力增加 8',stress:8},familyWatch:{name:'父亲查账中',copy:'两段行情内杠杆至多 20×、投入至多 50%',leverage:20,stake:.5},bathroom:{name:'热茶的后半场',copy:'下一段投入至多 25%',stake:.25},wired:{name:'今晚不睡',copy:'两段内承受力 +8；之后疲惫两段',mental:8},fatigue:{name:'咖啡因下班了',copy:'两段内承受力 −6',mental:-6},notes:{name:'写都写了',copy:'两段内承受力 +6、杠杆至多 20×',mental:6,leverage:20},offline:{name:'飞行模式',copy:'下一段不能开新仓',noEntry:true},lucky:{name:'护身符在看着',copy:'两段内承受力 +6；之后容易上头',mental:6},ego:{name:'这截图够我吹一天',copy:'两段内压力 +6',stress:6},caution:{name:'答应过萌智子',copy:'下一段杠杆至多 20×',leverage:20}};
 export function ensureStory(s){
  s.story ||= {seen:[],queue:[],log:[],flags:{}};s.story.seen ||= [];s.story.queue ||= [];s.story.log ||= [];s.story.flags ||= {};s.story.presentedDay ||= 0;
