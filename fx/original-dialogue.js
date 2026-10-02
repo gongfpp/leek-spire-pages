@@ -1,4 +1,4 @@
-import {ORIGINAL_DIALOGUE_BANK} from './copy/original-lines.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {ORIGINAL_DIALOGUE_BANK} from './copy/original-lines.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
 export {ORIGINAL_DIALOGUE_BANK};
 // Only public, already-rendered market observations are read here. Never inspect script/tracks.
 function marketMove(s){

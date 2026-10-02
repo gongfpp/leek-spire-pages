@@ -1,4 +1,4 @@
-import {EXTRA_NEWS_CHAINS} from './story-content.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {EXTRA_NEWS_CHAINS} from './story-content.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
 // Simulated market information and functional UI copy, separate from approved character dialogue.
 const BASE_NEWS_CHAINS = [
   {id:'boj',name:'日本央行会议',bias:1,vol:2,source:'东京政策快讯',
@@ -41,4 +41,4 @@ export const MOODS = {
 };
 
 export const CANON_QUOTE = {id:'V2-HOPE-01',text:'两千万而已，我会轻松赚回来的！',source:'用户附译；日语原句见动画官方简介',url:'https://fxkurumi-info.com/'};
-export {PROPS} from './copy/items.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+export {PROPS} from './copy/items.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';

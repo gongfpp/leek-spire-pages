@@ -1,23 +1,24 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {buildFXReceipt} from './statement.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {createShareCard} from './share-card.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {createGameStorage} from './storage.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {PROP_LINES} from './copy/items.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {UI_COPY} from './copy/ui.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {TRANSITION_COPY} from './copy/transitions.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {setImage} from './assets.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {GameAudio} from '../audio.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {GameMotion} from '../feedback.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {showSettlement} from '../settlement.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {MOODS, PROPS} from './content.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {buildFXReceipt} from './statement.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {createShareCard} from './share-card.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {createGameStorage} from './storage.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {PROP_LINES} from './copy/items.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {UI_COPY} from './copy/ui.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {TRANSITION_COPY} from './copy/transitions.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {setImage} from './assets.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {GameAudio} from '../audio.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {GameMotion} from '../feedback.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {showSettlement} from '../settlement.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {MOODS, PROPS} from './content.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {mountVoiceLibrary} from './voice-library.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
 
 const $ = id => document.getElementById(id);
 const storage=createGameStorage();
@@ -110,7 +111,7 @@ function render(){
   setText('chapter-target',`交易净收益 ${signed(tradingProfit(state))} · 首章目标 +${yen(TARGET_PROFIT)}`);
   setText('emotion-label',info[0]);
   const portraitKey=state.lastReaction?.reversal||(['ending','day_end'].includes(phase)&&account<5000?'blank':info[1]);if($('portrait').dataset.mood!==portraitKey){setImage($('portrait'),`./expressions/kurumi-${portraitKey}.webp`);$('portrait').dataset.mood=portraitKey;$('portrait').alt=`久留美此刻${info[0]}的漫画表情`;}
-  const voiceEmotion=state.lastReaction?.reversal||(em==='stunned'?'blank':em);const voiced=voice.sync({enabled:voiceEnabled,emotion:voiceEmotion,speechId:state.speech?.id,run:state.runId});
+  const voiceEmotion=state.lastReaction?.reversal||(em==='stunned'?'blank':em);const voiced=$('voice-library-dialog').open?null:voice.sync({enabled:voiceEnabled,emotion:voiceEmotion,speechId:state.speech?.id,run:state.runId});
   setText('speech',voiced?.zh||state.speech?.text||'');setText('voice-caption',voiced?`PV 原声 · ${voiced.speaker||'久留美'} · ${voiced.ja||''}`:'');$('voice-caption').hidden=!voiced;
   const voiceStatus=voiceEnabled?(voice.lastError?UI_COPY.voiceState[voice.lastError]:voice.loading?UI_COPY.voiceState.loading:voice.playing?UI_COPY.voiceState.playing:''):'';for(const id of ['voice-state','voice-library-status']){setText(id,voiceStatus);$(id).hidden=!voiceStatus;}
   setText('voice-toggle',voiceEnabled?'动画原声 · 开':'动画原声 · 关');$('voice-toggle').disabled=false;$('voice-toggle').setAttribute('aria-pressed',String(voiceEnabled));$('voice-replay').hidden=!voiceEnabled||!availableVoices(voiceEmotion).length;
@@ -323,7 +324,8 @@ $('retire').onclick=()=>{try{finishCampaign(state,'walkaway');render();continueS
 $('ending-restart').onclick=newChapter;
 $('day-review').onclick=()=>showDayDialog();
 $('day-dialog').addEventListener('cancel',e=>{e.preventDefault();$('next-day').click();});
-document.addEventListener('visibilitychange',()=>{audio.sync();if(document.hidden)voice.stop();});window.addEventListener('pagehide',()=>{audio.pause();voice.stop();});
+function pauseAuditions(){for(const player of $('voice-list').querySelectorAll('audio'))player.pause();}
+document.addEventListener('visibilitychange',()=>{audio.sync();if(document.hidden){voice.stop();pauseAuditions();}});window.addEventListener('pagehide',()=>{audio.pause();voice.stop();pauseAuditions();});
 function replaceDeveloperState(next){
   state=next;orderFormOpen=!positionsOf(state).length;state.runId=state.developer?.edited?crypto.randomUUID():(state.runId||crypto.randomUUID());telemetry.setTestMode(!!state.developer?.edited);voice.stop();lastMood=null;playing=false;actionBusy=false;skip=false;
   for(const d of document.querySelectorAll('dialog[open]'))d.close();
@@ -349,8 +351,9 @@ $('developer-form').onsubmit=e=>{
   }catch(error){setText('developer-error',error.message);}
 };
 $('developer-restore').onclick=()=>{try{const original=restoreGame(storage.getItem(developerBackupKey));if(!original)throw Error('没有有效的修改前存档');replaceDeveloperState(original);toast('已恢复修改前存档');}catch(error){setText('developer-error',error.message);}};
-$('voice-library-open').onclick=()=>{const box=$('voice-list');box.replaceChildren();for(const line of VOICE_LINES){const b=document.createElement('button');b.textContent=line.speaker+' · '+line.zh;b.disabled=!voiceEnabled;b.onclick=()=>{voice.unlock();setText('voice-library-caption',line.ja+' / '+line.zh);void voice.playLine(line.id);};box.append(b);}setText('voice-library-caption',voiceEnabled?'选择一段原声试听':'请先开启动画原声');$('voice-library-dialog').showModal();};
-$('voice-library-dialog').addEventListener('close',()=>voice.stop());
+let disposeAuditions=null;
+$('voice-library-open').onclick=()=>{voice.stop();disposeAuditions?.();setText('voice-library-caption','');$('voice-library-status').hidden=true;disposeAuditions=mountVoiceLibrary($('voice-list'),VOICE_LINES,{beforePlay:()=>voice.stop(),onPlay:line=>track('voice_play',line.id,{dialogueId:line.id}),onError:line=>{setText('voice-library-caption','“'+line.zh+'”暂时无法播放，请重试或试听其他片段。');}});$('voice-library-dialog').showModal();};
+$('voice-library-dialog').addEventListener('close',()=>{disposeAuditions?.();disposeAuditions=null;voice.stop();render();});
 let marginPositionId=null;
 function renderRiskAlerts(){
  const box=$('risk-alerts'),risks=nearStopOrders(state),visible=new Set(risks.map(r=>String(r.positionId)));
