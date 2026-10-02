@@ -1,4 +1,4 @@
-import {equity,tradingProfit,planDay,mentalState,settleDay,beginRest,restoreGame} from './engine.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {equity,tradingProfit,planDay,mentalState,settleDay,beginRest,restoreGame} from './engine.js?v=da1d043bda91408042db7dae5be3319577d20085';
 
 const range=(value,min,max,label,integer=false)=>{
   if(!Number.isFinite(value)||value<min||value>max||integer&&!Number.isInteger(value))throw Error(`${label}需要在 ${min}～${max} 之间${integer?'，且为整数':''}`);

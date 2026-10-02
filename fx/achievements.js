@@ -11,8 +11,8 @@ export const ACHIEVEMENTS = Object.freeze([
   define('tell-everything','今晚把事情说清楚','实际向朋友披露欠款，或在父亲发现前主动归还一笔。','话','Web 第 3 话：想向父亲坦白；本作加入实际披露与还款。'),
   define('fully-repaid','三百万，一分不少','取用父亲存款后，将欠款全部归还。','还','Web 第 3 话的归还三百万计划，由游戏实现；非原作既成事实。'),
   define('accept-stop','我不能输，所以止损','实际执行一次止损平仓。','止','Web 第 2 话：执念使久留美放弃止损；本作反向改写。'),
-  define('mochiko-warning','萌智子让你看持仓','实际使用萌智子的止损提醒。','萌','Web 第 3 话：萌智子催久留美查看持仓；止损道具为本作设计。'),
-  define('profit-receipt','笑容先落袋','使用盈利截图封存袋，并实际减仓兑现净盈利。','袋','Web 第 3 话：久留美在电脑前确认利润，封存袋为本作道具。'),
+  define('mochiko-warning','萌智子帮忙盯盘','实际使用萌智子的盯盘保护。','萌','Web 第 3 话：萌智子催久留美查看持仓；爆仓减免为本作设计。'),
+  define('profit-receipt','利润换成热饭','赚到第一笔利润后，点一份外卖。','饭','Web 第 3 话：久留美在电脑前确认利润，外卖消费为本作设计。'),
   define('saved-at-last','手还在发抖','一笔曾接近强平的仓位最终净盈利平仓。','救','Web 第 3 话：扛过巨亏、平仓后仍发抖；触发条件为游戏改写。'),
   define('walkaway','屏幕之外还有明天','完成主动离场结局。','休','回避屏幕情境的本作延伸；主动离场是原创结局。'),
   define('twenty-million','拿回两千万','在正常游戏中完成两千万交易净收益目标结局。','2000','动画官方简介中的两千万目标；游戏交易结果独立计算。')
@@ -20,7 +20,7 @@ export const ACHIEVEMENTS = Object.freeze([
 const finite = (n, fallback=0) => Number.isFinite(n) ? n : fallback;
 const positions = s => Array.isArray(s.positions) ? s.positions : s.position ? [s.position] : [];
 const closed = s => (s.history || []).filter(t => t.type !== 'open' && Number.isFinite(t.pnl));
-const pnl = (s,p) => finite(p.unrealized,finite(p.margin)*finite(p.leverage)*finite(p.direction)*(finite(s.price)/finite(p.entry,1)-1));
+const pnl = (s,p) => finite(p.unrealized,finite(p.notional,finite(p.margin)*finite(p.leverage))*finite(p.direction)*(finite(s.price)/finite(p.entry,1)-1));
 function evidence(s) {
   const trades=closed(s), active=positions(s), realized=trades.reduce((sum,t)=>sum+t.pnl,0);
   return {
@@ -34,7 +34,7 @@ function evidence(s) {
     'fully-repaid':s.fatherUsed&&s.family?.repaid>=3000000&&finite(s.family?.outstanding)===0?1:0,
     'accept-stop':trades.some(t=>t.type==='stop')?1:0,
     'mochiko-warning':s.itemsUsed?.mochiko||s.skills?.mochiko?1:0,
-    'profit-receipt':trades.some(t=>t.type==='receipt'&&t.pnl>0)?1:0,
+    'profit-receipt':(s.itemsUsed?.takeaway&&realized>0)||trades.some(t=>t.type==='receipt'&&t.pnl>0)?1:0,
     'saved-at-last':trades.some(t=>t.pnl>0&&(t.nearMiss||t.minUnrealized<=-t.margin*.65))?1:0,
     'walkaway':s.phase==='ending'&&s.ending?.id==='walkaway'?1:0,
     'twenty-million':s.phase==='ending'&&s.ending?.id==='million'&&s.ending?.profit>=20000000?1:0

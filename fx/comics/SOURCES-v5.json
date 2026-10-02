@@ -1,0 +1,32 @@
+{
+  "createdAt": "2026-10-02",
+  "kind": "original game fan-art illustrations, not original manga scans",
+  "assets": [
+    {
+      "file": "event-takeaway.webp",
+      "scene": "小额盈利点外卖、小额亏损关灯泡面",
+      "generatedWith": "built-in image_gen",
+      "references": [
+        "expressions/kurumi-calm.webp",
+        "comics/event-friend.webp"
+      ],
+      "sourcePNG": "exec-6b7e601c-e713-444b-a698-b0ae16c4c36d.png",
+      "review": "all four panels visually inspected; consistent identity, plausible hands, no AI prose",
+      "sha256": "6a019690b2c238d9ff7ba0781201cc5436155e6d2834b210a695e3a90c653585",
+      "promptSummary": "3:4 four-panel 2x2 manga; exact pink-haired adult/red-ribbon protagonist; fine ink and crosshatching, restrained color; no dialogue balloons or lettering; sequential narrative specified by scene"
+    },
+    {
+      "file": "event-turnaround.webp",
+      "scene": "浮盈转亏与亏损翻红",
+      "generatedWith": "built-in image_gen",
+      "references": [
+        "expressions/kurumi-calm.webp",
+        "comics/event-friend.webp"
+      ],
+      "sourcePNG": "exec-e485cb3d-eba5-4714-8277-e3e655cb45c2.png",
+      "review": "all four panels visually inspected; consistent identity, plausible hands, no AI prose",
+      "sha256": "58a6733434078ee702ab99b81d5b51b60f1fda5ef41344fe857ef531e36c3ef9",
+      "promptSummary": "3:4 four-panel 2x2 manga; exact pink-haired adult/red-ribbon protagonist; fine ink and crosshatching, restrained color; no dialogue balloons or lettering; sequential narrative specified by scene"
+    }
+  ]
+}

@@ -1,14 +1,14 @@
-import {DIALOGUE_BANK} from './dialogue-bank.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
-import {ORIGINAL_DIALOGUE_BANK,originalCandidates} from './original-dialogue.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {DIALOGUE_BANK} from './dialogue-bank.js?v=da1d043bda91408042db7dae5be3319577d20085';
+import {ORIGINAL_DIALOGUE_BANK,originalCandidates} from './original-dialogue.js?v=da1d043bda91408042db7dae5be3319577d20085';
 
-export const DIALOGUE_VERSION=5;
+export const DIALOGUE_VERSION=6;
 const quotes=new Map(DIALOGUE_BANK.flatMap(q=>[[q.id,q],[q.alias,q]]));
 const n=value=>Number.isFinite(value)?value:0;
 const money=value=>Math.round(n(value)).toLocaleString('zh-CN');
 const empty=()=>({id:null,lines:[]});
 export function dialogueFacts(s){
   const positions=Array.isArray(s.positions)&&s.positions.length?s.positions:s.position?[s.position]:[];
-  const p=positions[0],unrealized=positions.reduce((sum,p)=>sum+n(p.margin)*n(p.leverage)*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1),0);
+  const p=positions[0],unrealized=positions.reduce((sum,p)=>sum+n(p.notional??n(p.margin)*n(p.leverage))*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1),0);
   const equity=Math.max(0,n(s.cash)+positions.reduce((sum,p)=>sum+n(p.margin),0)+unrealized)+n(s.reserve);
   const profit=equity-100000-n(s.externalFunding)+n(s.expenses)-n(s.developer?.profitOffset);
   const trades=(s.history||[]).filter(t=>Number.isFinite(t.pnl));
@@ -37,7 +37,7 @@ function permitted(q,s){
     case 'Q11':return true;
     case 'Q12':return f.p?.direction===1||s.intent==='long';
     case 'Q13':return s.publicMarketSpeaker?.direction===1&&s.publicMarketSpeaker?.losing===true;
-    case 'Q15':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>n(p.maxUnrealized)>0&&n(p.margin)*n(p.leverage)*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1)<=0);
+    case 'Q15':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>n(p.maxUnrealized)>0&&n(p.notional??n(p.margin)*n(p.leverage))*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1)<=0);
     case 'Q16':return s.ending?.id==='crisis'||s.pendingEnding==='crisis';
     case 'Q17':return !!f.p&&(n(s.sanity)<=20||(s.positions?.length?s.positions:[f.p]).some(p=>n(p.risk)>=25));
     case 'Q18':return (s.history||[]).some(t=>t.day<s.day&&t.pnl<=-30000);
@@ -130,7 +130,7 @@ export function updateSpeech(s,emotion,force=false){
   ensureDialogue(s);
   // Eligibility, rather than raw price, is the stable render key. It changes as facts change.
   const pool=candidates(s,'speech.'+emotion),key=emotion+':'+pool.map(q=>q.id).join('|');
-  if(!force&&s.speech?.facts===key)return;
+  if(!force&&s.speech?.facts===key){const current=pool.find(q=>q.id===s.speech.id);if(current)s.speech.text=current.lines[0]?.text||'';return;}
   const selected=chooseDialogue(s,'speech.'+emotion);
   s.speech={id:selected.id,mood:emotion,text:selected.lines[0]?.text||'',facts:key};
 }

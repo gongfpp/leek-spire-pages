@@ -1,0 +1,46 @@
+{
+  "createdAt": "2026-10-02",
+  "kind": "original game fan-art, not manga panels",
+  "assets": [
+    {
+      "file": "kurumi-exhilarated.webp",
+      "mood": "极度亢奋",
+      "generatedWith": "built-in image_gen",
+      "reference": "kurumi-calm.webp",
+      "sourcePNG": "exec-17557d25-ae2d-4b03-8208-d10afd527f8d.png",
+      "review": "identity, expression, anatomy, no text visually inspected",
+      "sha256": "cf301b062e0491e78e0fa80430359dadf7946175c2e67959652aa0ac9253da88",
+      "promptSummary": "3:4 bust, exact existing pink-haired adult/red ribbon identity, ivory paper, fine ink/hatching; 极度亢奋 expression; no lettering"
+    },
+    {
+      "file": "kurumi-profit-to-loss.webp",
+      "mood": "盈转亏",
+      "generatedWith": "built-in image_gen",
+      "reference": "kurumi-calm.webp",
+      "sourcePNG": "exec-619975fa-5fb0-4cc3-95a4-0f57d5fba54f.png",
+      "review": "identity, expression, anatomy, no text visually inspected",
+      "sha256": "73cea489af14cf20014dae94d2c2304f4af14aed19fbfb5c1a6f0fb231db9a4d",
+      "promptSummary": "3:4 bust, exact existing pink-haired adult/red ribbon identity, ivory paper, fine ink/hatching; 盈转亏 expression; no lettering"
+    },
+    {
+      "file": "kurumi-loss-to-profit.webp",
+      "mood": "亏转盈",
+      "generatedWith": "built-in image_gen",
+      "reference": "kurumi-calm.webp",
+      "sourcePNG": "exec-34032546-7407-4581-8d43-ab4039f25df0.png",
+      "review": "identity, expression, anatomy, no text visually inspected",
+      "sha256": "3c735fd94afdabeb0c59fd8cefbd8e4a486df39431d02460c48350d8365c5f69",
+      "promptSummary": "3:4 bust, exact existing pink-haired adult/red ribbon identity, ivory paper, fine ink/hatching; 亏转盈 expression; no lettering"
+    },
+    {
+      "file": "kurumi-blank.webp",
+      "mood": "疲惫麻木",
+      "generatedWith": "built-in image_gen",
+      "reference": "kurumi-calm.webp",
+      "sourcePNG": "exec-0597f19a-6bae-4414-8565-c1469431b8aa.png",
+      "review": "identity, expression, anatomy, no text visually inspected",
+      "sha256": "70d25792ecdc7e71ff9a7353ffc689dd050c3ce7fc37de175f935ffa2aa8efb1",
+      "promptSummary": "3:4 bust, exact existing pink-haired adult/red ribbon identity, ivory paper, fine ink/hatching; 疲惫麻木 expression; no lettering"
+    }
+  ]
+}

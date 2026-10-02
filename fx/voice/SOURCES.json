@@ -1,0 +1,211 @@
+{
+  "recordedAt": "2026-10-02",
+  "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+  "officialIndex": "https://fxkurumi-info.com/movie/",
+  "sourceSHA256": "1a81a980f714d7d5742f2dab791ddc48093dc6d2ae0e2f4ff69dc00374a30d0d",
+  "note": "Short excerpts of a public official trailer. Existing eight candidate files retained; two additional excerpts. Guest voices never mapped onto Kurumi. No generated or cloned speech.",
+  "clips": [
+    {
+      "id": "pv-profit-ten",
+      "file": "kurumi-profit-ten.mp3",
+      "ja": "含み益10万は出てるけど",
+      "zh": "虽然已经有十万浮盈了",
+      "moods": [
+        "confident",
+        "excited"
+      ],
+      "start": 53.98,
+      "end": 56.7,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 2.72,
+      "bytes": 33585,
+      "sha256": "c279d688714b316c06cd2c2f3e93c7c569b38caa1338d252cd82cb69db34aece",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-profit-twenty",
+      "file": "kurumi-profit-twenty.mp3",
+      "ja": "やっぱ20万以上で利確したい",
+      "zh": "果然还是想赚到二十万以上再止盈",
+      "moods": [
+        "greedy",
+        "exhilarated",
+        "ecstatic"
+      ],
+      "start": 56.7,
+      "end": 59.32,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 2.62,
+      "bytes": 32331,
+      "sha256": "10d539453bb4f33c2da050f6f3ff3f04875a43eed26251e437c1bafdeca21658",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-cannot-lose",
+      "file": "kurumi-cannot-lose.mp3",
+      "ja": "負けようがない",
+      "zh": "不可能输的",
+      "moods": [
+        "reckless",
+        "determined"
+      ],
+      "start": 72.52,
+      "end": 73.8,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 1.28,
+      "bytes": 16030,
+      "sha256": "328f24d5dfa1e7407ded48c92ff795354229ce55dcdc52a82974659b1e637504",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-gone",
+      "file": "kurumi-gone.mp3",
+      "ja": "どこ行った!?",
+      "zh": "去哪儿了！？",
+      "moods": [
+        "regretful",
+        "profit-to-loss",
+        "shocked",
+        "stunned"
+      ],
+      "start": 61.32,
+      "end": 62.67,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 1.35,
+      "bytes": 22700,
+      "sha256": "f59d5a56745a6e139beb2903c929ebceaa7eb13d516d77237e977681dffaf4bf",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-human",
+      "file": "kurumi-human.mp3",
+      "ja": "人間が扱っていいものじゃない！",
+      "zh": "这根本不是人该碰的东西！",
+      "moods": [
+        "despair",
+        "anxious",
+        "blank"
+      ],
+      "start": 63.78,
+      "end": 66.01,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 2.23,
+      "bytes": 36524,
+      "sha256": "531a392f4534bd78af49bc3e47a8797af49a638be3bee9228829f8efcd805af3",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-stop",
+      "file": "kurumi-stop.mp3",
+      "ja": "やめて！",
+      "zh": "停下来啊！",
+      "moods": [
+        "nervous"
+      ],
+      "start": 79.62,
+      "end": 80.66,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 1.04,
+      "bytes": 17708,
+      "sha256": "128a51d9bc77041cbc53f9aec7cd447b820dc2e856ffa471d7cdd7f6ccccdf0c",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-profit-vanished",
+      "file": "kurumi-profit-vanished.mp3",
+      "ja": "利益…",
+      "zh": "利润……",
+      "moods": [
+        "profit-to-loss"
+      ],
+      "start": 60.5,
+      "end": 61.32,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 0.82,
+      "bytes": 11276,
+      "sha256": "e5eb63d52168d48c2746f02230b7dcfd74798abca81c5577ecfd2e74fdc4ceaa",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-gasp",
+      "file": "kurumi-gasp.mp3",
+      "ja": "あっ！",
+      "zh": "啊！",
+      "moods": [
+        "loss-to-profit",
+        "relieved"
+      ],
+      "start": 59.32,
+      "end": 59.82,
+      "speaker": "福賀くるみ",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 0.5,
+      "bytes": 7388,
+      "sha256": "38afd3fd4eea8b652a2faae6315072a73cb56d728cc8071d7e4ab10670668573",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-mebuki-rich",
+      "file": "mebuki-rich.mp3",
+      "ja": "お金持ち目指して頑張ります",
+      "zh": "我会朝着变有钱的目标努力",
+      "moods": [],
+      "start": 31.92,
+      "end": 34.7,
+      "speaker": "山師芽吹",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 2.78,
+      "bytes": 34212,
+      "sha256": "766677074dc5d53da24f8d8d3cd847df806b1d48d8174472436c4d071a705f57",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    },
+    {
+      "id": "pv-yasuko-start",
+      "file": "yasuko-start.mp3",
+      "ja": "私もFXやってやるよ",
+      "zh": "我也来做FX给你看",
+      "moods": [],
+      "start": 34.58,
+      "end": 37.1,
+      "speaker": "高根やす子",
+      "source": "https://www.youtube.com/watch?v=7rxIZ3z0S4s",
+      "synthetic": false,
+      "duration": 2.52,
+      "bytes": 31077,
+      "sha256": "42c478a58b6ff2f421aa7f35d52ca12848bbbad258112643768d787b70277239",
+      "review": "official PV frame and automatic transcript cross-check; no human audition",
+      "humanAudition": false
+    }
+  ],
+  "excluded": [
+    {
+      "candidate": "76.88–79.60 repetition",
+      "reason": "speaker and precise wording remain ambiguous across a character cut; not used"
+    }
+  ]
+}

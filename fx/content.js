@@ -1,4 +1,4 @@
-import {EXTRA_NEWS_CHAINS} from './story-content.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {EXTRA_NEWS_CHAINS} from './story-content.js?v=da1d043bda91408042db7dae5be3319577d20085';
 // Simulated market information and functional UI copy, separate from approved character dialogue.
 const BASE_NEWS_CHAINS = [
   {id:'boj',name:'日本央行会议',bias:1,vol:2,source:'东京政策快讯',
@@ -37,18 +37,8 @@ export const NEWS_CHAINS = [...BASE_NEWS_CHAINS,...EXTRA_NEWS_CHAINS];
 export const MOODS = {
   hopeful:['期待','hopeful'],focused:['专注','focused'],irritated:['烦躁','irritated'],stunned:['震惊','stunned'],exhausted:['疲惫','exhausted'],guilty:['内疚','guilty'],embarrassed:['局促','embarrassed'],lonely:['落寞','lonely'],determined:['坚定','determined'],warm:['温暖','warm'],
   calm:['平静','calm'],smug:['得意','smug'],nervous:['紧张','nervous'],anxious:['焦虑','anxious'],
-  ecstatic:['亢奋','ecstatic'],despair:['绝望','shocked'],regretful:['懊恼','regretful'],relieved:['如释重负','relieved']
+  ecstatic:['极度亢奋','exhilarated'],despair:['绝望','shocked'],regretful:['懊恼','regretful'],relieved:['如释重负','relieved']
 };
 
 export const CANON_QUOTE = {id:'V2-HOPE-01',text:'两千万而已，我会轻松赚回来的！',source:'用户附译；日语原句见动画官方简介',url:'https://fxkurumi-info.com/'};
-export const PROPS = {
-  tea:{name:'便利店热茶：先喝口再说',caption:'¥280 · 压力 −10',copy:'暖一暖手。下一段投入最多 25%，总得去一趟洗手间。',speaker:'久留美',cost:280},
-  energy:{name:'红眼能量饮料：今晚不睡',caption:'¥300 · 两段承受力 +8',copy:'精神撑两段，之后疲惫两段，承受力 −6。',speaker:'久留美',cost:300},
-  notebook:{name:'亏损复盘本：写都写了',caption:'¥200 · 两段承受力 +6',copy:'两段内杠杆至多 20×。纸上的承诺先兑现一次。',speaker:'久留美',cost:200},
-  airplane:{name:'飞行模式：拔网线大法',caption:'立即平仓 · 压力 −16',copy:'下一段不能开仓。行情照走，手机先躺平。',speaker:'久留美'},
-  amulet:{name:'神社御守：神也别加杠杆',caption:'¥600 · 两段承受力 +6',copy:'安心两段，之后容易上头：压力 +6，持续两段。',speaker:'久留美',cost:600},
-  receipt:{name:'盈利截图封存袋：先落袋',caption:'盈利仓位减半 · 压力 −6',copy:'只在浮盈时可用。截图之后容易得意，压力 +6，持续两段。',speaker:'久留美'},
-  father:{name:'父亲的柜中存款',caption:'¥3,000,000 · 整章一次',copy:'偷偷取出 ¥3,000,000。父亲两段后可能发现；欠款未还时压力 +8，可主动归还。',speaker:'久留美'},
-  mochiko:{name:'萌智子的止损提醒',caption:'收紧止损 · 每天一次',copy:'持仓止损收紧至保证金的 25%；空仓时作用于下一笔。下一段杠杆至多 20×。',speaker:'萌智子'},
-  yasuko:{name:'安子的停手卡',caption:'立即平仓 · 每天一次',copy:'按现价退出持仓，压力 −12，下一段不能再开仓。',speaker:'安子'}
-};
+export {PROPS} from './copy/items.js?v=da1d043bda91408042db7dae5be3319577d20085';

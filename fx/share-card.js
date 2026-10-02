@@ -1,4 +1,3 @@
-import {assetURL} from './assets.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
 const finite=(n,fallback=0)=>Number.isFinite(n)?n:fallback;
 const amount=n=>(n<0?'−':'')+'¥'+Math.abs(n).toLocaleString('zh-CN',{maximumFractionDigits:2});
 const signed=n=>(n>0?'+':'')+amount(n);
@@ -6,7 +5,7 @@ const records=s=>(s.history||[]).filter(t=>t.type!=='open'&&Number.isFinite(t.pn
 // Completed-trade net P/L, live mark-to-market P/L and debt are deliberately separate.
 export function buildShareSummary(state={},options={}) {
   const positions=Array.isArray(state.positions)?state.positions:state.position?[state.position]:[];
-  const floating=finite(options.unrealized,positions.reduce((sum,p)=>sum+finite(p.unrealized,finite(p.margin)*finite(p.leverage)*finite(p.direction)*(finite(state.price)/finite(p.entry,1)-1)),0));
+  const floating=finite(options.unrealized,positions.reduce((sum,p)=>sum+finite(p.unrealized,finite(p.notional,finite(p.margin)*finite(p.leverage))*finite(p.direction)*(finite(state.price)/finite(p.entry,1)-1)),0));
   const realized=records(state), day=Math.max(1,Math.floor(finite(state.day,1))), candidate=options.report===null?null:options.report||state.dayReport;
   const report=['day_end','resting','ending'].includes(state.phase)&&candidate?.day===day?candidate:null;
   const eq=finite(options.equity,Math.max(0,finite(state.cash)+finite(state.reserve)+positions.reduce((sum,p)=>sum+finite(p.margin),0)+floating));
@@ -17,50 +16,37 @@ export function buildShareSummary(state={},options={}) {
     realizedProfit:total,dayRealizedProfit:daily,unrealized:floating,
     tradingProfit:finite(options.tradingProfit,eq-100000-finite(state.externalFunding)+finite(state.expenses)-finite(state.developer?.profitOffset)),
     dayTradingProfit:report?finite(report.net):null,
-    feesPaid:totalFees, debt:Math.max(0,finite(state.family?.outstanding)),funding:finite(state.externalFunding),
+    feesPaid:totalFees, debt:Math.max(0,finite(state.family?.outstanding)+finite(state.loan?.outstanding)),livingCost:finite(report?.livingCost),funding:finite(state.externalFunding),
     tradeCount:realized.length,winRate:realized.length?Math.round(wins/realized.length*100):null,
     positionCount:positions.length,achievementCount:Math.max(0,Math.floor(finite(options.achievementCount))),
-    moodLabel:options.moodLabel||'今日心情',sanity:Math.round(finite(state.sanity,100)),edited:!!state.developer?.edited,
+    moodLabel:options.moodLabel||'今日心情',sanity:Math.round(finite(state.sanity,50)),edited:!!state.developer?.edited,
     gameUrl:String(options.gameUrl||globalThis.location?.href||''),
     equityTrail:(state.equityTrail||[]).filter(Number.isFinite).slice(-48),
     trailLabel:'交易本金趋势 · 已扣净借入，加回道具支出',
-    caption:report?(daily>0?'利润已落袋，手心还没停止冒汗。':daily<0?'账单记下来。明天的我，先看这一页。':'行情走了一天，我也可以先休息。'):
-      floating>0?'绿色还不是钱。平仓之前，笑容先收一半。':floating<0?'屏幕关掉了，持仓也不会停下来。':'先把风险看清楚，再决定要不要按下去。'};
+    caption:''};
 }
-function rounded(ctx,x,y,w,h,r=18){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
 function wrap(ctx,text,x,y,maxWidth,lineHeight,maxLines=4){let line='',count=0;for(const char of String(text)){if(ctx.measureText(line+char).width>maxWidth&&line){ctx.fillText(line,x,y);y+=lineHeight;if(++count>=maxLines)return y;line=char;}else line+=char;}if(line)ctx.fillText(line,x,y);return y+lineHeight;}
-function loadPortrait(url,timeout=4500){return new Promise(resolve=>{if(!globalThis.Image||!url)return resolve(null);const img=new Image();let done=false;const finish=value=>{if(done)return;done=true;clearTimeout(timer);resolve(value);};const timer=setTimeout(()=>finish(null),timeout);img.onload=()=>finish(img);img.onerror=()=>finish(null);img.src=url;});}
 const fonts={body:'system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif'};
 export async function createShareCard(state,options={}) {
-  const doc=options.document||globalThis.document;if(!doc)throw Error('战报图片需要浏览器画布');
-  const canvas=doc.createElement('canvas');canvas.width=1080;canvas.height=1400;const ctx=canvas.getContext('2d');if(!ctx)throw Error('当前浏览器无法生成战报图片');
-  const s=buildShareSummary(state,options), pink='#dd5b8e', dark='#292434', muted='#766b7e', green='#137c68', negative='#b63c61';
-  ctx.fillStyle='#faf6f8';ctx.fillRect(0,0,1080,1400);ctx.fillStyle=pink;ctx.fillRect(0,0,1080,14);
-  const font=(size,weight=500)=>{ctx.font=`${weight} ${size}px ${fonts.body}`;};
-  font(20,750);ctx.fillStyle=muted;ctx.fillText('DAY REPORT / FX KURUMI',64,77);
-  font(64,850);ctx.fillStyle=dark;ctx.fillText(s.title,64,158);
-  font(28,600);ctx.fillStyle=muted;ctx.fillText(`第 ${s.day} 天 · ${s.kind} · ${s.moodLabel}`,64,215);
-  const emotion=s.kind==='收盘战报'?state.dayReport?.mood||state.speech?.mood||'calm':state.speech?.mood||'calm', portraitKey=emotion==='despair'?'shocked':emotion;
-  const portrait=await loadPortrait(options.portraitUrl||assetURL(`expressions/kurumi-${portraitKey}.webp`));
-  ctx.fillStyle='#f2d8e5';rounded(ctx,778,62,238,238,28);
-  if(portrait){try{ctx.save();ctx.beginPath();ctx.roundRect(778,62,238,238,28);ctx.clip();const scale=Math.max(238/portrait.width,238/portrait.height),w=portrait.width*scale,h=portrait.height*scale;ctx.drawImage(portrait,778+(238-w)/2,62+(238-h)/2,w,h);ctx.restore();}catch{ctx.restore();}}
-  else{font(48,800);ctx.fillStyle=pink;ctx.fillText('FX',856,173);}
-  if(s.edited){ctx.fillStyle='#a51e4c';rounded(ctx,64,246,640,42,8);font(23,750);ctx.fillStyle='white';ctx.fillText('开发者测试数据 · 不代表正常游戏战绩',82,275);}
-  font(25,550);ctx.fillStyle=muted;ctx.fillText('当前账户权益',64,335);font(72,850);ctx.fillStyle=dark;ctx.fillText(amount(s.equity),64,421);
-  function panel(x,label,value){ctx.fillStyle='#fff';rounded(ctx,x,459,468,123);font(21,600);ctx.fillStyle=muted;ctx.fillText(label,x+24,497);font(42,780);ctx.fillStyle=value>=0?green:negative;ctx.fillText(signed(value),x+24,553);}
-  panel(64,s.dayTradingProfit===null?'当日平仓净收益':'当日交易净收益',s.dayTradingProfit??s.dayRealizedProfit);
-  panel(548,'累计交易净收益 · 含手续费',s.tradingProfit);
-  const metrics=[['累计平仓净收益',signed(s.realizedProfit)],['持仓浮动损益',signed(s.unrealized)],['累计手续费',amount(s.feesPaid)],['父亲存款待归还',amount(s.debt)],['已平仓 / 胜率',`${s.tradeCount} 笔 / ${s.winRate===null?'—':s.winRate+'%'}`],['当前持仓 / 成就',`${s.positionCount} 单 / ${s.achievementCount} 项`]];
-  metrics.forEach(([label,value],i)=>{const x=64+(i%3)*326,y=638+Math.floor(i/3)*107;font(20,550);ctx.fillStyle=muted;ctx.fillText(label,x,y);font(29,750);ctx.fillStyle=dark;ctx.fillText(value,x,y+44);});
-  ctx.fillStyle='#fff';rounded(ctx,64,847,952,220,18);font(20,550);ctx.fillStyle=muted;ctx.fillText(s.trailLabel,88,884);
-  const trail=s.equityTrail.length>1?s.equityTrail:[100000,s.equity-s.funding+finite(state.expenses)];
-  const min=Math.min(...trail),max=Math.max(...trail),range=Math.max(max-min,1000),x0=88,y0=1017,w=904,h=97;
-  ctx.strokeStyle='#ded7df';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x0+w,y0);ctx.stroke();
-  ctx.strokeStyle=trail.at(-1)>=trail[0]?green:negative;ctx.lineWidth=4;ctx.beginPath();trail.forEach((v,i)=>{const x=x0+i/(trail.length-1)*w,y=y0-(v-min)/range*h;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
-  font(34,720);ctx.fillStyle=dark;wrap(ctx,s.caption,64,1125,952,49,2);
-  font(20,500);ctx.fillStyle=muted;ctx.fillText('借入资金不算交易收益 · 浮盈不等于已落袋 · 模拟游戏',64,1251);
-  ctx.strokeStyle='#ddc7d6';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(64,1274);ctx.lineTo(1016,1274);ctx.stroke();
-  font(19,600);ctx.fillStyle=pink;wrap(ctx,s.gameUrl||'FX韭留美 · 你的下一次决定，先留一点余地。',64,1310,952,26,2);
-  const blob=await new Promise((resolve,reject)=>{try{canvas.toBlob(value=>value?resolve(value):reject(Error('战报图片生成失败')),'image/png');}catch(error){reject(Error('战报图片生成失败：请使用本地角色图片'));}});
-  const url=URL.createObjectURL(blob);return {blob,url,filename:`FX韭留美-第${s.day}天${s.edited?'-测试':''}-战报.png`,summary:s};
+ const doc=options.document||globalThis.document;if(!doc)throw Error('战报图片需要浏览器画布');const canvas=doc.createElement('canvas');canvas.width=1080;canvas.height=1320;const ctx=canvas.getContext('2d');if(!ctx)throw Error('当前浏览器无法生成战报图片');
+ const s=buildShareSummary(state,options),ink='#e4edf1',muted='#8b9ba8',green='#7fddbb',red='#fa91aa';
+ ctx.fillStyle='#111b23';ctx.fillRect(0,0,1080,1320);
+ const font=(size,weight=500)=>ctx.font=`${weight} ${size}px ${fonts.body}`;
+ const label=(text,x,y,size=20,color=muted)=>{font(size);ctx.fillStyle=color;ctx.fillText(text,x,y);};
+ const num=(text,x,y,size=32,color=ink)=>{font(size,750);ctx.fillStyle=color;ctx.fillText(text,x,y);};
+ const rule=y=>{ctx.strokeStyle='#33444f';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(48,y);ctx.lineTo(1032,y);ctx.stroke();};
+ num('FX韭留美',48,82,40);label('JPY / USD',808,80,26,green);label(`第 ${s.day} 天 · ${s.kind}${s.edited?' · 开发测试数据':''}`,48,126,21);rule(151);
+ label('账户权益 / EQUITY',48,200);num(amount(s.equity),48,274,70);label('日元保证金账户',800,201,18);
+ const metrics=[['当日平仓净收益',s.dayTradingProfit??s.dayRealizedProfit],['累计平仓净收益',s.realizedProfit],['未平仓浮动损益',s.unrealized]];
+ metrics.forEach(([key,val],i)=>{const x=48+i*334;label(key,x,335);num(signed(val),x,385,32,val>=0?green:red);});rule(420);
+ label('交易本金曲线',48,466,21);const trail=s.equityTrail.length>1?s.equityTrail:[100000,s.equity-s.funding+finite(state.expenses)];const lo=Math.min(...trail),range=Math.max(1000,Math.max(...trail)-lo);
+ for(let i=0;i<4;i++){ctx.strokeStyle='#263642';ctx.beginPath();ctx.moveTo(48,501+i*45);ctx.lineTo(1032,501+i*45);ctx.stroke();}
+ ctx.strokeStyle=trail.at(-1)>=trail[0]?green:red;ctx.lineWidth=4;ctx.beginPath();trail.forEach((v,i)=>{const x=48+i/(trail.length-1)*984,y=638-(v-lo)/range*135;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+ label('净借入已剔除，生活费与消费已加回',48,681,17);rule(709);
+ num('最近成交 / CLOSED ORDERS',48,752,23);const cols=[48,194,408,690,1032],labels=['订单','方向 / 杠杆','成交价格','手续费','净收益'];labels.forEach((v,i)=>{ctx.textAlign=i===4?'right':'left';label(v,cols[i],799,17);});ctx.textAlign='left';
+ const rows=records(state).slice(-5);if(!rows.length)label('暂无已平仓订单',48,856,21);
+ rows.forEach((t,i)=>{const y=846+i*43;label('#'+(t.positionId||i+1),48,y,18,ink);label((t.direction===1?'买入':'卖出')+' '+Number(finite(t.leverage).toFixed(1))+'×',194,y,18,ink);label(finite(t.entry).toFixed(6)+' → '+finite(t.exit).toFixed(6),408,y,17,ink);label(amount(finite(t.openFee)+finite(t.closeFee)),690,y,18,muted);ctx.textAlign='right';num(signed(t.pnl),1032,y,20,t.pnl>=0?green:red);ctx.textAlign='left';});rule(1068);
+ const footer=[['累计手续费',amount(s.feesPaid)],['今日生活费',amount(s.livingCost)],['未还借款',amount(s.debt)]];footer.forEach(([k,v],i)=>{const x=48+i*334;label(k,x,1111,18);num(v,x,1153,27);});
+ label(`已平仓 ${s.tradeCount} 笔 · 胜率 ${s.winRate===null?'—':s.winRate+'%'} · 持仓 ${s.positionCount} 单`,48,1201,19);rule(1227);label('模拟交易游戏',48,1271,18);font(17);ctx.fillStyle=muted;wrap(ctx,s.gameUrl,350,1271,682,24,2);
+ const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(Error('战报图片生成失败')),'image/png'));return{blob,url:URL.createObjectURL(blob),filename:`FX韭留美-第${s.day}天${s.edited?'-测试':''}-战报.png`,summary:s};
 }

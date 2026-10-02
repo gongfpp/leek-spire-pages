@@ -1,6 +1,6 @@
-import {ITEM_SCENES} from './item-events.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {ITEM_SCENES,STORY_DEFINITIONS,SCENE_LINES} from './copy/scenes.js?v=da1d043bda91408042db7dae5be3319577d20085';
 // Simulated market information is separate from user-approved character dialogue.
-import {approvedQuote,dialogueFacts} from './dialogue.js?v=1207f5275a4bb64847e79d8364044d9cc982a5c8';
+import {approvedQuote,dialogueFacts} from './dialogue.js?v=da1d043bda91408042db7dae5be3319577d20085';
 // Market directions refer to JPY valued in USD: positive = stronger yen, negative = weaker yen.
 // Historical market incidents inspire scenarios only; headlines, timing and moves are fictional.
 
@@ -116,22 +116,7 @@ export const BLACK_SWANS = [
     copy:'商品市场的异常成交引发跨市场减仓与美元需求。日元兑美元下跌；商品合约的价格规则不等于日元汇率规则。',delta:-0.015,speaker:'久留美'}
 ];
 
-const choice=(id,label,mood,stress=0,trust=0)=>({id,label,lines:[],mood,stress,trust});
-// Static metadata is safe for journals; runtime text always comes from getStory.
-export const STORIES={
-  threshold75:{id:'threshold75_notes',title:'休市后的消息',lines:[],choices:[choice('accept_notes','回应消息','warm',-3,1),choice('listen_again','先休息','focused',-5)]},
-  threshold50:{id:'threshold50_unread',title:'休市后的陪伴',lines:[],choices:[choice('join_lunch','回应消息','warm',-8,1),choice('need_space','先休息','lonely',-4)]},
-  fatherUnlock:{id:'father_unlock',title:'父亲的柜中存款',lines:[],choices:[choice('look_at_savings','查看存款','guilty',2),choice('leave_alone','关上柜门','exhausted',-3)]},
-  fatherFound:{id:'father_discovered',title:'父亲首次发现',lines:[],choices:[choice('admit','承认取钱','guilty',6,-2),choice('deny','暂不回应','irritated',10,-3)]},
-  repayPartial:{id:'father_repay_partial',title:'部分归还完成',lines:[],choices:[choice('record_payment','记下余债','determined',-4,1),choice('write_note','结束对话','guilty',-4,1)]},
-  repayFull:{id:'father_repay_full',title:'全部归还完成',lines:[],choices:[choice('close_envelope','收好还款记录','relieved',-6,2),choice('stay_for_dinner','结束对话','warm',-6,2)]},
-  classroom:{id:'class_project',title:'整理笔记',lines:[],choices:[choice('do_part','整理笔记','focused',-4,1),choice('request_extension','先休息','embarrassed',2)]},
-  roommate:{id:'roommate_laundry',title:'短暂休息',lines:[],choices:[choice('help_laundry','收拾房间','warm',-5,1),choice('put_phone_aside','放下手机','relieved',-4)]},
-  friendWalk:{id:'friend_boundary',title:'朋友陪伴',lines:[],choices:[choice('cat_story','安静陪伴','warm',-3,1),choice('quiet_walk','一起散步','relieved',-4,1)]},
-  friendStudy:{id:'friend_study',title:'一起休息',lines:[],choices:[choice('review_notes','整理笔记','focused',-4,1),choice('tea_break','喝杯热饮','warm',-3,1)]},
-  lonelyEvening:{id:'lonely_evening',title:'夜间休息',lines:[],choices:[choice('call_friend','联系朋友','warm',-6,1),choice('open_window','打开窗户','lonely',-4)]},
-  recovery:{id:'recovery_walk',title:'一起散步',lines:[],choices:[choice('walk_home','一起散步','hopeful',-5,1),choice('notice_flowers','先休息','warm',-4)]}
-};
+export const STORIES=STORY_DEFINITIONS;
 export function getStory(s,key){
   const base=STORIES[key];if(!base)return null;
   const f=dialogueFacts(s),family=s.family||{};
@@ -143,16 +128,14 @@ export function getStory(s,key){
   const state=['fatherFound','fatherUnlock'].includes(key)?{...s,storyContext:key}:s;
   const lines=ids=>ids.map(id=>approvedQuote(id,state)).filter(Boolean).map(q=>[q.from,q.text]);
   const event={...base,key,lines:[],choices:base.choices.map(c=>({...c,lines:[]}))};
-  if(key==='threshold75')event.lines=lines(['Q07']);
-  if(key==='threshold50')event.lines=lines(['Q14']);
-  if(key==='threshold75'){event.original=true;event.lines.push(['萌智子','休市了。给你留一本复盘本，需要止损提醒的时候就发消息。'],['久留美','你别把我写成反面教材啊。']);event.choices[0].lines=[['久留美','本子我收下。提醒也先留着。'],['萌智子','好，下次提醒你的是约定，不是行情预言。']];event.choices[1].lines=[['久留美','我先休息。本子明天再看。'],['萌智子','可以，提醒不会因为你睡一觉就过期。']];}
-  if(key==='threshold50'){event.original=true;event.lines.push(['安子','先休息。停手卡和飞行模式都给你留着，想暂停时用得上。'],['久留美','你这张卡上怎么没有一个买入按钮。']);event.choices[0].lines=[['久留美','我收下了。今晚先听你说。'],['安子','很好，我也没打算拿聊天时间给你报点位。']];event.choices[1].lines=[['久留美','我想安静一会儿，卡留下。'],['安子','好。想停下来的时候，不用先向我解释。']];}
   if(ITEM_SCENES[key]){const scene=ITEM_SCENES[key];event.original=true;event.lines=scene.lines.map(line=>[...line]);for(const c of event.choices)c.lines=(scene.choices[c.id]||[]).map(line=>[...line]);}
   if(key==='fatherUnlock'){
     event.lines=lines(['V2-E03-01']);
     event.choices.find(c=>c.id==='look_at_savings').lines=lines(['V2-E03-02']);
-    event.choices.find(c=>c.id==='leave_alone').lines=lines(['V2-E03-04']);
+
   }
+  if(key==='fatherDiscover'){event.original=true;event.lines=SCENE_LINES.fatherDiscover.map(line=>[...line]);}
+  if(key==='quietNight'){event.original=true;event.lines=SCENE_LINES.quietNight.map(line=>[...line]);}
   if(key==='fatherFound')event.lines=lines(['V2-E04-01','V2-E04-03']);
   if(key==='repayPartial')event.lines=lines(['V2-E05-05','V2-E05-01','V2-E05-03']);
   if(key==='repayFull')event.lines=lines(['V2-E06-01']);
