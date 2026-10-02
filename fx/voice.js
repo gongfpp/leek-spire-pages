@@ -1,4 +1,4 @@
-import {assetURL} from './assets.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {assetURL} from './assets.js?v=42e60038912f95eb620b043e667658eb078c4608';
 
 // Actual short recordings from the official public main PV, never generated speech.
 // Captions stay with their recording, including the PV's amounts, not game balances.

@@ -1,5 +1,5 @@
-import {ITEM_EVENTS,itemUnlocked} from './item-events.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
-import {STORIES,getStory} from './story-content.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {ITEM_EVENTS,itemUnlocked} from './item-events.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {STORIES,getStory} from './story-content.js?v=42e60038912f95eb620b043e667658eb078c4608';
 export const DEBUFFS={guilt:{name:'父亲的存款',copy:'未还清时心理压力增加 8',stress:8},familyWatch:{name:'父亲开始查账',copy:'心理压力增加 6',stress:6}};
 export function ensureStory(s){
  s.story ||= {seen:[],queue:[],log:[],flags:{}};s.story.seen ||= [];s.story.queue ||= [];s.story.log ||= [];s.story.flags ||= {};s.story.presentedDay ||= 0;

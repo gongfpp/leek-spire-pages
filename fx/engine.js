@@ -1,9 +1,9 @@
-import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
-import {NEWS_CHAINS,PROPS} from './content.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
-import {BLACK_SWANS} from './story-content.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
-import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
-export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {NEWS_CHAINS,PROPS} from './content.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {BLACK_SWANS} from './story-content.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=42e60038912f95eb620b043e667658eb078c4608';
+export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=42e60038912f95eb620b043e667658eb078c4608';
 export const VERSION = 5;
 export const FEE_RATE = .00005;
 export const STOP_OUT_LEVEL = .5;
@@ -137,13 +137,18 @@ function marginWithinBudget(budget,leverage){
   if(margin+fee(margin,leverage)>budget+1e-8)margin=floorMoney(margin-.01);
   return margin;
 }
-function accountLiquidationPrice(s,extra){
+export function accountLiquidationEstimate(s,extra){
   const positions=[...positionsOf(s),...(extra?[extra]:[])],used=positions.reduce((sum,p)=>sum+p.margin,0);
   const slope=positions.reduce((sum,p)=>sum+(p.notional??p.margin*p.leverage)*p.direction/p.entry,0);
-  if(Math.abs(slope)<1e-8)return null;
+  const required=positions.reduce((sum,p)=>sum+(p.initialMargin??p.margin),0),afterFee=accountMetrics(s).tradingEquity-(extra?fee(extra.margin,extra.leverage):0);
+  const lossThreshold=Math.max(0,s.cash-(extra?extra.margin+fee(extra.margin,extra.leverage):0)+used-STOP_OUT_LEVEL*required);
+  const remainingLoss=Math.max(0,afterFee-STOP_OUT_LEVEL*required);
+  const result={price:null,movePercent:null,lossThreshold,remainingLoss,reason:!positions.length?'empty':Math.abs(slope)<1e-8?'hedged':'unreachable'};
+  if(!positions.length||Math.abs(slope)<1e-8)return result;
   const constant=s.cash-(extra?extra.margin+fee(extra.margin,extra.leverage):0)+used-positions.reduce((sum,p)=>sum+(p.notional??p.margin*p.leverage)*p.direction,0);
   const price=(STOP_OUT_LEVEL*positions.reduce((sum,p)=>sum+(p.initialMargin??p.margin),0)-constant)/slope;
-  return price>0&&Number.isFinite(price)?price:null;
+  if(price>0&&Number.isFinite(price))return {...result,price,movePercent:(price/s.price-1)*100,reason:null};
+  return result;
 }
 export function pipStopPrice(entry,direction,pips){
   if(pips===null)return null;
@@ -184,7 +189,7 @@ export function orderPreview(s,action={}){
   else if(margin+openFee>a.availableMargin+1e-7)error='可用保证金不足（需要预留开仓手续费）';
   else if(margin>maxMargin+1e-7)error='总持仓超过当前心理承受力的风险限额';
   result.error=error;result.valid=!error;
-  if(result.valid)result.liquidationPrice=accountLiquidationPrice(s,{margin,leverage,direction:action.type==='long'?1:-1,entry:s.price});
+  if(result.valid){result.liquidation=accountLiquidationEstimate(s,{margin,leverage,direction:action.type==='long'?1:-1,entry:s.price});result.liquidationPrice=result.liquidation.price;}
   return result;
 }
 export function tradingProfit(s){return equity(s)-START-(s.externalFunding||0)+(s.expenses||0)-(s.developer?.profitOffset||0);}

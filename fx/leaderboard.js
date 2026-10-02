@@ -1,5 +1,5 @@
-import {runPerformance} from './performance.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
-import {BEATS_PER_DAY,CANDLES_PER_BEAT} from './engine.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {runPerformance} from './performance.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {BEATS_PER_DAY,CANDLES_PER_BEAT} from './engine.js?v=42e60038912f95eb620b043e667658eb078c4608';
 // Optional public score publishing is independent of anonymous usage statistics.
 // Only publish() writes; reading the board never creates a run or an identifier.
 const BACKEND = 'https://leek-spire.gongfpp.chatgpt.site';
