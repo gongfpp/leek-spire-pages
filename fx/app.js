@@ -1,25 +1,25 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {buildFXReceipt} from './statement.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {createShareCard} from './share-card.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {createGameStorage} from './storage.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {PROP_LINES} from './copy/items.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {UI_COPY} from './copy/ui.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {TRANSITION_COPY} from './copy/transitions.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {setImage} from './assets.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {GameAudio} from '../audio.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {GameMotion} from '../feedback.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {showSettlement} from '../settlement.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {MOODS, PROPS} from './content.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {mountVoiceLibrary} from './voice-library.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=126727502e134420149df18f2b464b445752d940';
+import {buildFXReceipt} from './statement.js?v=126727502e134420149df18f2b464b445752d940';
+import {createShareCard} from './share-card.js?v=126727502e134420149df18f2b464b445752d940';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=126727502e134420149df18f2b464b445752d940';
+import {createGameStorage} from './storage.js?v=126727502e134420149df18f2b464b445752d940';
+import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=126727502e134420149df18f2b464b445752d940';
+import {PROP_LINES} from './copy/items.js?v=126727502e134420149df18f2b464b445752d940';
+import {UI_COPY} from './copy/ui.js?v=126727502e134420149df18f2b464b445752d940';
+import {TRANSITION_COPY} from './copy/transitions.js?v=126727502e134420149df18f2b464b445752d940';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=126727502e134420149df18f2b464b445752d940';
+import {setImage} from './assets.js?v=126727502e134420149df18f2b464b445752d940';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=126727502e134420149df18f2b464b445752d940';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=126727502e134420149df18f2b464b445752d940';
+import {GameAudio} from '../audio.js?v=126727502e134420149df18f2b464b445752d940';
+import {GameMotion} from '../feedback.js?v=126727502e134420149df18f2b464b445752d940';
+import {showSettlement} from '../settlement.js?v=126727502e134420149df18f2b464b445752d940';
+import {MOODS, PROPS} from './content.js?v=126727502e134420149df18f2b464b445752d940';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=126727502e134420149df18f2b464b445752d940';
+import {mountVoiceLibrary} from './voice-library.js?v=126727502e134420149df18f2b464b445752d940';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=126727502e134420149df18f2b464b445752d940';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=126727502e134420149df18f2b464b445752d940';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=126727502e134420149df18f2b464b445752d940';
 
 const $ = id => document.getElementById(id);
 const storage=createGameStorage();
@@ -275,7 +275,7 @@ function showDayDialog(){
   setText('day-total',yen(r.closing));setText('day-net',`今日交易 ${signed(r.net)} · 生活费 ${yen(r.livingCost||0)} · 交易累计 ${signed(tradingProfit(state))}`);
   setText('next-day','休市');$('day-dialog').showModal();
 }
-function newChapter(){storage.removeItem(saveKey);state=fresh();telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;stake=.5;leverage=20;stop=.5;skip=false;playing=false;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('capital-flow').textContent='';$('last-trade').textContent='';render();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
+function newChapter(){storage.removeItem(saveKey);state=fresh();telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;stake=.5;leverage=20;stop=.5;skip=false;playing=false;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('capital-flow').textContent='';$('last-trade').textContent='';render();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
 function showProp(id,confirmed=false){
   if(actionBusy||!['decision','day_end','resting'].includes(state.phase))return;
   if(id==='father'&&!confirmed){$('father-take-dialog').showModal();return;}
