@@ -1,3 +1,5 @@
+import {runPerformance} from './performance.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {BEATS_PER_DAY,CANDLES_PER_BEAT} from './engine.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
 // Optional public score publishing is independent of anonymous usage statistics.
 // Only publish() writes; reading the board never creates a run or an identifier.
 const BACKEND = 'https://leek-spire.gongfpp.chatgpt.site';
@@ -13,22 +15,36 @@ export function normalizeLeaderboardAlias(value='') {
   return alias;
 }
 export function completedLeaderboardScore(state) {
-  const report=state?.dayReport;
+  const report=state?.dayReport,gameMode=state?.mode??'story';
   if(state?.developer?.edited) throw new Error('开发者测试局不能提交排行榜');
-  if(!report||!Number.isInteger(report.day)||report.day<1||report.day>state.day||!Array.isArray(report.trades)||!report.trades.length||!Array.isArray(state.history))throw new Error('完成至少一笔交易并收盘后，可以提交成绩');
-  const daily=report.trades,all=state.history.filter(trade=>trade.day<=report.day);
-  if(!all.length||all.length>20000||[...daily,...all].some(trade=>!Number.isFinite(trade.pnl)))throw new Error('本局成绩数据不完整');
-  // Net closed-trade P/L already includes both sides' fees. It excludes family
-  // funding, loans, living costs, shopping, and any still-open positions.
+  if(!['story','endless'].includes(gameMode))throw new Error('游戏模式不正确');
+  if(!Array.isArray(state?.history))throw new Error('本局成绩数据不完整');
+  if(gameMode==='story'&&(!report||!Number.isInteger(report.day)||report.day<1||report.day>state.day||!Array.isArray(report.trades)||!report.trades.length))throw new Error('完成至少一笔交易并收盘后，可以提交成绩');
+  const day=gameMode==='story'?report.day:state.day;
+  const daily=gameMode==='story'?report.trades:state.history.filter(t=>t.day===day),all=state.history.filter(trade=>trade.day<=day);
+  if([...daily,...all].some(trade=>!Number.isFinite(trade.pnl)))throw new Error('本局成绩数据不完整');
   const dayProfit=cents(daily.reduce((sum,trade)=>sum+trade.pnl,0));
-  const totalProfit=cents(all.reduce((sum,trade)=>sum+trade.pnl,0));
-  if([dayProfit,totalProfit].some(value=>Math.abs(value)>1e10))throw new Error('本局成绩超过排行榜范围');
-  return {day:report.day,dayProfit,totalProfit,closedTrades:all.length};
+  // Preserve historical calls from pre-mode saves without inventing extrema.
+  if(!state.mode&&!state.performance){
+    if(!all.length||all.length>20000)throw new Error('本局成绩数据不完整');
+    const totalProfit=cents(all.reduce((sum,trade)=>sum+trade.pnl,0));
+    if(Math.abs(dayProfit)>1e10||Math.abs(totalProfit)>1e10)throw new Error('本局成绩超过排行榜范围');
+    return {day,dayProfit,totalProfit,closedTrades:all.length};
+  }
+  // A saved report is a snapshot; current-day beat/bonus rounds must never
+  // shorten yesterday's elapsed time or alter its daily return rate.
+  const reportBeat=gameMode==='story'?(report.beat??((report.completedDays??0)>=day?BEATS_PER_DAY:Math.max(0,Math.min(BEATS_PER_DAY,((report.completedCandles??day*16)-(day-1)*16)/CANDLES_PER_BEAT)))):0;
+  const performance=gameMode==='story'?runPerformance({...state,history:all,performance:report.performance,day,beat:reportBeat,bonusBeats:report.bonusBeats??0,phase:'day_end',pending:null,completedDays:report.completedDays,completedCandles:report.completedCandles}):runPerformance(state);
+  const closedTrades=performance.closedTrades??all.length;
+  if(!closedTrades)throw new Error(gameMode==='endless'?'完成至少一笔平仓交易后，可以提交成绩':'本局成绩数据不完整');
+  if(!Number.isFinite(performance.totalProfit)||Math.abs(performance.totalProfit)>1e10||Math.abs(dayProfit)>1e10)throw new Error('本局成绩超过排行榜范围');
+  const totalProfit=cents(performance.totalProfit),initialEquity=performance.initialEquity??state.startEquity??100000,returnRate=totalProfit/initialEquity;
+  return {day,dayProfit,totalProfit,closedTrades,gameMode,initialEquity,daysSurvived:performance.daysSurvived,elapsedDays:performance.elapsedDays,returnRate,dailyReturnRate:returnRate/performance.elapsedDays,maxLoss:cents(performance.maxLoss),maxProfit:cents(performance.maxProfit),maxDrawdown:performance.maxDrawdown};
 }
 export function buildLeaderboardSubmission(state,{campaign=state?.runId,token,alias=''}={}) {
   if(!ID.test(campaign||''))throw new Error('本局缺少游戏标识，请重新打开游戏后再试');
   if(!/^[a-f0-9]{64}$/.test(token||''))throw new Error('本局缺少提交凭证');
-  return {campaign,token,...completedLeaderboardScore(state),alias:normalizeLeaderboardAlias(alias),settled:true,developerEdited:false};
+  return {campaign,token,...completedLeaderboardScore(state),alias:normalizeLeaderboardAlias(alias),settled:(state?.mode??'story')==='story',developerEdited:false};
 }
 export class LeaderboardError extends Error {
   constructor(message,code='unavailable',status=0){super(message);this.name='LeaderboardError';this.code=code;this.status=status;}
@@ -56,10 +72,11 @@ export class FXLeaderboard {
     }catch(error){if(error instanceof LeaderboardError)throw error;throw new LeaderboardError(error?.name==='AbortError'?'排行榜连接超时，请重试':'排行榜连接失败，请检查网络后重试',error?.name==='AbortError'?'timeout':'network');}
     finally{clearTimeout(timer);}
   }
-  async read({mode='daily',limit=20}={}) {
-    if(!['daily','total'].includes(mode)||!Number.isInteger(limit)||limit<1||limit>50)throw new LeaderboardError('排行榜参数不正确','input');
-    this.status({state:'loading',mode});
-    try{const result=await this.request(`?mode=${mode}&limit=${limit}`);if(!Array.isArray(result?.rows)||result.verification!=='client-submitted')throw new LeaderboardError('排行榜响应不完整，请稍后重试','response');this.status({state:result.rows.length?'ready':'empty',mode});return result;}
+  async read({mode='daily',gameMode,sort,limit=20}={}) {
+    if(!['daily','total'].includes(mode)||(gameMode!==undefined&&!['story','endless'].includes(gameMode))||(sort!==undefined&&!['survival','returnRate','dailyReturnRate','totalProfit','maxProfit'].includes(sort))||!Number.isInteger(limit)||limit<1||limit>50)throw new LeaderboardError('排行榜参数不正确','input');
+    this.status({state:'loading',mode,gameMode});
+    const query=new URLSearchParams({mode,limit:String(limit)});if(gameMode!==undefined)query.set('gameMode',gameMode);if(sort!==undefined)query.set('sort',sort);
+    try{const result=await this.request(`?${query}`);if(!Array.isArray(result?.rows)||result.verification!=='client-submitted'||(gameMode!==undefined&&result.gameMode!==gameMode))throw new LeaderboardError('排行榜响应不完整，请稍后重试','response');this.status({state:result.rows.length?'ready':'empty',mode,gameMode});return result;}
     catch(error){this.status({state:'error',code:error.code,message:error.message});throw error;}
   }
   tokenFor(campaign) {
@@ -80,7 +97,7 @@ export class FXLeaderboard {
     this.pending=true;this.status({state:'publishing'});
     try{
       const token=this.tokenFor(campaign),submission=buildLeaderboardSubmission(state,{campaign,token,alias});
-      await this.request('/run',{method:'POST',data:{campaign,session:this.sessionFor(),token}});
+      await this.request('/run',{method:'POST',data:{campaign,session:this.sessionFor(),token,gameMode:state?.mode??'story'}});
       const result=await this.request('',{method:'POST',data:submission});this.status({state:'published',duplicate:result.duplicate});return result;
     }catch(error){this.status({state:'error',code:error.code||'input',message:error.message});throw error;}
     finally{this.pending=false;}

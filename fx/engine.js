@@ -1,9 +1,9 @@
-import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=126727502e134420149df18f2b464b445752d940';
-import {NEWS_CHAINS,PROPS} from './content.js?v=126727502e134420149df18f2b464b445752d940';
-import {BLACK_SWANS} from './story-content.js?v=126727502e134420149df18f2b464b445752d940';
-import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=126727502e134420149df18f2b464b445752d940';
-export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=126727502e134420149df18f2b464b445752d940';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=126727502e134420149df18f2b464b445752d940';
+import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {NEWS_CHAINS,PROPS} from './content.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {BLACK_SWANS} from './story-content.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
 export const VERSION = 5;
 export const FEE_RATE = .00005;
 export const STOP_OUT_LEVEL = .5;
@@ -14,7 +14,7 @@ export const START_PRICE = 1 / 150;
 export const START = 100000;
 export const CANDLES_PER_BEAT = 4;
 export const BEATS_PER_DAY = 4;
-export function beatsPerDay(s){return BEATS_PER_DAY+(s.bonusBeats||0);}
+export function beatsPerDay(s){return s.mode==='endless'?BEATS_PER_DAY:BEATS_PER_DAY+(s.bonusBeats||0);}
 export {itemDiscovered,discoverItems};
 export const TICKS_PER_CANDLE = 6;
 export const MIN_EQUITY = 1000;
@@ -89,10 +89,11 @@ function historyCandles(seed) {
   for (const c of candles) for (const key of ['open','close','high','low']) c[key] *= ratio;
   return candles;
 }
-export function createGame(seed = Date.now()) {
+export function createGame(seed = Date.now(), {mode = 'story'} = {}) {
+  if(!['story','endless'].includes(mode))throw Error('未知游戏模式');
   seed = seed >>> 0;
-  const state = {version: VERSION, seed, day: 1, beat: 0, phase: 'decision', price: START_PRICE,
-    cash: START-LIVING_DAILY, reserve: LIVING_DAILY, positions: [], position: null, nextOrderId: 1, feesPaid: 0, feeLedger: [], sanity: 50, mentalBoost:0, bonusBeats:0, dayOpening: START, candles: historyCandles(seed),
+  const state = {version: VERSION, mode, startEquity:START, completedCandles:0, completedDays:0, performance:{totalProfit:0,closedTrades:0,maxLoss:0,maxProfit:0,peakEquity:START,maxDrawdown:0}, seed, day: 1, beat: 0, phase: 'decision', price: START_PRICE,
+    cash: mode==='endless'?START:START-LIVING_DAILY, reserve: mode==='endless'?0:LIVING_DAILY, positions: [], position: null, nextOrderId: 1, feesPaid: 0, feeLedger: [], sanity: 50, mentalBoost:0, bonusBeats:0, dayOpening: START, candles: historyCandles(seed),
     script: null, pending: null, history: [], recent: [], chat: {group:[],friend:[]}, promise: null,
     relationship: 0, publicStance: null, promiseNoted:false, dinner:false, skills:{mochiko:false,yasuko:false},
     fatherUsed:false,externalFunding:0,dayOpeningFunding:0,stress:0,heat:0,peakPersonal:START,equityTrail:[START],nextStop:null,
@@ -144,6 +145,22 @@ function accountLiquidationPrice(s,extra){
   const price=(STOP_OUT_LEVEL*positions.reduce((sum,p)=>sum+(p.initialMargin??p.margin),0)-constant)/slope;
   return price>0&&Number.isFinite(price)?price:null;
 }
+export function pipStopPrice(entry,direction,pips){
+  if(pips===null)return null;
+  const usdJpy=1/entry+direction*pips*.01;
+  return usdJpy>0?1/usdJpy:null;
+}
+function orderStop(s,action){
+  if(Object.hasOwn(action,'stopPips')){
+    const price=pipStopPrice(s.price,action.type==='short'?-1:1,action.stopPips);
+    return{stop:1,stopPips:action.stopPips,stopPrice:price};
+  }
+  const stop=s.nextStop?Math.min(action.stop,s.nextStop):action.stop;
+  return{stop,stopPrice:stop<1&&action.leverage?s.price*(1-(action.type==='short'?-1:1)*stop/action.leverage):null};
+}
+export function positionStopLoss(p){
+  return Object.hasOwn(p,'stopPips')?(Number.isFinite(p.stopPrice)?Math.max(0,-p.notional*p.direction*(p.stopPrice/p.entry-1)):null):p.stop<1?p.margin*p.stop:null;
+}
 export function orderPreview(s,action={}){
   const a=accountMetrics(s),limits=restrictions(s),leverage=action.leverage;
   const factor=Number.isFinite(leverage)?leverage*FEE_RATE:0;
@@ -152,17 +169,17 @@ export function orderPreview(s,action={}){
   const maxMargin=floorMoney(Math.min(marginWithinBudget(a.availableMargin,leverage||0),Math.max(0,marginLimit),Math.max(0,notionalLimit)));
   const amountMode=Object.hasOwn(action,'amount');
   const margin=amountMode?money(action.amount):marginWithinBudget(a.availableMargin*(action.stake||0),leverage||0);
-  const openFee=fee(margin,leverage||0),closeFee=openFee,stop=s.nextStop?Math.min(action.stop,s.nextStop):action.stop;
+  const openFee=fee(margin,leverage||0),closeFee=openFee,stopConfig=orderStop(s,action);
   const result={valid:false,error:null,margin,notional:margin*(leverage||0),openFee,closeFee,totalDebit:margin+openFee,maxMargin,
-    stopPrice:stop<1&&leverage?s.price*(1-(action.type==='short'?-1:1)*stop/leverage):null,
+    ...stopConfig,stopLossAmount:stopConfig.stopPrice?Math.max(0,-margin*leverage*(action.type==='short'?-1:1)*(stopConfig.stopPrice/s.price-1)):null,
     liquidationPrice:null,liquidationBasis:'account',riskPercent:a.tradingEquity>0?(a.usedMargin+margin)/Math.max(1,a.tradingEquity-openFee)*100:0,
     availableMargin:a.availableMargin,feeRate:FEE_RATE,stopOutLevel:STOP_OUT_LEVEL};
   let error=null;
   if(s.phase!=='decision')error='请等待下一个决策点';
-  else if(!['long','short'].includes(action.type)||![5,20,50,100].includes(leverage)||![.25,.5,1].includes(action.stop)||amountMode&&(!Number.isFinite(action.amount)||action.amount<=0)||!amountMode&&(!Number.isFinite(action.stake)||action.stake<.01||action.stake>1))error='订单参数无效';
+  else if(!['long','short'].includes(action.type)||![5,10,20,25,50,100].includes(leverage)||(Object.hasOwn(action,'stopPips')?![10,30,50,null].includes(action.stopPips):![.25,.5,1].includes(action.stop))||amountMode&&(!Number.isFinite(action.amount)||action.amount<=0)||!amountMode&&(!Number.isFinite(action.stake)||action.stake<.01||action.stake>1))error='订单参数无效';
   else if(limits.noEntry)error='承受力过低，先休息';
   else if(leverage>limits.leverage)error='心理承受力不足，无法使用这个杠杆';
-  else if(action.stop>limits.stop)error='心理承受力不足，需设置更紧的止损';
+  else if(Object.hasOwn(action,'stopPips')?action.stopPips===null&&!limits.noStop:action.stop>limits.stop)error='心理承受力不足，需设置止损';
   else if(margin<100)error='保证金至少需要 ¥100';
   else if(margin+openFee>a.availableMargin+1e-7)error='可用保证金不足（需要预留开仓手续费）';
   else if(margin>maxMargin+1e-7)error='总持仓超过当前心理承受力的风险限额';
@@ -185,7 +202,7 @@ export function mentalState(s, sample=false){
   s.sanity=Math.max(0,Math.min(100,Math.round(50+earned+(s.mentalBoost||0)+(s.restRecovery||0)-totalDrawdown*65-recentDrawdown*20-exposure*5-(s.stress||0)-modifiers.stress+modifiers.mental)));
   if((s.restRecovery||0)>0&&equity(s)>=5000)s.sanity=Math.max(6,s.sanity);
   if(s.developer?.edited&&Number.isFinite(s.developer.sanityOverride))s.sanity=Math.max(0,Math.min(100,s.developer.sanityOverride));
-  const emotion=mood(s);discoverItems(s);checkStories(s,equity(s),emotion);updateSpeech(s,emotion);
+  const emotion=mood(s);discoverItems(s);checkStories(s,equity(s),emotion);samplePerformance(s);updateSpeech(s,emotion);
   return {value:s.sanity,totalDrawdown,recentDrawdown,exposure};
 }
 function experience(s, entry) {
@@ -218,6 +235,22 @@ function closePosition(s, fraction, reason, positionId){
   experience(s,{type,impact,risk:p.risk,pnl,positionId:p.id,day:s.day,beat:s.beat});
   return s.lastTrade;
 }
+function ensurePerformance(s){
+  if(s.performance)return s.performance;
+  const trades=(s.history||[]).filter(t=>t.type!=='open'&&Number.isFinite(t.pnl));
+  let profit=0,peak=START,drawdown=0;
+  for(const t of trades){profit+=t.pnl;peak=Math.max(peak,START+profit);drawdown=Math.max(drawdown,1-Math.max(0,START+profit)/peak);}
+  return s.performance={totalProfit:profit,closedTrades:trades.length,maxLoss:Math.min(0,...trades.map(t=>t.pnl)),maxProfit:Math.max(0,...trades.map(t=>t.pnl)),peakEquity:peak,maxDrawdown:drawdown};
+}
+function samplePerformance(s){
+  const stats=ensurePerformance(s),netEquity=Math.max(0,START+tradingProfit(s));
+  stats.peakEquity=Math.max(START,stats.peakEquity,netEquity);
+  stats.maxDrawdown=Math.max(stats.maxDrawdown,1-netEquity/stats.peakEquity);
+}
+function trimEndlessLedgers(s){
+  if(s.mode!=='endless')return;
+  for(const key of ['candles','history','feeLedger','protectionLedger','collateralLedger','expenseLedger'])if(s[key]?.length>256)s[key]=s[key].slice(-256);
+}
 function protectBalance(s,trades){
   // Cross-margin losses may exceed one order's margin, but cannot consume reserve.
   // A gap can exhaust the trading account; debt relief is explicit in its ledger.
@@ -226,6 +259,9 @@ function protectBalance(s,trades){
     const trade=trades.at(-1);if(trade){trade.balanceProtection=relief;trade.pnl+=relief;}
   }
   if(Math.abs(s.cash)<1e-8)s.cash=0;
+  const stats=ensurePerformance(s);
+  for(const t of trades)if(!t.performanceRecorded){stats.totalProfit+=t.pnl;stats.closedTrades++;stats.maxLoss=Math.min(stats.maxLoss,t.pnl);stats.maxProfit=Math.max(stats.maxProfit,t.pnl);t.performanceRecorded=true;}
+  samplePerformance(s);trimEndlessLedgers(s);
 }
 function enforceMargin(s){
   const exits=[];
@@ -266,6 +302,7 @@ export function useProp(s,id){
  ensureStory(s);ensureOrders(s);
  if(!['decision','day_end','resting','bankrupt'].includes(s.phase)||s.phase!=='decision'&&id!=='father')throw Error('请等行情暂停');
  if(!PROPS[id])throw Error('没有这个物品');
+ if(s.mode==='endless'&&['energy','noodles','father'].includes(id))throw Error('这个物品仅在剧情模式使用');
  if(!itemUnlocked(s,id))throw Error('这个物品还没获得');
  if(id==='father'){
   if(s.fatherUsed)throw Error('这笔存款已经取过了');
@@ -301,7 +338,7 @@ export function repayNetwork(s,amount){
 }
 export function nearStopOrders(s){
  const a=accountMetrics(s);return positionsOf(s).map(p=>{
-  const loss=Math.max(0,-positionUnrealized(s,p)),threshold=p.stop<1?p.margin*p.stop:null;
+  const loss=Math.max(0,-positionUnrealized(s,p)),threshold=positionStopLoss(p);
   const progress=threshold?loss/threshold:a.marginLevel?STOP_OUT_LEVEL/a.marginLevel:0;
   return{positionId:p.id,loss,threshold,progress,canTopUp:a.availableMargin>=100,maxTopUp:floorMoney(a.availableMargin),kind:threshold?'stop':'liquidation'};
  }).filter(p=>p.progress>=.65);
@@ -374,7 +411,7 @@ export function takeAction(s,action){
   if(action.type==='long'||action.type==='short'){
     const {margin,openFee}=preview;s.cash-=margin+openFee;if(Math.abs(s.cash)<1e-8)s.cash=0;s.feesPaid+=openFee;s.feeLedger.push({day:s.day,beat:s.beat,positionId:'order-'+s.nextOrderId,side:'open',amount:openFee});
     const p={id:'order-'+s.nextOrderId++,direction:action.type==='long'?1:-1,entry:s.price,margin,initialMargin:margin,notional:margin*action.leverage,leverage:action.leverage,
-      stop:s.nextStop?Math.min(action.stop,s.nextStop):action.stop,risk:margin/Math.max(1,accountMetrics(s).tradingEquity+margin)*action.leverage,
+      ...orderStop(s,action),risk:margin/Math.max(1,accountMetrics(s).tradingEquity+margin)*action.leverage,
       openFee,openFeeRemaining:openFee,maxUnrealized:0,nearMiss:false,day:s.day,beat:s.beat};
     s.positions.push(p);syncPosition(s);s.nextStop=null;
     s.lastTrade={type:'open',positionId:p.id,direction:p.direction,margin,leverage:p.leverage,entry:p.entry,openFee,fee:openFee,day:s.day,beat:s.beat};
@@ -383,7 +420,7 @@ export function takeAction(s,action){
     s.heat=Math.min(5,s.heat+(action.leverage>=50?2:1));
   }else if(action.type==='half'||action.type==='close'){
     trades=closeOrders(s,action.type==='half'?.5:1,action.type,action.positionId);trade=trades[0];
-  }else if(action.type==='wait'){s.stress=Math.max(0,s.stress-3);s.heat=Math.max(0,s.heat-1);}
+  }else if(action.type==='wait'){s.stress=Math.max(0,s.stress-3);s.heat=Math.max(0,s.heat-1);if(s.mode==='endless')s.restRecovery=Math.min(32,(s.restRecovery||0)+1);}
   s.pending={beat:s.beat,candle:0,tick:0,action:action.type,before,flashShown:false,flatAtStart:!s.position,startPrice:s.price};
   s.phase='playing';mentalState(s);
   return {trade,trades,before,after:equity(s),action:action.type};
@@ -401,22 +438,36 @@ function appendChatAfterBeat(s){
   }
   updateSpeech(s,mood(s),true);
 }
+function accrueLoanInterest(s,living=0){
+  // Charge once per completed simulated day. Unpaid interest becomes debt;
+  // matching external funding keeps finance costs out of trading performance.
+  if(s.loan?.lastInterestDay===s.day)return{interest:0,interestPaid:0,interestAccrued:0};
+  const interest=money((s.loan?.outstanding||0)*(s.loan?.dailyRate||.0005));
+  const interestPaid=Math.min(Math.max(0,s.cash-living),interest),interestAccrued=interest-interestPaid;
+  s.cash-=interestPaid;s.expenses+=interest;
+  if(s.loan){
+    s.loan.lastInterestDay=s.day;
+    if(interestAccrued){s.loan.outstanding+=interestAccrued;s.externalFunding+=interestAccrued;}
+    s.loan.interestPaid=(s.loan.interestPaid||0)+interestPaid;s.loan.interestAccrued=(s.loan.interestAccrued||0)+interestAccrued;
+  }
+  return{interest,interestPaid,interestAccrued};
+}
 export function settleDay(s) {
+  if(s.mode==='endless')throw Error('操盘模式不进行日结算');
   if(s.phase!=='closing')throw Error('请等待今日行情结束，再全平收盘');
   if(positionsOf(s).length)closeOrders(s,1,'closing');
   s.cash+=s.reserve;s.reserve=0;
-  const living=livingCost(s),interest=money((s.loan?.outstanding||0)*(s.loan?.dailyRate||.0005)),interestPaid=Math.min(Math.max(0,s.cash-living),interest),interestAccrued=interest-interestPaid;
-  s.cash-=living+interestPaid;s.expenses+=living+interest;if(interestAccrued&&s.loan){s.loan.outstanding+=interestAccrued;s.externalFunding+=interestAccrued;}s.livingPaid=(s.livingPaid||0)+living;
-  if(s.loan){s.loan.interestPaid+=interestPaid;s.loan.interestAccrued=(s.loan.interestAccrued||0)+interestAccrued;}
+  const living=livingCost(s),{interest,interestPaid,interestAccrued}=accrueLoanInterest(s,living);
+  s.cash-=living;s.expenses+=living;s.livingPaid=(s.livingPaid||0)+living;
   s.expenseLedger ||= [];s.expenseLedger.push({day:s.day,living,interest});
   if(s.dinner)appendDialogue(s,'friend','friend.day.end');
   mentalState(s,true);
   const closing=equity(s),funding=s.externalFunding-s.dayOpeningFunding,costs=s.expenses-s.dayOpeningExpenses;
-  s.dayReport={day:s.day,opening:s.dayOpening,closing,net:closing-s.dayOpening-funding+costs,funding,costs,
+  s.dayReport={day:s.day,beat:s.beat,bonusBeats:s.bonusBeats||0,opening:s.dayOpening,closing,net:closing-s.dayOpening-funding+costs,funding,costs,
     livingCost:living,interest,interestPaid,interestAccrued,tradeNet:closing-s.dayOpening-funding+costs,netTradingProfit:closing-s.dayOpening-funding+costs,trades:s.history.filter(t=>t.day===s.day), mood:mood(s), promise:s.promise,externalFunding:s.externalFunding,
     openingLine:s.dayOpeningLine,closingLine:s.speech.text,fees:s.feeLedger.filter(t=>t.day===s.day).reduce((sum,t)=>sum+t.amount,0),feesPaid:s.feeLedger.filter(t=>t.day===s.day).reduce((sum,t)=>sum+t.amount,0),totalFeesPaid:s.feesPaid,
     moments:(s.dayMoments||[]).filter(t=>t.day===s.day),peak:s.history.filter(t=>t.day===s.day).reduce((a,t)=>!a||Math.abs(t.pnl||0)>Math.abs(a.pnl||0)?t:a,null)};
-  s.phase='day_end';return s.dayReport;
+  s.completedDays=Math.max(s.completedDays||0,equity(s)>=MIN_EQUITY&&s.beat>=beatsPerDay(s)?s.day:s.day-1);s.dayReport.performance={...s.performance};s.dayReport.completedCandles=s.completedCandles;s.dayReport.completedDays=s.completedDays;s.phase='day_end';return s.dayReport;
 }
 export function beginRest(s){if(s.phase!=='day_end')throw Error('先完成全平收盘');s.phase='resting';mentalState(s);return pendingStory(s);}
 export function finishCampaign(s,id='walkaway'){
@@ -424,7 +475,7 @@ export function finishCampaign(s,id='walkaway'){
   if(!['million','walkaway','broke','crisis'].includes(id))throw Error('未知结局');
   s.ending={id,day:s.day,equity:equity(s),profit:tradingProfit(s),sanity:s.sanity};s.phase='ending';return s.ending;
 }
-export function endingCondition(s){return s.sanity<=5&&equity(s)<5000?'crisis':equity(s)<MIN_EQUITY?'broke':tradingProfit(s)>=TARGET_PROFIT?'million':null;}
+export function endingCondition(s){if(s.mode==='endless')return equity(s)<MIN_EQUITY?'broke':null;return s.sanity<=5&&equity(s)<5000?'crisis':equity(s)<MIN_EQUITY?'broke':tradingProfit(s)>=TARGET_PROFIT?'million':null;}
 export function advanceTick(s) {
   if(s.phase!=='playing'||!s.pending)throw Error('当前没有待播放行情');
   const p=s.pending,points=s.script.tracks[p.beat][p.candle];
@@ -442,19 +493,32 @@ export function advanceTick(s) {
    pos.lastFloating=unreal;if(Math.abs(unreal)>meaningful)pos.lastDirectionalFloating=unreal;
   }
   exits.push(...enforceMargin(s));
-  for(const pos of [...s.positions])if(pos.stop<1&&positionUnrealized(s,pos)<=-pos.margin*pos.stop)exits.push(closePosition(s,1,'stop',pos.id));
-  exits.push(...enforceMargin(s));protectBalance(s,exits);const exit=exits[0]||null;
+  for(const pos of [...s.positions])if(Object.hasOwn(pos,'stopPips')&&Number.isFinite(pos.stopPrice)?(s.price-pos.stopPrice)*pos.direction<=0:pos.stop<1&&positionUnrealized(s,pos)<=-pos.margin*pos.stop)exits.push(closePosition(s,1,'stop',pos.id));
+  exits.push(...enforceMargin(s));protectBalance(s,exits);let exit=exits[0]||null;
   let flash=null;
   if(p.candle===1&&p.tick===2&&!p.flashShown&&!(s.lastEvent?.swan&&s.lastEvent.beat===p.beat)){p.flashShown=true;const e=s.script.events[p.beat];flash={title:e.flash,copy:e.flashCopy,chain:e.chain};s.lastEvent=flash;}
   const swan=s.script.swan;if(swan&&swan.beat===p.beat&&swan.candle===p.candle&&swan.tick===p.tick){s.swanSeen=true;flash={...swan,swan:true,chain:swan.name};s.lastEvent=flash;s.emotionBias={mood:'stunned',until:(s.day-1)*4+s.beat+2};appendDialogue(s,'group','group.swan.'+(swan.delta>0?'up':'down'));}
   mentalState(s,true);
   p.tick++;
   let candleClosed=false,beatEnded=false,dayEnded=false;
-  if(p.tick>=points.length){candle.closed=true;candleClosed=true;p.tick=0;p.candle++;}
+  if(p.tick>=points.length){candle.closed=true;candleClosed=true;s.completedCandles=(s.completedCandles||0)+1;p.tick=0;p.candle++;trimEndlessLedgers(s);}
   if(p.candle>=CANDLES_PER_BEAT){
     if(p.flatAtStart&&!s.position){const observedMove=s.price/(p.startPrice||s.price)-1;if(Math.abs(observedMove)>=.004)experience(s,{type:observedMove>0?'regretful':'relieved',impact:0,observedMove,day:s.day,beat:s.beat});}
     s.beat++;s.pending=null;beatEnded=true;ageEffects(s);mentalState(s);appendChatAfterBeat(s);
-    if(s.beat>=beatsPerDay(s)||equity(s)<MIN_EQUITY||s.sanity<=0){s.phase='closing';dayEnded=true;}
+    if(s.mode==='endless'){
+      if(s.beat>=BEATS_PER_DAY){
+        const cost=accrueLoanInterest(s);
+        if(cost.interest){s.expenseLedger ||= [];s.expenseLedger.push({day:s.day,living:0,...cost});}
+        exits.push(...enforceMargin(s));protectBalance(s,exits);exit ||= exits[0]||null;mentalState(s);trimEndlessLedgers(s);
+      }
+      if(equity(s)<MIN_EQUITY){
+        if(s.positions.length)closeOrders(s,1,'closing');
+        s.ending={id:'broke',day:s.day,equity:equity(s),profit:tradingProfit(s),sanity:s.sanity};s.phase='ending';
+      }else if(s.beat>=BEATS_PER_DAY){
+        s.completedDays=(s.completedDays||0)+1;s.day++;s.beat=0;s.dayOpening=equity(s);s.dayOpeningFunding=s.externalFunding;s.dayOpeningExpenses=s.expenses;
+        s.script=planDay(s.seed,s.day,s.price);s.lastEvent=null;s.swanSeen=false;s.itemsUsed={};s.skills={mochiko:false,yasuko:false};s.bonusBeats=0;s.phase='decision';mentalState(s);
+      }else s.phase='decision';
+    }else if(s.beat>=beatsPerDay(s)||equity(s)<MIN_EQUITY||s.sanity<=0){s.phase='closing';dayEnded=true;}
     else s.phase='decision';
   }
   return{price, candleClosed, beatEnded, dayEnded, exit, exits, flash, equity:equity(s), mood:mood(s)};
@@ -487,10 +551,16 @@ export function restoreGame(raw) {
     if(s.version===2){delete s.positions;s=migrateV2(s);}
     if(s.version<4){delete s.positions;s.version=VERSION;}
     if(oldVersion<5){s.nextStop=null;s.version=VERSION;s.mentalBoost ||= 0;s.bonusBeats ||= 0;s.itemDiscoveries={...s.itemUnlocks};s.effects=(s.effects||[]).filter(e=>['guilt','familyWatch'].includes(e.id));}
-    ensureOrders(s);
+    if(!s.mode)s.mode='story';if(!['story','endless'].includes(s.mode))return null;
+    s.startEquity ??= START;s.completedCandles ??= Math.max(0,(s.day-1)*16+s.beat*4+(s.pending?.candle||0));s.completedDays ??= Math.max(0,s.day-1+(s.mode==='story'&&['day_end','resting','ending'].includes(s.phase)&&s.beat>=beatsPerDay(s)&&equity(s)>=MIN_EQUITY?1:0));
+    if(!Number.isSafeInteger(s.completedCandles)||s.completedCandles<0||!Number.isSafeInteger(s.completedDays)||s.completedDays<0)return null;
+    if(s.mode==='endless'&&['closing','day_end','resting'].includes(s.phase))return null;
+    if(s.mode==='endless'&&s.reserve){s.cash+=s.reserve;s.reserve=0;}
+    ensureOrders(s);ensurePerformance(s);
+    if(!Number.isFinite(s.performance.totalProfit)||!Number.isInteger(s.performance.closedTrades)||s.performance.closedTrades<0||!Number.isFinite(s.performance.maxLoss)||s.performance.maxLoss>0||!Number.isFinite(s.performance.maxProfit)||s.performance.maxProfit<0||!Number.isFinite(s.performance.peakEquity)||s.performance.peakEquity<START||!Number.isFinite(s.performance.maxDrawdown)||s.performance.maxDrawdown<0||s.performance.maxDrawdown>1)return null;
     const ids=new Set();
     for(const p of s.positions){
-      if(typeof p.id!=='string'||ids.has(p.id)||![1,-1].includes(p.direction)||!Number.isFinite(p.entry)||p.entry<=0||!Number.isFinite(p.margin)||p.margin<=0||!Number.isFinite(p.leverage)||p.leverage<=0||p.leverage>100||!Number.isFinite(p.notional)||p.notional<=0||![.25,.5,1].includes(p.stop)||!Number.isFinite(p.openFeeRemaining)||p.openFeeRemaining<0)return null;
+      if(typeof p.id!=='string'||ids.has(p.id)||![1,-1].includes(p.direction)||!Number.isFinite(p.entry)||p.entry<=0||!Number.isFinite(p.margin)||p.margin<=0||!Number.isFinite(p.leverage)||p.leverage<=0||p.leverage>100||!Number.isFinite(p.notional)||p.notional<=0||![.25,.5,1].includes(p.stop)||(Object.hasOwn(p,'stopPips')&&![10,30,50,null].includes(p.stopPips))||(p.stopPrice!==undefined&&p.stopPrice!==null&&(!Number.isFinite(p.stopPrice)||p.stopPrice<=0))||!Number.isFinite(p.openFeeRemaining)||p.openFeeRemaining<0)return null;
       ids.add(p.id);
     }
     // In cross margin, realizing the losing hedge can make cash negative while

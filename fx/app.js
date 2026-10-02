@@ -1,40 +1,46 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=126727502e134420149df18f2b464b445752d940';
-import {buildFXReceipt} from './statement.js?v=126727502e134420149df18f2b464b445752d940';
-import {createShareCard} from './share-card.js?v=126727502e134420149df18f2b464b445752d940';
-import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=126727502e134420149df18f2b464b445752d940';
-import {createGameStorage} from './storage.js?v=126727502e134420149df18f2b464b445752d940';
-import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=126727502e134420149df18f2b464b445752d940';
-import {PROP_LINES} from './copy/items.js?v=126727502e134420149df18f2b464b445752d940';
-import {UI_COPY} from './copy/ui.js?v=126727502e134420149df18f2b464b445752d940';
-import {TRANSITION_COPY} from './copy/transitions.js?v=126727502e134420149df18f2b464b445752d940';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=126727502e134420149df18f2b464b445752d940';
-import {setImage} from './assets.js?v=126727502e134420149df18f2b464b445752d940';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=126727502e134420149df18f2b464b445752d940';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=126727502e134420149df18f2b464b445752d940';
-import {GameAudio} from '../audio.js?v=126727502e134420149df18f2b464b445752d940';
-import {GameMotion} from '../feedback.js?v=126727502e134420149df18f2b464b445752d940';
-import {showSettlement} from '../settlement.js?v=126727502e134420149df18f2b464b445752d940';
-import {MOODS, PROPS} from './content.js?v=126727502e134420149df18f2b464b445752d940';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=126727502e134420149df18f2b464b445752d940';
-import {mountVoiceLibrary} from './voice-library.js?v=126727502e134420149df18f2b464b445752d940';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=126727502e134420149df18f2b464b445752d940';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=126727502e134420149df18f2b464b445752d940';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=126727502e134420149df18f2b464b445752d940';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {buildFXReceipt} from './statement.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {createShareCard} from './share-card.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {createGameStorage} from './storage.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {runPerformance} from './performance.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {TERMINAL_HELP,OPENING_STORY} from './copy/terminal-help.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {PROP_LINES} from './copy/items.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {UI_COPY} from './copy/ui.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {TRANSITION_COPY} from './copy/transitions.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {setImage} from './assets.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,positionStopLoss,accountMetrics,orderPreview} from './engine.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {GameAudio} from '../audio.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {GameMotion} from '../feedback.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {showSettlement} from '../settlement.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {MOODS, PROPS} from './content.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {mountVoiceLibrary} from './voice-library.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=0903e0cb2ec6498c86db15a635dd58970cd555e4';
 
 const $ = id => document.getElementById(id);
 const storage=createGameStorage();
 const yen = value => `${value<0?'−':''}¥${Math.abs(value).toLocaleString('zh-CN',{maximumFractionDigits:2})}`;
 const signed = value => `${value>0?'+':''}${yen(value)}`;
-const saveKey = 'fx-girl-campaign-v3';
+const saveKeyFor=mode=>mode==='endless'?'fx-girl-endless-v1':'fx-girl-campaign-v3';
+let selectedMode=storage.getItem('fx-girl-mode')==='endless'?'endless':'story';
+let saveKey=saveKeyFor(selectedMode);
 const settingsKey = 'fx-girl-settings';
-const developerBackupKey='fx-girl-developer-backup-v3';
-const fresh = () => createGame(crypto.getRandomValues(new Uint32Array(1))[0]);
-let state = restoreGame(storage.getItem(saveKey)||storage.getItem('fx-girl-campaign-v2')) || fresh();
+let developerBackupKey=selectedMode==='endless'?'fx-endless-developer-backup-v1':'fx-girl-developer-backup-v3';
+const fresh = (mode=selectedMode) => createGame(crypto.getRandomValues(new Uint32Array(1))[0],{mode});
+const initialSave=storage.getItem(saveKey)||(selectedMode==='story'?storage.getItem('fx-girl-campaign-v2'):null);
+let state=restoreGame(initialSave)||fresh();
+const firstVisit=!initialSave&&!storage.getItem('fx-girl-mode');
 let orderFormOpen=!positionsOf(state).length;
 let orderMode='percent',orderAmount=10000, shareUrl=null,shareFile=null,shareBusy=false,shareRequest=0;
 const achievementKey='fx-jiuliumei-achievements-v1';
 let achievementProfile;try{achievementProfile=JSON.parse(storage.getItem(achievementKey)||'{}');}catch{achievementProfile={};}
-let stake=.5, leverage=20, stop=.5, speed=1, skip=false, playing=false, actionBusy=false,  shownFlashTimer, toastTimer, propFrame;
+let stake=.5, leverage=25, stop=.5, stopPips=30, speed=1, skip=false, playing=false, actionBusy=false,  shownFlashTimer, toastTimer, propFrame;
 let sound = storage.getItem(settingsKey)!=='mute';
 let voiceEnabled=storage.getItem('fx-girl-voice')!=='off';
 let fullMotion=storage.getItem('fx-girl-motion')!=='reduce';
@@ -55,7 +61,7 @@ const shouldAnimate=()=>motion.enabled&&fullMotion;
 const quote=value=>value.toFixed(6);
 function persist(){const saved=storage.setItem(saveKey,JSON.stringify(state));$('saved').textContent=saved?'✓':'进度仅在本页';$('saved').title=saved?'进度已保存':'浏览器无法保存进度，刷新或关闭后会丢失';$('storage-warning').hidden=saved;}
 function currentRisk(){return Math.round(accountMetrics(state).usedMargin/Math.max(accountMetrics(state).tradingEquity,1)*100);}
-function selectedOrder(type='long'){return {type,leverage,stop,...(orderMode==='amount'?{amount:orderAmount}:{stake})};}
+function selectedOrder(type='long'){return {type,leverage,stop,stopPips,...(orderMode==='amount'?{amount:orderAmount}:{stake})};}
 function setText(id,value){if($(id))$(id).textContent=value;}
 function chart(){
   const candles=state.candles.slice(-30), w=660,h=252,left=8,right=70,top=14,bottom=26;
@@ -75,14 +81,30 @@ function renderPositions(orders,enabled){
   for(const p of orders){
     const row=document.createElement('article');row.className='order-row';
     const head=document.createElement('div');head.className='order-row-head';
-    const title=document.createElement('b'),tag=document.createElement('span');
-    title.textContent=`#${p.id} · ${p.direction===1?'↗ 日元多单':'↘ 日元空单'}`;tag.textContent=`${Number(p.leverage.toFixed(1))}×`;head.append(title,tag);row.append(head);
-    const net=positionUnrealized(state,p),notional=p.notional??p.margin*p.leverage,closeFee=notional*.00005;
-    const data=[['开仓 → 当前',`${quote(p.entry)} → ${quote(state.price)}`],['保证金 / 名义仓位',`${yen(p.margin)} / ${yen(notional)}`],['浮动盈亏（未扣平仓费）',signed(net)],['已付开仓 / 预计平仓费',`${yen(p.openFee||0)} / ${yen(closeFee)}`],['本笔止损',p.stop===1?'不预设':`−${yen(p.margin*p.stop)}`]];
-    for(const [label,value] of data){const line=document.createElement('div');line.className='order-row-data';const key=document.createElement('span'),val=document.createElement('b');key.textContent=label;val.textContent=value;if(label.startsWith('浮动盈亏'))val.className=net>=0?'positive':'negative';line.append(key,val);row.append(line);}
-    const actions=document.createElement('div');actions.className='order-row-actions';for(const [action,label] of [['half','本单减半'],['close','本单平仓']]){const b=document.createElement('button');b.dataset.positionId=p.id;b.dataset.positionAction=action;b.textContent=label;b.disabled=!enabled;actions.append(b);}row.append(actions);if(p.stop<1){const bar=document.createElement('div');bar.className='stop-progress';const fill=document.createElement('i'),progress=Math.max(0,-net/(p.margin*p.stop));fill.style.width=Math.min(100,progress*100)+'%';bar.classList.toggle('danger',progress>=.75);bar.setAttribute('aria-label','止损进度 '+Math.round(progress*100)+'%');bar.append(fill);row.append(bar);}box.append(row);
+    const title=document.createElement('b'),tag=document.createElement('span'),detail=document.createElement('button');
+    title.textContent=`#${p.id} · ${p.direction===1?'↗ 日元多单':'↘ 日元空单'}`;tag.textContent=`${Number(p.leverage.toFixed(1))}×`;detail.className='help-dot';detail.textContent='?';detail.dataset.positionDetail=p.id;detail.setAttribute('aria-label',`查看订单 ${p.id} 详情`);head.append(title,tag,detail);row.append(head);
+    const net=positionUnrealized(state,p),loss=positionStopLoss(p);
+    for(const [label,value] of [['浮动盈亏',signed(net)],['保证金',yen(p.margin)],['止损',Object.hasOwn(p,'stopPips')&&p.stopPips!==null?`${p.stopPips} 点 · 约 −${yen(loss)}`:p.stop===1?'不预设':`约 −${yen(loss)}`]]){
+      const line=document.createElement('div');line.className='order-row-data';const key=document.createElement('span'),val=document.createElement('b');key.textContent=label;val.textContent=value;if(label==='浮动盈亏'){line.classList.add('order-live-pnl');val.className=net>=0?'positive':'negative';}line.append(key,val);row.append(line);
+    }
+    const actions=document.createElement('div');actions.className='order-row-actions';for(const [action,label] of [['half','本单减半'],['close','本单平仓']]){const b=document.createElement('button');b.dataset.positionId=p.id;b.dataset.positionAction=action;b.textContent=label;b.disabled=!enabled;actions.append(b);}row.append(actions);
+    if(Number.isFinite(loss)&&loss>0){const bar=document.createElement('div');bar.className='stop-progress';const fill=document.createElement('i'),progress=Math.max(0,-net/loss);fill.style.width=Math.min(100,progress*100)+'%';bar.classList.toggle('danger',progress>=.75);bar.setAttribute('aria-label','止损进度 '+Math.round(progress*100)+'%');bar.append(fill);row.append(bar);}box.append(row);
   }
 }
+function openDetails(title,lines,source=null,extra=null){
+  setText('detail-title',title);const box=$('detail-copy');box.replaceChildren();for(const text of lines){const p=document.createElement('p');p.textContent=text;box.append(p);}if(extra){const copy=extra.cloneNode(true);copy.hidden=false;copy.removeAttribute('id');for(const node of copy.querySelectorAll('[id]'))node.removeAttribute('id');box.append(copy);}if(source){const a=document.createElement('a');a.textContent=source[0]+' ↗';a.href=source[1];a.target='_blank';a.rel='noopener';box.append(a);}$('detail-dialog').showModal();
+}
+function openPositionDetail(id){const p=positionsOf(state).find(p=>p.id===id);if(!p)return;const notional=p.notional??p.margin*p.leverage;openDetails('订单 #'+p.id,[`开仓 JPY / USD ${quote(p.entry)}，当前 ${quote(state.price)}。`,`保证金 ${yen(p.margin)}，名义仓位 ${yen(notional)}。`,`已付开仓费用 ${yen(p.openFee||0)}，预计平仓费用 ${yen(notional*.00005)}。`,Number.isFinite(p.stopPrice)?`止损价 JPY / USD ${quote(p.stopPrice)}（USD / JPY ${(1/p.stopPrice).toFixed(2)}）。`:'未设置固定止损价。','浮动盈亏尚未扣除预计平仓费用。']);}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-help]');if(!b)return;const key=b.dataset.help,h=TERMINAL_HELP[key];if(h)openDetails(h.title,h.lines,h.source,key==='account'?$('account-details'):key==='order'?$('order-details'):key==='mental'?$('mental-detail'):null);});
+let openingPage=0;
+function showOpening(){openingPage=0;renderOpening();if(!$('opening-dialog').open)$('opening-dialog').showModal();}
+function renderOpening(){const page=OPENING_STORY[openingPage];setText('opening-count',`序章 / ${openingPage+1} · ${OPENING_STORY.length}`);setText('opening-title',page.title);setText('opening-copy',page.text);setImage($('opening-face'),`./expressions/kurumi-${page.face}.webp`);setText('opening-next',openingPage===OPENING_STORY.length-1?'打开交易软件':'继续');}
+function finishOpening(){state.openingSeen=true;$('opening-dialog').close();persist();continueScenes();}
+$('opening-next').onclick=()=>{if(++openingPage>=OPENING_STORY.length)finishOpening();else renderOpening();};$('opening-skip').onclick=finishOpening;$('opening-dialog').addEventListener('cancel',e=>{e.preventDefault();finishOpening();});
+$('mode-open').onclick=()=>$('mode-dialog').showModal();
+for(const b of document.querySelectorAll('[data-play-mode]'))b.onclick=()=>{
+  const mode=b.dataset.playMode;persist();selectedMode=mode;saveKey=saveKeyFor(mode);developerBackupKey=mode==='endless'?'fx-endless-developer-backup-v1':'fx-girl-developer-backup-v3';storage.setItem('fx-girl-mode',mode);const saved=storage.getItem(saveKey);state=restoreGame(saved)||fresh(mode);state.runId||=crypto.randomUUID();telemetry.setTestMode(!!state.developer?.edited);voice.stop();lastMood=null;orderFormOpen=!positionsOf(state).length;leverage=25;stake=.5;stopPips=30;stop=.5;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;$('mode-dialog').close();render();if(state.phase==='playing')playSegment();else if(mode==='story'&&!state.openingSeen)showOpening();else continueScenes();
+};
 function checkAchievements(){
   const result=evaluateAchievements(state,achievementProfile);achievementProfile=result.profile;
   if(result.newlyUnlocked.length){try{storage.setItem(achievementKey,JSON.stringify(achievementProfile));}catch{}for(const def of result.newlyUnlocked){createAchievementToast(def);if(sound)soundEffect('gain',{level:.3});}}
@@ -90,29 +112,33 @@ function checkAchievements(){
   if($('achievements-dialog').open)renderAchievementBook($('achievement-book'),achievementProfile,state);
 }
 function openAchievements(){renderAchievementBook($('achievement-book'),achievementProfile,state);$('achievements-dialog').showModal();}
-async function openShare(){
+async function openShare(variant='report'){
+  if(typeof variant!=='string')variant='report';setText('share-title',variant==='ranking'?'我的大洋榜战绩':'这次的战报');
   if(state.phase==='playing'||actionBusy)return;
   const request=++shareRequest;const dialog=$('share-dialog');if(!dialog.open)dialog.showModal();
   shareFile=null;$('share-preview').hidden=true;$('share-actions').hidden=true;$('share-native').hidden=true;setText('share-status','正在制作战报…');
   const snapshot=structuredClone(state),em=mood(snapshot);
   try{
-    const card=await createShareCard(snapshot,{equity:equity(snapshot),tradingProfit:tradingProfit(snapshot),unrealized:unrealized(snapshot),moodLabel:moodInfo[em]?.[0]||'平静',portraitUrl:$('portrait').src,gameUrl:location.href.split('#')[0],achievementCount:Object.keys(achievementProfile.unlocked||{}).length,report:snapshot.dayReport});
+    const card=await createShareCard(snapshot,{variant,equity:equity(snapshot),tradingProfit:tradingProfit(snapshot),unrealized:unrealized(snapshot),moodLabel:$('emotion-label').textContent||moodInfo[em]?.[0]||'平静',portraitUrl:$('portrait').src,gameUrl:location.href.split('#')[0],achievementCount:Object.keys(achievementProfile.unlocked||{}).length,report:snapshot.dayReport});
     if(request!==shareRequest){URL.revokeObjectURL(card.url);return;}if(shareUrl)URL.revokeObjectURL(shareUrl);shareUrl=card.url;
     shareFile=buildShareFile(card);$('share-preview').src=shareUrl;$('share-preview').hidden=false;$('share-download').href=shareUrl;$('share-download').download=card.filename||`FX韭留美-第${snapshot.day}天.png`;$('share-original').href=shareUrl;$('share-actions').hidden=false;$('share-native').hidden=!canShareFile(shareFile);$('share-native').disabled=shareBusy;setText('share-status',snapshot.developer?.edited?'开发测试战报 · 不计入成就':'战报已生成，可保存原图');
   }catch(error){setText('share-status','战报生成失败：'+error.message);}
 }
 function render(){
-  const limit=restrictions(state);stake=Math.min(stake,limit.stake);leverage=Math.min(leverage,limit.leverage);stop=Math.min(stop,limit.stop??1);
+  const limit=restrictions(state);stake=Math.min(stake,limit.stake);leverage=Math.min(leverage,limit.leverage);if(![5,10,25,50,100].includes(leverage))leverage=leverage<25?10:25;stop=Math.min(stop,limit.stop??1);if(stopPips===null&&(limit.stop??1)<1)stopPips=30;
   const day=state.day,phase=state.phase,position=state.position,marketPlaying=phase==='playing',end=['day_end','resting','ending'].includes(phase),closing=phase==='closing';
   const account=equity(state),event=currentEvent(state),mental=mentalState(state),em=mood(state),info=moodInfo[em]||['平静','calm'];
   const dayNet=account-state.dayOpening-(state.externalFunding-state.dayOpeningFunding)+(state.expenses-state.dayOpeningExpenses);
-  setText('stage-name',`第 ${day} 天 · ${dayNames[Math.min(day-1,3)]} / 第 ${Math.floor((day-1)/3)+1} 章`);
-  setText('mission-title',`第 ${day} 天 · ${dayTasks[Math.min(day-1,3)]}`);
-  setText('mission-copy',end?'窗外已经暗了。':`本日开盘 ${yen(state.dayOpening)} · ${Math.min(state.beat+1,beatsPerDay(state))} / ${beatsPerDay(state)} 次决策`);
-  setText('chapter-target',`交易净收益 ${signed(tradingProfit(state))} · 首章目标 +${yen(TARGET_PROFIT)}`);
+  const endless=state.mode==='endless',stats=runPerformance(state);
+  setText('mode-open',endless?'操盘模式 ▾':'剧情模式 ▾');setText('restart',endless?'重新操盘':'重新开始章节');
+  setText('stage-name',endless?`操盘 · 无尽 / 已存活 ${stats.daysSurvived} 天`:`第 ${day} 天 · ${dayNames[Math.min(day-1,3)]} / 第 ${Math.floor((day-1)/3)+1} 章`);
+  setText('mission-title',endless?'市场继续，账户还在':`第 ${day} 天 · ${dayTasks[Math.min(day-1,3)]}`);
+  setText('mission-copy',endless?`第 ${day} 个模拟日 · 已平仓 ${stats.closedTrades} 笔`:end?'窗外已经暗了。':`本日开盘 ${yen(state.dayOpening)} · ${Math.min(state.beat+1,beatsPerDay(state))} / ${beatsPerDay(state)} 次决策`);
+  setText('chapter-target',endless?`总收益率 ${(stats.returnRate*100).toFixed(2)}% · 交易收益 ${signed(stats.totalProfit)}`:`交易净收益 ${signed(tradingProfit(state))} · 首章目标 +${yen(TARGET_PROFIT)}`);
   setText('emotion-label',info[0]);
-  const portraitKey=state.lastReaction?.reversal||(['ending','day_end'].includes(phase)&&account<5000?'blank':info[1]);if($('portrait').dataset.mood!==portraitKey){setImage($('portrait'),`./expressions/kurumi-${portraitKey}.webp`);$('portrait').dataset.mood=portraitKey;$('portrait').alt=`久留美此刻${info[0]}的漫画表情`;}
-  const voiceEmotion=state.lastReaction?.reversal||(em==='stunned'?'blank':em);const voiced=$('voice-library-dialog').open?null:voice.sync({enabled:voiceEnabled,emotion:voiceEmotion,speechId:state.speech?.id,run:state.runId});
+  const reversal=state.lastReaction?.day===state.day?state.lastReaction?.reversal:null;
+  const portraitKey=reversal||(['ending','day_end'].includes(phase)&&account<5000?'blank':info[1]);if($('portrait').dataset.mood!==portraitKey){setImage($('portrait'),`./expressions/kurumi-${portraitKey}.webp`);$('portrait').dataset.mood=portraitKey;$('portrait').alt=`久留美此刻${info[0]}的漫画表情`;}
+  const voiceEmotion=reversal||(em==='stunned'?'blank':em);const voiced=$('voice-library-dialog').open?null:voice.sync({enabled:voiceEnabled,emotion:voiceEmotion,speechId:state.speech?.id,run:state.runId});
   setText('speech',voiced?.zh||state.speech?.text||'');setText('voice-caption',voiced?`PV 原声 · ${voiced.speaker||'久留美'} · ${voiced.ja||''}`:'');$('voice-caption').hidden=!voiced;
   const voiceStatus=voiceEnabled?(voice.lastError?UI_COPY.voiceState[voice.lastError]:voice.loading?UI_COPY.voiceState.loading:voice.playing?UI_COPY.voiceState.playing:''):'';for(const id of ['voice-state','voice-library-status']){setText(id,voiceStatus);$(id).hidden=!voiceStatus;}
   setText('voice-toggle',voiceEnabled?'动画原声 · 开':'动画原声 · 关');$('voice-toggle').disabled=false;$('voice-toggle').setAttribute('aria-pressed',String(voiceEnabled));$('voice-replay').hidden=!voiceEnabled||!availableVoices(voiceEmotion).length;
@@ -131,20 +157,20 @@ function render(){
   setText('margin-level',orders.length?`${(metrics.marginLevel*100).toFixed(1)}%`:'— 无持仓');
   $('margin-meter').value=orders.length?Math.min(200,Math.max(0,metrics.marginLevel*100)):200;
   $('margin-level').className=orders.length&&metrics.marginLevel<=1?'negative':'';
-  setText('day-pnl',signed(dayNet));$('day-pnl').className=dayNet>=0?'positive':'negative';
-  $('order-empty').hidden=end||closing||!orderFormOpen;$('order-form-toggle').hidden=end||closing;$('order-form-toggle').disabled=!canTrade;$('order-form-toggle').setAttribute('aria-expanded',String(orderFormOpen));setText('order-form-toggle',orderFormOpen?'收起订单面板':orders.length?'＋ 追加市价单':'＋ 新建市价单');$('position-card').hidden=!orders.length;
+  const displayPnl=endless?stats.totalProfit:dayNet;setText('pnl-period',endless?'累计交易收益':'今日收益');setText('day-pnl',signed(displayPnl));$('day-pnl').className=displayPnl>=0?'positive':'negative';
+  $('order-empty').hidden=end||closing||!orderFormOpen;$('order-form-toggle').hidden=end||closing;$('order-form-toggle').disabled=!canTrade;$('order-form-toggle').setAttribute('aria-expanded',String(orderFormOpen));setText('order-form-toggle',orderFormOpen?'收起订单面板':orders.length?'＋ 追加市价单':'＋ 新建市价单');$('position-card').hidden=false;$('position-empty').hidden=!!orders.length;for(const id of ['hold','half','close'])$(id).hidden=!orders.length;
   $('percent-field').hidden=orderMode!=='percent';$('amount-field').hidden=orderMode!=='amount';$('order-amount').disabled=!canTrade;$('stake-slider').disabled=!canTrade;$('stake-slider').max=Math.round(limit.stake*100);$('stake-slider').value=Math.round(stake*100);$('stake-slider').setAttribute('aria-valuetext',Math.round(stake*100)+'%');
   for(const b of document.querySelectorAll('[data-order-mode]')){b.setAttribute('aria-pressed',String(b.dataset.orderMode===orderMode));b.disabled=!canTrade;}
-  setText('stake-value',`${Math.round(stake*100)}%`);setText('leverage-value',`${leverage}×`);setText('stop-value',stop===1?'不预设':`保证金 ${Math.round(stop*100)}%`);
+  setText('stake-value',`${Math.round(stake*100)}%`);setText('leverage-value',`${leverage}×`);setText('stop-value',stopPips===null?'不预设':`${stopPips} 点`);
   const preview=orderPreview(state,selectedOrder('long')),shortPreview=orderPreview(state,selectedOrder('short'));
   setText('preview-margin',yen(preview.margin||0));setText('preview-notional',yen(preview.notional||0));setText('preview-fee',yen(preview.openFee||0));setText('preview-debit',yen(preview.totalDebit||0));
-  setText('risk-amount',stop===1?'不预设':yen((preview.margin||0)*stop));
+  setText('risk-amount',stopPips===null?'不预设':yen(preview.stopLossAmount||0));
   const liquidation=p=>Number.isFinite(p.liquidationPrice)&&p.liquidationPrice>0?quote(p.liquidationPrice):'无单一价格线';
   setText('preview-liquidation',`多 ${liquidation(preview)} / 空 ${liquidation(shortPreview)}`);
-  setText('order-validation',!preview.valid&&!shortPreview.valid?(preview.error||'当前不能新开仓'): `可追加额度上限 ${yen(Math.max(preview.maxMargin||0,shortPreview.maxMargin||0))} · 开平各收一次费用`);
+  setText('order-validation',!preview.valid&&!shortPreview.valid?(preview.error||'当前不能新开仓'):'');$('order-validation').hidden=preview.valid||shortPreview.valid;
   $('order-validation').classList.toggle('invalid',!preview.valid&&!shortPreview.valid);
   for(const [attr,value] of [['stake',stake],['leverage',leverage],['stop',stop]])for(const button of document.querySelectorAll(`[data-${attr}]`)){button.setAttribute('aria-pressed',String(Number(button.dataset[attr])===value));button.disabled=!canTrade;}
-  for(const id of ['long','short','wait','hold','half','close'])$(id).disabled=!canTrade;
+  for(const id of ['long','short','wait','hold','half','close'])$(id).disabled=!canTrade;for(const b of document.querySelectorAll('[data-stop-pips]')){b.setAttribute('aria-pressed',String(b.dataset.stopPips===(stopPips===null?'none':String(stopPips))));b.disabled=!canTrade||(b.dataset.stopPips==='none'&&(limit.stop??1)<1);}
   $('long').disabled ||= !preview.valid;$('short').disabled ||= !shortPreview.valid;
   $('wait').hidden=!!orders.length;
   setText('position-count',`${orders.length} 笔`);setText('floating',signed(metrics.unrealized));$('floating').className=metrics.unrealized>=0?'positive':'negative';
@@ -164,7 +190,7 @@ function render(){
   if(state.cash<100){$('long').disabled=true;$('short').disabled=true;}
   setText('motion-toggle',fullMotion?'完整动效 · 开':'低动效 · 点此开启');$('motion-toggle').setAttribute('aria-pressed',String(fullMotion));
   setText('heat-label',`交易室 · ${['平稳','升温','升温','火热','沸腾','狂热'][state.heat]}`);$('heat-fill').style.width=`${state.heat*20}%`;document.body.dataset.heat=String(state.heat);
-  $('share-open').disabled=marketPlaying||actionBusy;
+  $('share-open').disabled=marketPlaying||actionBusy;$('mode-open').disabled=marketPlaying||actionBusy;
   $('skip').disabled=!marketPlaying;$('restart').disabled=marketPlaying||actionBusy;$('day-review').hidden=!['day_end','resting'].includes(phase);
   setText('playback-state',marketPlaying?'行情正在形成':closing?'今日行情结束，等待你全平收盘':end?'今日休市':'等待下一笔操作');
   $('settle-day').hidden=!closing;$('settle-day').disabled=actionBusy;
@@ -244,12 +270,12 @@ async function sendAction(type,positionId=null,sourceButton=null){
     const result=takeAction(state,{...selectedOrder(type),...(positionId?{positionId}:{})});if(result.trade?.type==='open')orderFormOpen=false;if(result.trade?.type==='open')track('trade_open',type,{direction:type==='long'?'long':'short',stake:stake*100,leverage,stop:stop*100});else for(const t of result.trades||[result.trade])trackExit(t);render();
     if(type==='long'||type==='short'){
       const amount=result.trade.margin,label=type==='long'?'做多':'做空';
-      setText('capital-flow',`${type==='long'?'多单':'空单'} · 保证金 ${yen(amount)}`);
+
       fly(`${label} ${yen(amount)}`,buttonRect,$('position-card'));impact(label,`${leverage}× · ${yen(amount)}`);
     }else if(result.trade){
       if(!positionsOf(state).length)orderFormOpen=true;
       const total=tradeTotals(result.trades||[result.trade]),label=positionId?(type==='half'?'本单减半':'本单平仓'):(type==='half'?'全部减半':'全部平仓');
-      setText('capital-flow',`${total.count} 笔 · ${yen(total.margin)} 保证金释放 · 净收益 ${signed(total.pnl)}`);
+
       fly(`${label} ${signed(total.pnl)}`,positionRect,$('free-cash'));impact(label,signed(total.pnl),total.pnl>=0?'gain':'loss');
     }else if(type==='hold'){impact('继续持有',signed(unrealized(state)),'hold');}
     else toast('空仓');
@@ -275,7 +301,7 @@ function showDayDialog(){
   setText('day-total',yen(r.closing));setText('day-net',`今日交易 ${signed(r.net)} · 生活费 ${yen(r.livingCost||0)} · 交易累计 ${signed(tradingProfit(state))}`);
   setText('next-day','休市');$('day-dialog').showModal();
 }
-function newChapter(){storage.removeItem(saveKey);state=fresh();telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;stake=.5;leverage=20;stop=.5;skip=false;playing=false;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('capital-flow').textContent='';$('last-trade').textContent='';render();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
+function newChapter(){storage.removeItem(saveKey);state=fresh();telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;stake=.5;leverage=25;stop=.5;stopPips=30;skip=false;playing=false;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('last-trade').textContent='';render();if(state.mode==='story')showOpening();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
 function showProp(id,confirmed=false){
   if(actionBusy||!['decision','day_end','resting'].includes(state.phase))return;
   if(id==='father'&&!confirmed){$('father-take-dialog').showModal();return;}
@@ -291,10 +317,9 @@ function showProp(id,confirmed=false){
       const step=Math.floor(progress*7);if(step!==soundStep){soundStep=step;soundEffect('gain',{rate:Math.min(1.8,.85+step*.12),level:.6});}
       if(progress<1&&$('prop-dialog').open)propFrame=requestAnimationFrame(count);else if(progress===1)soundEffect('win',{rate:1.35});};
     propFrame=requestAnimationFrame(count);
-    setText('capital-flow',`${yen(amount)} · 父亲的柜中存款`);
+
   }else{
     const total=tradeTotals(result.trades||[result.trade]);setText('prop-amount',result.trade?signed(total.pnl):result.cost?`−${yen(result.cost)}`:spec.caption);soundEffect(id==='mochiko'?'defend':'exhaust',{rate:1.1});
-    if(result.trade)setText('capital-flow',`${total.count} 笔 · ${yen(total.margin)} 保证金释放 · 净收益 ${signed(total.pnl)}`);
   }
   motion.animate($('prop-dialog'),[{opacity:0,transform:'translateY(30px) scale(.85) rotate(-3deg)'},{opacity:1,transform:'translateY(0) scale(1.03) rotate(1deg)'},{opacity:1,transform:'none'}],{duration:600});
   motion.animate(document.querySelector('.prop-envelope'),[{transform:'rotate(-12deg) scale(.6)'},{transform:'rotate(8deg) scale(1.12)'},{transform:'rotate(-5deg) scale(1)'}],{duration:800});
@@ -311,7 +336,8 @@ for(const b of document.querySelectorAll('[data-order-mode]'))b.onclick=()=>{ord
 $('order-form-toggle').onclick=()=>{orderFormOpen=!orderFormOpen;render();};
 $('order-amount').oninput=()=>{orderAmount=Number($('order-amount').value);render();};
 $('order-amount').onchange=()=>{if(Number.isFinite(orderAmount))selectOrderAmount(orderAmount);};
-$('position-list').onclick=e=>{const b=e.target.closest('[data-position-action]');if(b&&!b.disabled)sendAction(b.dataset.positionAction,b.dataset.positionId,b);};
+$('position-list').onclick=e=>{const detail=e.target.closest('[data-position-detail]');if(detail){openPositionDetail(detail.dataset.positionDetail);return;}const b=e.target.closest('[data-position-action]');if(b&&!b.disabled)sendAction(b.dataset.positionAction,b.dataset.positionId,b);};
+for(const b of document.querySelectorAll('[data-stop-pips]'))b.onclick=()=>{stopPips=b.dataset.stopPips==='none'?null:Number(b.dataset.stopPips);stop=stopPips===null?1:.5;render();};
 for(const type of ['long','short','wait','hold','half','close'])$(type).addEventListener('click',()=>sendAction(type));
 for(const b of document.querySelectorAll('[data-speed]'))b.addEventListener('click',()=>{speed=Number(b.dataset.speed);for(const option of document.querySelectorAll('[data-speed]'))option.setAttribute('aria-pressed',String(option===b));});
 $('skip').addEventListener('click',()=>{if(state.phase==='playing')skip=true;});
@@ -337,12 +363,14 @@ document.addEventListener('visibilitychange',()=>{audio.sync();if(document.hidde
 function replaceDeveloperState(next){
   state=next;orderFormOpen=!positionsOf(state).length;state.runId=state.developer?.edited?crypto.randomUUID():(state.runId||crypto.randomUUID());telemetry.setTestMode(!!state.developer?.edited);voice.stop();lastMood=null;playing=false;actionBusy=false;skip=false;
   for(const d of document.querySelectorAll('dialog[open]'))d.close();
-  $('capital-flow').textContent='';$('last-trade').textContent='';render();continueScenes();
+  $('last-trade').textContent='';render();continueScenes();
 }
 function openDeveloper(){
   const values=developerValues(state);for(const [key,value] of Object.entries(values))$('dev-'+key).value=value;
   $('dev-auto-sanity').checked=state.developer?.edited&&state.developer.sanityOverride===null;
   $('dev-sanity').disabled=$('dev-auto-sanity').checked;
+  for(const option of $('dev-phase').options)option.disabled=option.hidden=state.mode==='endless'&&option.value!=='decision';
+  if(state.mode==='endless')$('dev-phase').value='decision';
   $('developer-restore').disabled=!storage.getItem(developerBackupKey);
   setText('developer-error',state.position?'请先平仓并等行情暂停，再应用数据。':'');$('developer-dialog').showModal();
 }
@@ -369,49 +397,52 @@ function renderRiskAlerts(){
  for(const risk of risks){let row=[...box.children].find(r=>r.dataset.riskId===String(risk.positionId));
   if(!row){row=document.createElement('div');row.className='risk-alert';row.dataset.riskId=risk.positionId;const text=document.createElement('b');text.className='risk-copy';row.append(text);for(const [action,label] of [['topup','追加保证金'],['exit','提前平仓']]){const b=document.createElement('button');b.dataset.riskAction=action;b.dataset.riskPosition=risk.positionId;b.textContent=label;row.append(b);}box.append(row);}
   row.querySelector('.risk-copy').textContent=`#${risk.positionId} · ${risk.kind==='stop'?'接近止损':'接近账户强平'} ${Math.round(risk.progress*100)}% · 浮亏 ${yen(risk.loss)}`;
-  const b=row.querySelector('[data-risk-action="topup"]');b.hidden=risk.kind!=='stop';b.disabled=!risk.canTopUp||actionBusy||!['decision','playing'].includes(state.phase);
+  const b=row.querySelector('[data-risk-action="topup"]'),p=positionsOf(state).find(p=>p.id===risk.positionId);b.hidden=risk.kind!=='stop'||Object.hasOwn(p||{},'stopPips');b.disabled=!risk.canTopUp||actionBusy||!['decision','playing'].includes(state.phase);
   row.querySelector('[data-risk-action="exit"]').disabled=actionBusy||!['decision','playing'].includes(state.phase);
  }
  if($('margin-dialog').open&&!positionsOf(state).some(p=>p.id===marginPositionId)){setText('margin-error','该持仓已经平仓，无需追加。');$('margin-confirm').disabled=true;}
 }
 $('risk-alerts').onclick=e=>{const b=e.target.closest('[data-risk-action]');if(!b||b.disabled)return;const id=b.dataset.riskPosition;
  if(b.dataset.riskAction==='topup'){marginPositionId=id;const p=positionsOf(state).find(p=>p.id===id);if(!p)return;const max=Math.floor(accountMetrics(state).availableMargin);$('margin-amount').max=max;$('margin-amount').value=Math.min(max,1000);$('margin-confirm').disabled=false;setText('margin-error','');setText('margin-description',`#${id} · 可追加 ${yen(max)}。现金转为本单抵押，名义仓位不变，止损容许金额随保证金增加；账户保证金率不变。行情继续播放。`);$('margin-dialog').showModal();}
- else try{const r=rescueClose(state,id);trackExit(r.trade);if(!positionsOf(state).length)orderFormOpen=true;setText('capital-flow',`#${id} · 保证金释放 ${yen(r.trade.margin)} · 净收益 ${signed(r.trade.pnl)}`);render();toast(`#${id} 平仓 ${signed(r.trade.pnl)}`,r.trade.pnl>=0?'gain':'loss');}catch(error){toast(error.message,'loss');}
+ else try{const r=rescueClose(state,id);trackExit(r.trade);if(!positionsOf(state).length)orderFormOpen=true;render();toast(`#${id} 平仓 ${signed(r.trade.pnl)}`,r.trade.pnl>=0?'gain':'loss');}catch(error){toast(error.message,'loss');}
 };
 $('margin-max').onclick=()=>{$('margin-amount').value=Math.floor(accountMetrics(state).availableMargin);};
 $('margin-confirm').onclick=()=>{try{const r=topUpMargin(state,marginPositionId,Number($('margin-amount').value));$('margin-dialog').close();render();toast(`#${marginPositionId} 已追加 ${yen(r.amount)}`);}catch(error){setText('margin-error',error.message);}};
 $('loan-open').onclick=()=>{const loan=state.loan;setText('loan-summary',`欠款 ${yen(loan.outstanding)} · 剩余额度 ${yen(Math.max(0,loan.limit-loan.outstanding))} · 日利息 0.05%（借 ¥10,000，每日 ¥5）。未付利息计入欠款。`);setText('loan-error','');$('loan-borrow').disabled=loan.outstanding>=loan.limit;$('loan-repay').disabled=loan.outstanding<=0;$('loan-dialog').showModal();};
 for(const [id,action] of [['loan-borrow',borrowNetwork],['loan-repay',repayNetwork]])$(id).onclick=()=>{try{action(state,Number($('loan-amount').value));$('loan-dialog').close();render();}catch(error){setText('loan-error',error.message);}};
-let rankingMode='total',rankingRequest=0,rankingBusy=false;
-function rankingEligibility(){try{const r=completedLeaderboardScore(state);setText('ranking-eligibility',`第 ${r.day} 天 · 已结算，可提交。`);$('ranking-publish').disabled=rankingBusy;return true;}catch(error){setText('ranking-eligibility',error.message);$('ranking-publish').disabled=true;return false;}}
-async function readRanking(){const request=++rankingRequest;setText('ranking-status','正在读取…');$('ranking-table').replaceChildren();for(const b of document.querySelectorAll('[data-ranking]'))b.setAttribute('aria-pressed',String(b.dataset.ranking===rankingMode));
- try{const data=await leaderboard.read({mode:rankingMode,limit:20});if(request!==rankingRequest)return;
-  if(!data.rows.length){setText('ranking-status','还没有提交的成绩。');return;}
-  const table=document.createElement('table'),head=document.createElement('tr');for(const label of ['排名','玩家','日期','净收益']){const th=document.createElement('th');th.textContent=label;head.append(th);}table.append(head);
-  for(const r of data.rows){const row=document.createElement('tr');for(const value of [r.rank,r.name,'第 '+r.day+' 天',signed(r.score)]){const td=document.createElement('td');td.textContent=value;row.append(td);}table.append(row);}$('ranking-table').append(table);setText('ranking-status','已平仓净收益 · 含手续费 · 不含借款、消费与浮盈');
+let rankingMode='total',rankingGameMode=state.mode||'story',rankingSort='survival',rankingRequest=0,rankingBusy=false;
+function rankingEligibility(){try{const r=completedLeaderboardScore(state);setText('ranking-eligibility',`${r.gameMode==='endless'?'操盘':'剧情'} · 存活 ${r.daysSurvived} 天 · 可提交本局成绩。`);$('ranking-publish').disabled=rankingBusy;return true;}catch(error){setText('ranking-eligibility',error.message);$('ranking-publish').disabled=true;return false;}}
+const percent=value=>Number.isFinite(value)?(value*100).toFixed(2)+'%':'—';
+async function readRanking(){const request=++rankingRequest;setText('ranking-status','正在读取…');$('ranking-table').replaceChildren();for(const b of document.querySelectorAll('[data-ranking-game]'))b.setAttribute('aria-pressed',String(b.dataset.rankingGame===rankingGameMode));
+ try{const data=await leaderboard.read({mode:rankingMode,gameMode:rankingGameMode,sort:rankingSort,limit:20});if(request!==rankingRequest)return;
+  if(!data.rows.length){setText('ranking-status','这个模式还没有提交的成绩。');return;}
+  const box=$('ranking-table');for(const r of data.rows){const card=document.createElement('article');card.className='ranking-entry';const header=document.createElement('div');header.className='ranking-entry-head';const name=document.createElement('b');name.textContent=`${r.rank}. ${r.name}`;const days=document.createElement('strong');days.textContent=`存活 ${r.daysSurvived} 天`;header.append(name,days);card.append(header);const hero=document.createElement('div');hero.className='ranking-return';hero.textContent=percent(r.returnRate);const sub=document.createElement('span');sub.textContent='总收益率';hero.prepend(sub);hero.classList.add(r.returnRate>=0?'positive':'negative');card.append(hero);const grid=document.createElement('div');grid.className='ranking-metrics';for(const [label,value] of [['日均收益率',percent(r.dailyReturnRate)],['总收益',signed(r.totalProfit)],['最大盈利',r.maxProfit===null?'—':signed(r.maxProfit)],['最大亏损',r.maxLoss===null?'—':signed(r.maxLoss)],['最大回撤',percent(r.maxDrawdown)]]){const cell=document.createElement('div'),key=document.createElement('span'),val=document.createElement('b');key.textContent=label;val.textContent=value;cell.append(key,val);grid.append(cell);}card.append(grid);box.append(card);}setText('ranking-status',`${rankingGameMode==='endless'?'操盘':'剧情'}模式 · ${data.rows.length} 位玩家`);
  }catch(error){if(request===rankingRequest)setText('ranking-status',error.message+'，可点击重新读取。');}
 }
-$('leaderboard-open').onclick=()=>{rankingEligibility();$('leaderboard-dialog').showModal();void readRanking();};
+$('leaderboard-open').onclick=()=>{rankingGameMode=state.mode||'story';rankingEligibility();$('leaderboard-dialog').showModal();void readRanking();};
 $('leaderboard-dialog').addEventListener('close',()=>{rankingRequest++;continueScenes();});
-for(const b of document.querySelectorAll('[data-ranking]'))b.onclick=()=>{rankingMode=b.dataset.ranking;void readRanking();};
+for(const b of document.querySelectorAll('[data-ranking-game]'))b.onclick=()=>{rankingGameMode=b.dataset.rankingGame;void readRanking();};
+$('ranking-sort').onchange=()=>{rankingSort=$('ranking-sort').value;void readRanking();};
+$('ranking-share').onclick=()=>openShare('ranking');
 $('ranking-retry').onclick=()=>void readRanking();
 $('ranking-form').onsubmit=async e=>{e.preventDefault();if(rankingBusy||!rankingEligibility())return;rankingBusy=true;rankingEligibility();setText('ranking-status','正在提交…');try{await leaderboard.publish(structuredClone(state),{alias:$('ranking-name').value.trim()});await readRanking();setText('ranking-status','提交成功。重复提交同一条记录不会重复计分。');}catch(error){setText('ranking-status',error.message);}finally{rankingBusy=false;rankingEligibility();}};
 
 for(const type of ['pointerdown','keydown'])document.addEventListener(type,()=>{audio.unlock();voice.unlock();},{once:true});
 setText('storage-warning',UI_COPY.storageWarning);setText('share-hint',UI_COPY.shareHint);
 for(const text of UI_COPY.help){const p=document.createElement('p');p.textContent=text;$('help-copy').append(p);}
-render();if(state.phase==='playing')playSegment();else continueScenes();
+render();if(firstVisit)$('mode-dialog').showModal();else if(state.phase==='playing')playSegment();else if(state.mode==='story'&&!state.openingSeen)showOpening();else continueScenes();
 
 function renderTools(){
- const box=$('tool-list');box.replaceChildren();const discovered=Object.entries(PROPS).filter(([id])=>itemDiscovered(state,id));
+ const box=$('tool-list');box.replaceChildren();const discovered=Object.entries(PROPS).filter(([id])=>itemDiscovered(state,id)&&(state.mode!=='endless'||!['energy','noodles','father'].includes(id)));
  $('inventory-empty').hidden=!!discovered.length;setText('inventory-empty',UI_COPY.inventoryEmpty);setText('inventory-count',discovered.length?discovered.length+' 件':'');
  for(const [id,spec] of discovered){const unlocked=itemUnlocked(state,id),used=id==='father'?state.fatherUsed:state.itemsUsed?.[id];const b=document.createElement('button');b.id=id;b.dataset.prop=id;const title=document.createElement('b'),small=document.createElement('small');title.textContent=spec.name;small.textContent=(unlocked?used?'已使用 · ':'':'未解锁 · ')+spec.caption;b.classList.toggle('item-locked',!unlocked);b.title=spec.copy;b.append(title,small);b.disabled=actionBusy||!unlocked||used||!(id==='father'?['decision','day_end','resting'].includes(state.phase):state.phase==='decision')||accountMetrics(state).availableMargin<(spec.cost||0);box.append(b);}
- $('family-panel').hidden=!state.fatherUsed;setText('family-debt',`父亲存款欠款 ${yen(state.family.outstanding)} · 已归还 ${yen(state.family.repaid)}`);$('repay-open').disabled=!['decision','day_end','resting'].includes(state.phase)||state.family.outstanding<=0||accountMetrics(state).availableMargin<1;
+ $('family-panel').hidden=state.mode==='endless'||!state.fatherUsed;setText('family-debt',`父亲存款欠款 ${yen(state.family.outstanding)} · 已归还 ${yen(state.family.repaid)}`);$('repay-open').disabled=!['decision','day_end','resting'].includes(state.phase)||state.family.outstanding<=0||accountMetrics(state).availableMargin<1;
  $('bankrupt-rescue').hidden=!state.family.unlocked||state.fatherUsed;
  $('loan-panel').hidden=!state.loan?.discovered;setText('loan-state',state.loan?.unlocked?'已开放':'未解锁');setText('loan-effect',`借款上限 ${yen(state.loan?.limit||300000)} · 日利息 0.05% · 当前欠款 ${yen(state.loan?.outstanding||0)}`);$('loan-open').disabled=!state.loan?.unlocked||!['decision','day_end','resting'].includes(state.phase)||actionBusy;
 }
 function continueScenes(){
  if(['playing','closing'].includes(state.phase)||document.querySelector('dialog[open]')||document.querySelector('.settlement-dialog'))return;
+ if(state.mode==='story'&&!state.openingSeen){showOpening();return;}
  const event=pendingStory(state);if(event){showStory(event);return;}
  if(state.phase==='day_end')showDaySettlement();else if(state.phase==='ending')showEnding();else if(state.phase==='resting'){track('rest_end','night',{day:state.day},`rest-end:${state.day}`);nextDay(state);render();continueScenes();}else telemetry.view({screen:'trading',run:state.runId,day:state.day});
 }
@@ -419,10 +450,10 @@ function showCaptions(id,lines){$(id).replaceChildren();lines.forEach((line,i)=>
 function showStory(event){
  telemetry.view({screen:'story',run:state.runId,day:state.day});track('story_seen',event.id,{storyId:event.id,mood:mood(state)},`story:${event.id}`);setText('story-title',event.title);
  const father=event.key.startsWith('father')||event.key.startsWith('repay'),comic=father?'event-father':event.key==='friendStudy'?'event-friend':null;
- $('story-comic-frame').hidden=!comic;$('story-captions').hidden=!father&&comic!=='event-friend';$('story-comic-frame').className='story-comic-frame';
- if(comic){setImage($('story-comic'),`./comics/${comic}.webp`);$('story-comic').alt=event.title+'漫画';}
- for(const [selector,visible] of [['.cover-two',state.fatherUsed],['.cover-three',state.family.discovered],['.cover-four',!!state.family.lastRepayment]])document.querySelector(selector).style.display=father&&!visible?'block':'none';
- if(father||comic==='event-friend')showCaptions('story-captions',comicCaptions(father?'father':'friend',state));
+ const frame=$('story-comic-frame');frame.hidden=!comic;frame.className='story-comic-frame revealed-comic';frame.replaceChildren();$('story-captions').hidden=true;
+ if(comic){const captions=comicCaptions(father?'father':'friend',state);const panels=father?[0,...(state.fatherUsed?[1]:[]),...(state.family.discovered?[2]:[]),...(state.family.lastRepayment?[3]:[])]:[0,1,2,3];frame.classList.toggle('single-panel',panels.length===1);
+  for(const index of panels){const figure=document.createElement('figure'),crop=document.createElement('div'),img=document.createElement('img'),caption=document.createElement('figcaption');crop.className='revealed-comic-crop';setImage(img,`./comics/${comic}.webp`);img.alt=`${event.title} · 第 ${index+1} 格`;img.style.left=(index%2?-100:0)+'%';img.style.top=(index>=2?-100:0)+'%';crop.append(img);figure.append(crop);if(captions[index]){caption.textContent=captions[index];figure.append(caption);}frame.append(figure);}
+ }
  $('story-lines').replaceChildren();for(const [from,text] of [...event.lines,...(event.choices.length===1?event.choices[0].lines:[])]){const p=document.createElement('p');p.textContent=`${from}：${text}`;$('story-lines').append(p);}
  const box=$('story-choices');box.replaceChildren();for(const choice of event.choices){const b=document.createElement('button');b.textContent=state.phase==='resting'?TRANSITION_COPY.restContinue:choice.label;b.dataset.storyChoice=choice.id;box.append(b);}$('story-dialog').showModal();
 }
@@ -436,6 +467,6 @@ $('repay-confirm').onclick=()=>{try{const r=repayFather(state,Number($('repay-am
 $('bankrupt-rescue').onclick=()=>{$('bankrupt-dialog').close();showProp('father');};
 $('voice-toggle').onclick=()=>{voiceEnabled=!voiceEnabled;storage.setItem('fx-girl-voice',voiceEnabled?'on':'off');if(voiceEnabled){voice.unlock?.();voice.lastMood=null;render();}else{voice.stop();render();}};
 $('father-take-confirm').onclick=()=>{$('father-take-dialog').close();showProp('father',true);};
-$('voice-replay').onclick=()=>{voice.unlock();void voice.play(state.lastReaction?.reversal||(mood(state)==='stunned'?'blank':mood(state)),state.speech?.id);};
+$('voice-replay').onclick=()=>{voice.unlock();void voice.play((state.lastReaction?.day===state.day?state.lastReaction?.reversal:null)||(mood(state)==='stunned'?'blank':mood(state)),state.speech?.id);};
 
 function showEnding(){const e=state.ending;track('ending_seen',e.id,{kind:e.id,equityBucket:capitalBucket(e.equity),sanityBucket:bucket(e.sanity)},`ending:${e.id}`);const names={million:'两千万回来了',walkaway:'主动离场',broke:'账户退场',crisis:'最后的坠落'};setText('ending-title',names[e.id]);setText('ending-summary',`第 ${e.day} 天 · 账户 ${yen(e.equity)} · 承受力 ${e.sanity}/100`);setImage($('ending-comic'),`./comics/ending-${e.id}.webp`);$('ending-comic').alt=names[e.id]+'的原创四格漫画';showCaptions('ending-captions',comicCaptions(e.id,state));const before=approvedQuote('Q16',state);setText('ending-before',e.id==='crisis'?before?.text||'':'');$('ending-dialog').showModal();}

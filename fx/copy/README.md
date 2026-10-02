@@ -9,6 +9,7 @@
 | items.js | 道具 name、caption、copy 和 PROP_LINES 使用短句。cost 是实际价格，修改会改变规则 |
 | scenes.js | 休市、父亲与朋友场景标题、台词、按钮标签 |
 | transitions.js | 日结按钮、盈亏反转短句、原作漫画单格中文翻译 |
+| terminal-help.js | 圆形问号扩展说明和开局三页剧情文字，保持来源链接与事实含义 |
 | ui.js | 玩法说明、库存空提示、匿名统计说明 |
 
 原声字幕与录音绑定，保存在 ../voice.js；不能把自行改写的台词当作原声转录。真实片段来源和时码见 ../voice/SOURCES.json。过场图片在 ../comics/，表情在 ../expressions/，原作单格在 ../homage/。

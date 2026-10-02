@@ -13,7 +13,7 @@ export function mountVoiceLibrary(container,lines,{beforePlay,onPlay,onError}={}
     const row=document.createElement('article');row.className='voice-audition';
     const heading=document.createElement('div');heading.className='voice-audition-heading';
     const title=document.createElement('strong');title.textContent=line.speaker+' · '+line.zh;
-    const duration=document.createElement('span');duration.textContent=(line.end-line.start).toFixed(1)+' 秒';
+    const duration=document.createElement('span');duration.textContent=(line.end-line.start+(line.leadInSeconds||0)).toFixed(1)+' 秒';
     heading.append(title,duration);
     const caption=document.createElement('p');caption.lang='ja';caption.textContent=line.ja;
     const player=document.createElement('audio');player.controls=true;player.preload='metadata';player.src=line.file;player.volume=.65;player.dataset.voiceId=line.id;player.setAttribute('aria-label','试听：'+line.speaker+' · '+line.zh);
