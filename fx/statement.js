@@ -1,4 +1,4 @@
-import {TRANSITION_COPY} from './copy/transitions.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {TRANSITION_COPY} from './copy/transitions.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
 const yen=value=>`${value<0?'−':''}¥${Math.abs(value).toLocaleString('zh-CN',{maximumFractionDigits:2})}`;
 const signed=value=>`${value>0?'+':''}${yen(value)}`;
 const quote=value=>Number.isFinite(value)?value.toFixed(6):'—';

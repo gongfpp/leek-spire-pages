@@ -1,24 +1,25 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {buildFXReceipt} from './statement.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {createShareCard} from './share-card.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {createGameStorage} from './storage.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {PROP_LINES} from './copy/items.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {UI_COPY} from './copy/ui.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {TRANSITION_COPY} from './copy/transitions.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {setImage} from './assets.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {GameAudio} from '../audio.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {GameMotion} from '../feedback.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {showSettlement} from '../settlement.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {MOODS, PROPS} from './content.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {mountVoiceLibrary} from './voice-library.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=0a987596a9518be16b4b4d2a6e109b9f8fa9c505';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {buildFXReceipt} from './statement.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {createShareCard} from './share-card.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {createGameStorage} from './storage.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {PROP_LINES} from './copy/items.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {UI_COPY} from './copy/ui.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {TRANSITION_COPY} from './copy/transitions.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {setImage} from './assets.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {GameAudio} from '../audio.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {GameMotion} from '../feedback.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {showSettlement} from '../settlement.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {MOODS, PROPS} from './content.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {mountVoiceLibrary} from './voice-library.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=67a113dea67d8564869ac8028026f79110f3cb2c';
 
 const $ = id => document.getElementById(id);
 const storage=createGameStorage();
@@ -153,8 +154,11 @@ function render(){
   for(const b of document.querySelectorAll('[data-stake]'))b.disabled ||= Number(b.dataset.stake)>limits.stake;
   leverage=Math.min(leverage,limits.leverage);stake=Math.min(stake,limits.stake);
   for(const b of document.querySelectorAll('[data-stop]'))b.disabled ||= Number(b.dataset.stop)>(limits.stop??1);
-  for(const b of document.querySelectorAll('[data-amount-step],#amount-max'))b.disabled=!canTrade;
-  const amountCap=Math.max(preview.maxMargin||0,shortPreview.maxMargin||0);$('order-amount').max=amountCap;setText('amount-limit',`最大 ${yen(amountCap)} · 开仓费另计`);
+  const amountCap=Math.max(preview.maxMargin||0,shortPreview.maxMargin||0),canPickAmount=canTrade&&!limits.noEntry&&amountCap>=100;
+  for(const b of document.querySelectorAll('[data-amount-step],#amount-max,#amount-random,#amount-slider'))b.disabled=!canPickAmount;
+  $('order-amount').disabled=!canPickAmount;
+  $('amount-slider').max=Math.max(100,amountCap);$('amount-slider').value=Number.isFinite(orderAmount)?Math.max(100,Math.min(amountCap,orderAmount)):100;$('amount-slider').setAttribute('aria-valuetext',Number.isFinite(orderAmount)?yen(orderAmount):'请输入有效额度');
+  setText('amount-slider-max',yen(amountCap));setText('amount-selected',Number.isFinite(orderAmount)?yen(orderAmount):'—');setText('amount-limit',amountCap>=100?`最大 ${yen(amountCap)} · 开仓费另计`:'当前可开仓额度不足 ¥100');
   if(limits.noEntry){$('long').disabled=true;$('short').disabled=true;}
   $('effect-list').replaceChildren();for(const effect of state.effects){const def=DEBUFFS[effect.id]||{name:effect.id,copy:''},row=document.createElement('p');row.textContent=`${def.name}${effect.remaining===null?'':` · 剩 ${effect.remaining} 段`}：${def.copy}`;$('effect-list').append(row);}
   if(state.cash<100){$('long').disabled=true;$('short').disabled=true;}
@@ -296,13 +300,17 @@ function showProp(id,confirmed=false){
   motion.animate(document.querySelector('.prop-envelope'),[{transform:'rotate(-12deg) scale(.6)'},{transform:'rotate(8deg) scale(1.12)'},{transform:'rotate(-5deg) scale(1)'}],{duration:800});
 }
 $('stake-slider').oninput=()=>{stake=Number($('stake-slider').value)/100;orderMode='percent';render();};
-for(const b of document.querySelectorAll('[data-amount-step]'))b.onclick=()=>{orderAmount=Math.max(100,Math.min(maxOrderAmount(),(Number($('order-amount').value)||0)+Number(b.dataset.amountStep)));$('order-amount').value=orderAmount;render();};
+function selectOrderAmount(value){orderAmount=clampOrderAmount(value,maxOrderAmount());$('order-amount').value=orderAmount;render();}
+for(const b of document.querySelectorAll('[data-amount-step]'))b.onclick=()=>selectOrderAmount((Number($('order-amount').value)||0)+Number(b.dataset.amountStep));
 function maxOrderAmount(){return Math.max(orderPreview(state,selectedOrder('long')).maxMargin||0,orderPreview(state,selectedOrder('short')).maxMargin||0);}
-$('amount-max').onclick=()=>{orderAmount=maxOrderAmount();$('order-amount').value=orderAmount;render();};
+$('amount-max').onclick=()=>selectOrderAmount(maxOrderAmount());
+$('amount-slider').oninput=()=>selectOrderAmount(sliderOrderAmount(Number($('amount-slider').value),maxOrderAmount()));
+$('amount-random').onclick=()=>{selectOrderAmount(randomOrderAmount(maxOrderAmount()));setText('amount-random-status',`随机选择 ${yen(orderAmount)}`);};
 for(const b of document.querySelectorAll('[data-stake],[data-leverage],[data-stop]'))b.addEventListener('click',()=>{if(b.dataset.stake){stake=Number(b.dataset.stake);orderMode='percent';}if(b.dataset.leverage)leverage=Number(b.dataset.leverage);if(b.dataset.stop)stop=Number(b.dataset.stop);render();});
 for(const b of document.querySelectorAll('[data-order-mode]'))b.onclick=()=>{orderMode=b.dataset.orderMode;render();};
 $('order-form-toggle').onclick=()=>{orderFormOpen=!orderFormOpen;render();};
 $('order-amount').oninput=()=>{orderAmount=Number($('order-amount').value);render();};
+$('order-amount').onchange=()=>{if(Number.isFinite(orderAmount))selectOrderAmount(orderAmount);};
 $('position-list').onclick=e=>{const b=e.target.closest('[data-position-action]');if(b&&!b.disabled)sendAction(b.dataset.positionAction,b.dataset.positionId,b);};
 for(const type of ['long','short','wait','hold','half','close'])$(type).addEventListener('click',()=>sendAction(type));
 for(const b of document.querySelectorAll('[data-speed]'))b.addEventListener('click',()=>{speed=Number(b.dataset.speed);for(const option of document.querySelectorAll('[data-speed]'))option.setAttribute('aria-pressed',String(option===b));});
