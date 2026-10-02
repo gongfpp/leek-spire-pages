@@ -1,39 +1,42 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {buildFXReceipt} from './statement.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {createShareCard} from './share-card.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {PROP_LINES} from './copy/items.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {UI_COPY} from './copy/ui.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {TRANSITION_COPY} from './copy/transitions.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {setImage} from './assets.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {GameAudio} from '../audio.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {GameMotion} from '../feedback.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {showSettlement} from '../settlement.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {MOODS, PROPS} from './content.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=da1d043bda91408042db7dae5be3319577d20085';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {buildFXReceipt} from './statement.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {createShareCard} from './share-card.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {createGameStorage} from './storage.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {PROP_LINES} from './copy/items.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {UI_COPY} from './copy/ui.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {TRANSITION_COPY} from './copy/transitions.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {setImage} from './assets.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,accountMetrics,orderPreview} from './engine.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {GameAudio} from '../audio.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {GameMotion} from '../feedback.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {showSettlement} from '../settlement.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {MOODS, PROPS} from './content.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
 
 const $ = id => document.getElementById(id);
+const storage=createGameStorage();
 const yen = value => `${value<0?'−':''}¥${Math.abs(value).toLocaleString('zh-CN',{maximumFractionDigits:2})}`;
 const signed = value => `${value>0?'+':''}${yen(value)}`;
 const saveKey = 'fx-girl-campaign-v3';
 const settingsKey = 'fx-girl-settings';
 const developerBackupKey='fx-girl-developer-backup-v3';
 const fresh = () => createGame(crypto.getRandomValues(new Uint32Array(1))[0]);
-let state = restoreGame(localStorage.getItem(saveKey)||localStorage.getItem('fx-girl-campaign-v2')) || fresh();
+let state = restoreGame(storage.getItem(saveKey)||storage.getItem('fx-girl-campaign-v2')) || fresh();
 let orderFormOpen=!positionsOf(state).length;
-let orderMode='percent',orderAmount=10000, shareUrl=null,shareRequest=0;
+let orderMode='percent',orderAmount=10000, shareUrl=null,shareFile=null,shareBusy=false,shareRequest=0;
 const achievementKey='fx-jiuliumei-achievements-v1';
-let achievementProfile;try{achievementProfile=JSON.parse(localStorage.getItem(achievementKey)||'{}');}catch{achievementProfile={};}
+let achievementProfile;try{achievementProfile=JSON.parse(storage.getItem(achievementKey)||'{}');}catch{achievementProfile={};}
 let stake=.5, leverage=20, stop=.5, speed=1, skip=false, playing=false, actionBusy=false,  shownFlashTimer, toastTimer, propFrame;
-let sound = localStorage.getItem(settingsKey)!=='mute';
-let voiceEnabled=localStorage.getItem('fx-girl-voice')!=='off';
-let fullMotion=localStorage.getItem('fx-girl-motion')!=='reduce';
-const telemetry=new FXTelemetry({enabled:localStorage.getItem('fx-girl-analytics')!=='off',testMode:!!state.developer?.edited,build:'fx-daily-life-v5'});
+let sound = storage.getItem(settingsKey)!=='mute';
+let voiceEnabled=storage.getItem('fx-girl-voice')!=='off';
+let fullMotion=storage.getItem('fx-girl-motion')!=='reduce';
+const telemetry=new FXTelemetry({enabled:storage.getItem('fx-girl-analytics')!=='off',testMode:!!state.developer?.edited,build:'fx-runtime-polish-v6'});
 const leaderboard=new FXLeaderboard();
 state.runId ||= crypto.randomUUID();let lastMood=null;
 const bucket=n=>n<25?'0-24':n<50?'25-49':n<75?'50-74':'75-100';
@@ -48,7 +51,7 @@ const dayNames=['我就试一下','赚钱好像不难','今晚有大事','新的
 const dayTasks=['熟悉市场，活到收盘','辨认消息反转','在突发事件中守住计划','决定什么时候收手'];
 const shouldAnimate=()=>motion.enabled&&fullMotion;
 const quote=value=>value.toFixed(6);
-function persist(){try{localStorage.setItem(saveKey,JSON.stringify(state));$('saved').textContent='✓';$('saved').title='进度已保存';}catch{$('saved').textContent='保存失败，请勿刷新';}}
+function persist(){const saved=storage.setItem(saveKey,JSON.stringify(state));$('saved').textContent=saved?'✓':'进度仅在本页';$('saved').title=saved?'进度已保存':'浏览器无法保存进度，刷新或关闭后会丢失';$('storage-warning').hidden=saved;}
 function currentRisk(){return Math.round(accountMetrics(state).usedMargin/Math.max(accountMetrics(state).tradingEquity,1)*100);}
 function selectedOrder(type='long'){return {type,leverage,stop,...(orderMode==='amount'?{amount:orderAmount}:{stake})};}
 function setText(id,value){if($(id))$(id).textContent=value;}
@@ -73,14 +76,14 @@ function renderPositions(orders,enabled){
     const title=document.createElement('b'),tag=document.createElement('span');
     title.textContent=`#${p.id} · ${p.direction===1?'↗ 日元多单':'↘ 日元空单'}`;tag.textContent=`${Number(p.leverage.toFixed(1))}×`;head.append(title,tag);row.append(head);
     const net=positionUnrealized(state,p),notional=p.notional??p.margin*p.leverage,closeFee=notional*.00005;
-    const data=[['开仓 → 当前',`${quote(p.entry)} → ${quote(state.price)}`],['保证金 / 名义仓位',`${yen(p.margin)} / ${yen(notional)}`],['浮盈（未扣平仓费）',signed(net)],['已付开仓 / 预计平仓费',`${yen(p.openFee||0)} / ${yen(closeFee)}`],['本笔止损',p.stop===1?'不预设':`−${yen(p.margin*p.stop)}`]];
-    for(const [label,value] of data){const line=document.createElement('div');line.className='order-row-data';const key=document.createElement('span'),val=document.createElement('b');key.textContent=label;val.textContent=value;if(label.startsWith('浮盈'))val.className=net>=0?'positive':'negative';line.append(key,val);row.append(line);}
+    const data=[['开仓 → 当前',`${quote(p.entry)} → ${quote(state.price)}`],['保证金 / 名义仓位',`${yen(p.margin)} / ${yen(notional)}`],['浮动盈亏（未扣平仓费）',signed(net)],['已付开仓 / 预计平仓费',`${yen(p.openFee||0)} / ${yen(closeFee)}`],['本笔止损',p.stop===1?'不预设':`−${yen(p.margin*p.stop)}`]];
+    for(const [label,value] of data){const line=document.createElement('div');line.className='order-row-data';const key=document.createElement('span'),val=document.createElement('b');key.textContent=label;val.textContent=value;if(label.startsWith('浮动盈亏'))val.className=net>=0?'positive':'negative';line.append(key,val);row.append(line);}
     const actions=document.createElement('div');actions.className='order-row-actions';for(const [action,label] of [['half','本单减半'],['close','本单平仓']]){const b=document.createElement('button');b.dataset.positionId=p.id;b.dataset.positionAction=action;b.textContent=label;b.disabled=!enabled;actions.append(b);}row.append(actions);if(p.stop<1){const bar=document.createElement('div');bar.className='stop-progress';const fill=document.createElement('i'),progress=Math.max(0,-net/(p.margin*p.stop));fill.style.width=Math.min(100,progress*100)+'%';bar.classList.toggle('danger',progress>=.75);bar.setAttribute('aria-label','止损进度 '+Math.round(progress*100)+'%');bar.append(fill);row.append(bar);}box.append(row);
   }
 }
 function checkAchievements(){
   const result=evaluateAchievements(state,achievementProfile);achievementProfile=result.profile;
-  if(result.newlyUnlocked.length){try{localStorage.setItem(achievementKey,JSON.stringify(achievementProfile));}catch{}for(const def of result.newlyUnlocked){createAchievementToast(def);if(sound)soundEffect('gain',{level:.3});}}
+  if(result.newlyUnlocked.length){try{storage.setItem(achievementKey,JSON.stringify(achievementProfile));}catch{}for(const def of result.newlyUnlocked){createAchievementToast(def);if(sound)soundEffect('gain',{level:.3});}}
   setText('achievement-count',String(Object.keys(achievementProfile.unlocked||{}).length));
   if($('achievements-dialog').open)renderAchievementBook($('achievement-book'),achievementProfile,state);
 }
@@ -88,12 +91,12 @@ function openAchievements(){renderAchievementBook($('achievement-book'),achievem
 async function openShare(){
   if(state.phase==='playing'||actionBusy)return;
   const request=++shareRequest;const dialog=$('share-dialog');if(!dialog.open)dialog.showModal();
-  $('share-preview').hidden=true;$('share-download').hidden=true;setText('share-status','正在制作战报…');
+  shareFile=null;$('share-preview').hidden=true;$('share-actions').hidden=true;$('share-native').hidden=true;setText('share-status','正在制作战报…');
   const snapshot=structuredClone(state),em=mood(snapshot);
   try{
     const card=await createShareCard(snapshot,{equity:equity(snapshot),tradingProfit:tradingProfit(snapshot),unrealized:unrealized(snapshot),moodLabel:moodInfo[em]?.[0]||'平静',portraitUrl:$('portrait').src,gameUrl:location.href.split('#')[0],achievementCount:Object.keys(achievementProfile.unlocked||{}).length,report:snapshot.dayReport});
     if(request!==shareRequest){URL.revokeObjectURL(card.url);return;}if(shareUrl)URL.revokeObjectURL(shareUrl);shareUrl=card.url;
-    $('share-preview').src=shareUrl;$('share-preview').hidden=false;$('share-download').href=shareUrl;$('share-download').download=card.filename||`FX韭留美-第${snapshot.day}天.png`;$('share-download').hidden=false;setText('share-status',snapshot.developer?.edited?'开发测试战报 · 不计入成就':'战报已生成，可保存原图');
+    shareFile=buildShareFile(card);$('share-preview').src=shareUrl;$('share-preview').hidden=false;$('share-download').href=shareUrl;$('share-download').download=card.filename||`FX韭留美-第${snapshot.day}天.png`;$('share-original').href=shareUrl;$('share-actions').hidden=false;$('share-native').hidden=!canShareFile(shareFile);$('share-native').disabled=shareBusy;setText('share-status',snapshot.developer?.edited?'开发测试战报 · 不计入成就':'战报已生成，可保存原图');
   }catch(error){setText('share-status','战报生成失败：'+error.message);}
 }
 function render(){
@@ -109,6 +112,7 @@ function render(){
   const portraitKey=state.lastReaction?.reversal||(['ending','day_end'].includes(phase)&&account<5000?'blank':info[1]);if($('portrait').dataset.mood!==portraitKey){setImage($('portrait'),`./expressions/kurumi-${portraitKey}.webp`);$('portrait').dataset.mood=portraitKey;$('portrait').alt=`久留美此刻${info[0]}的漫画表情`;}
   const voiceEmotion=state.lastReaction?.reversal||(em==='stunned'?'blank':em);const voiced=voice.sync({enabled:voiceEnabled,emotion:voiceEmotion,speechId:state.speech?.id,run:state.runId});
   setText('speech',voiced?.zh||state.speech?.text||'');setText('voice-caption',voiced?`PV 原声 · ${voiced.speaker||'久留美'} · ${voiced.ja||''}`:'');$('voice-caption').hidden=!voiced;
+  const voiceStatus=voiceEnabled?(voice.lastError?UI_COPY.voiceState[voice.lastError]:voice.loading?UI_COPY.voiceState.loading:voice.playing?UI_COPY.voiceState.playing:''):'';for(const id of ['voice-state','voice-library-status']){setText(id,voiceStatus);$(id).hidden=!voiceStatus;}
   setText('voice-toggle',voiceEnabled?'动画原声 · 开':'动画原声 · 关');$('voice-toggle').disabled=false;$('voice-toggle').setAttribute('aria-pressed',String(voiceEnabled));$('voice-replay').hidden=!voiceEnabled||!availableVoices(voiceEmotion).length;
 
   setText('mental-detail',`累计回撤 ${Math.round(mental.totalDrawdown*100)}% · 近期回撤 ${Math.round(mental.recentDrawdown*100)}% · ${limit.noEntry?'不能新开仓':`新单最多 ${limit.leverage}× · 合计保证金上限 ${Math.round(limit.stake*100)}%`}`);
@@ -266,7 +270,7 @@ function showDayDialog(){
   setText('day-total',yen(r.closing));setText('day-net',`今日交易 ${signed(r.net)} · 生活费 ${yen(r.livingCost||0)} · 交易累计 ${signed(tradingProfit(state))}`);
   setText('next-day','休市');$('day-dialog').showModal();
 }
-function newChapter(){localStorage.removeItem(saveKey);state=fresh();telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;stake=.5;leverage=20;stop=.5;skip=false;playing=false;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('capital-flow').textContent='';$('last-trade').textContent='';render();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
+function newChapter(){storage.removeItem(saveKey);state=fresh();telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;stake=.5;leverage=20;stop=.5;skip=false;playing=false;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('capital-flow').textContent='';$('last-trade').textContent='';render();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
 function showProp(id,confirmed=false){
   if(actionBusy||!['decision','day_end','resting'].includes(state.phase))return;
   if(id==='father'&&!confirmed){$('father-take-dialog').showModal();return;}
@@ -305,10 +309,12 @@ $('skip').addEventListener('click',()=>{if(state.phase==='playing')skip=true;});
 $('tool-list').addEventListener('click',e=>{const b=e.target.closest('[data-prop]');if(b)showProp(b.dataset.prop);});
 $('prop-done').onclick=()=>{cancelAnimationFrame(propFrame);$('prop-dialog').close();continueScenes();};
 $('prop-dialog').addEventListener('cancel',()=>{cancelAnimationFrame(propFrame);requestAnimationFrame(continueScenes);});
-$('motion-toggle').onclick=()=>{fullMotion=!fullMotion;localStorage.setItem('fx-girl-motion',fullMotion?'full':'reduce');motion.configure(fullMotion,true);document.body.classList.toggle('motion-full',fullMotion);render();};
-$('sound').onclick=()=>{sound=!sound;localStorage.setItem(settingsKey,sound?'sound':'mute');audio.unlock();audio.configure({sound,soundVolume:.5});soundEffect('click');render();};
+$('motion-toggle').onclick=()=>{fullMotion=!fullMotion;storage.setItem('fx-girl-motion',fullMotion?'full':'reduce');motion.configure(fullMotion,true);document.body.classList.toggle('motion-full',fullMotion);render();};
+$('sound').onclick=()=>{sound=!sound;storage.setItem(settingsKey,sound?'sound':'mute');audio.unlock();audio.configure({sound,soundVolume:.5});soundEffect('click');render();};
 $('achievements-open').onclick=openAchievements;$('share-open').onclick=openShare;$('day-share').onclick=openShare;
-$('share-dialog').addEventListener('close',()=>{shareRequest++;if(shareUrl){URL.revokeObjectURL(shareUrl);shareUrl=null;}});
+$('share-dialog').addEventListener('close',()=>{shareRequest++;shareFile=null;if(shareUrl){URL.revokeObjectURL(shareUrl);shareUrl=null;}});
+$('share-download').onclick=()=>setText('share-status',UI_COPY.shareSaving);
+$('share-native').onclick=async()=>{if(shareBusy||!shareFile)return;const request=shareRequest;shareBusy=true;$('share-native').disabled=true;setText('share-status','正在打开系统分享…');const result=await shareReportFile(shareFile);shareBusy=false;if(request!==shareRequest)return;$('share-native').disabled=false;setText('share-status',UI_COPY.shareResult[result]);};
 $('help').onclick=()=>$('help-dialog').showModal();for(const b of document.querySelectorAll('[data-close]'))b.onclick=()=>{$(b.dataset.close).close();continueScenes();};
 $('restart').onclick=()=>$('restart-dialog').showModal();$('confirm-restart').onclick=newChapter;$('new-chapter').onclick=newChapter;
 $('next-day').onclick=()=>{if(state.phase==='resting'){$('day-dialog').close();render();continueScenes();return;}beginRest(state);track('rest_start','night',{day:state.day},`rest:${state.day}`);$('day-dialog').close();render();continueScenes();};
@@ -327,7 +333,7 @@ function openDeveloper(){
   const values=developerValues(state);for(const [key,value] of Object.entries(values))$('dev-'+key).value=value;
   $('dev-auto-sanity').checked=state.developer?.edited&&state.developer.sanityOverride===null;
   $('dev-sanity').disabled=$('dev-auto-sanity').checked;
-  $('developer-restore').disabled=!localStorage.getItem(developerBackupKey);
+  $('developer-restore').disabled=!storage.getItem(developerBackupKey);
   setText('developer-error',state.position?'请先平仓并等行情暂停，再应用数据。':'');$('developer-dialog').showModal();
 }
 $('developer-open').onclick=openDeveloper;$('ending-developer').onclick=openDeveloper;
@@ -338,11 +344,11 @@ $('developer-form').onsubmit=e=>{
     const patch={};for(const key of ['cash','reserve','profit','debt','day','beat','price','stress','sanity'])patch[key]=Number($('dev-'+key).value);
     if($('dev-auto-sanity').checked)patch.sanity=null;patch.phase=$('dev-phase').value;
     const next=applyDeveloperPatch(state,patch);
-    if(!state.developer?.edited)localStorage.setItem(developerBackupKey,JSON.stringify(state));
+    if(!state.developer?.edited&&!storage.setItem(developerBackupKey,JSON.stringify(state)))throw Error('浏览器无法保存原存档备份，暂不能修改开发数据');
     replaceDeveloperState(next);toast('开发测试数据已应用，原存档可恢复');
   }catch(error){setText('developer-error',error.message);}
 };
-$('developer-restore').onclick=()=>{try{const original=restoreGame(localStorage.getItem(developerBackupKey));if(!original)throw Error('没有有效的修改前存档');replaceDeveloperState(original);toast('已恢复修改前存档');}catch(error){setText('developer-error',error.message);}};
+$('developer-restore').onclick=()=>{try{const original=restoreGame(storage.getItem(developerBackupKey));if(!original)throw Error('没有有效的修改前存档');replaceDeveloperState(original);toast('已恢复修改前存档');}catch(error){setText('developer-error',error.message);}};
 $('voice-library-open').onclick=()=>{const box=$('voice-list');box.replaceChildren();for(const line of VOICE_LINES){const b=document.createElement('button');b.textContent=line.speaker+' · '+line.zh;b.disabled=!voiceEnabled;b.onclick=()=>{voice.unlock();setText('voice-library-caption',line.ja+' / '+line.zh);void voice.playLine(line.id);};box.append(b);}setText('voice-library-caption',voiceEnabled?'选择一段原声试听':'请先开启动画原声');$('voice-library-dialog').showModal();};
 $('voice-library-dialog').addEventListener('close',()=>voice.stop());
 let marginPositionId=null;
@@ -381,6 +387,7 @@ $('ranking-retry').onclick=()=>void readRanking();
 $('ranking-form').onsubmit=async e=>{e.preventDefault();if(rankingBusy||!rankingEligibility())return;rankingBusy=true;rankingEligibility();setText('ranking-status','正在提交…');try{await leaderboard.publish(structuredClone(state),{alias:$('ranking-name').value.trim()});await readRanking();setText('ranking-status','提交成功。重复提交同一条记录不会重复计分。');}catch(error){setText('ranking-status',error.message);}finally{rankingBusy=false;rankingEligibility();}};
 
 for(const type of ['pointerdown','keydown'])document.addEventListener(type,()=>{audio.unlock();voice.unlock();},{once:true});
+setText('storage-warning',UI_COPY.storageWarning);setText('share-hint',UI_COPY.shareHint);
 for(const text of UI_COPY.help){const p=document.createElement('p');p.textContent=text;$('help-copy').append(p);}
 render();if(state.phase==='playing')playSegment();else continueScenes();
 
@@ -411,12 +418,12 @@ function showStory(event){
 $('story-dialog').addEventListener('cancel',e=>e.preventDefault());
 $('story-choices').addEventListener('click',e=>{const b=e.target.closest('[data-story-choice]');if(!b)return;try{const result=chooseStory(state,b.dataset.storyChoice);track('story_choice',result.event.id,{storyId:result.event.id,choiceId:result.choice.id});for(const id of result.unlocked)track('item_unlocked',id,{itemId:id,storyId:result.event.id});$('story-dialog').close();render();continueScenes();}catch(error){toast(error.message);}});
 $('privacy-toggle').onclick=()=>{setText('privacy-copy',UI_COPY.privacy);setText('privacy-state',telemetry.dnt?'浏览器 DNT / GPC 已关闭统计':state.developer?.edited?'开发测试局不发送统计':telemetry.enabled?'当前：开启':'当前：关闭');setText('privacy-confirm',telemetry.enabled?'关闭匿名统计':'开启匿名统计');$('privacy-confirm').disabled=telemetry.dnt||!!state.developer?.edited;$('privacy-dialog').showModal();};
-$('privacy-confirm').onclick=()=>{const next=!telemetry.enabled;localStorage.setItem('fx-girl-analytics',next?'on':'off');telemetry.setEnabled(next);$('privacy-dialog').close();render();};
+$('privacy-confirm').onclick=()=>{const next=!telemetry.enabled;storage.setItem('fx-girl-analytics',next?'on':'off');telemetry.setEnabled(next);$('privacy-dialog').close();render();};
 $('repay-open').onclick=()=>{const max=Math.floor(Math.min(accountMetrics(state).availableMargin,state.family.outstanding));$('repay-amount').max=max;$('repay-amount').value=Math.min(max,10000);setText('repay-limit',`可归还资金 ${yen(accountMetrics(state).availableMargin)} · 欠款 ${yen(state.family.outstanding)}`);$('repay-dialog').showModal();};
 $('repay-all').onclick=()=>{$('repay-amount').value=Math.floor(Math.min(accountMetrics(state).availableMargin,state.family.outstanding));};
 $('repay-confirm').onclick=()=>{try{const r=repayFather(state,Number($('repay-amount').value));track('story_choice','repay',{storyId:r.full?'repayFull':'repayPartial',choiceId:'repay',equityBucket:capitalBucket(equity(state))});$('repay-dialog').close();toast(`归还 ${yen(r.amount)}`);render();continueScenes();}catch(e){setText('repay-limit',e.message);}};
 $('bankrupt-rescue').onclick=()=>{$('bankrupt-dialog').close();showProp('father');};
-$('voice-toggle').onclick=()=>{voiceEnabled=!voiceEnabled;localStorage.setItem('fx-girl-voice',voiceEnabled?'on':'off');if(voiceEnabled){voice.unlock?.();voice.lastMood=null;render();}else{voice.stop();render();}};
+$('voice-toggle').onclick=()=>{voiceEnabled=!voiceEnabled;storage.setItem('fx-girl-voice',voiceEnabled?'on':'off');if(voiceEnabled){voice.unlock?.();voice.lastMood=null;render();}else{voice.stop();render();}};
 $('father-take-confirm').onclick=()=>{$('father-take-dialog').close();showProp('father',true);};
 $('voice-replay').onclick=()=>{voice.unlock();void voice.play(state.lastReaction?.reversal||(mood(state)==='stunned'?'blank':mood(state)),state.speech?.id);};
 

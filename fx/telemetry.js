@@ -4,6 +4,7 @@ const names = new Set(FX_EVENT_NAMES), tokens = new Set(['from','to','reason','b
 const numbers = new Set(['leverage','sizePct','durationMs','drawdownPct','tolerance','stress','turn','count','day','beat','stake','stop','duration','threshold']);
 const booleans = new Set(['success','returning','muted']);
 const uid = () => crypto.randomUUID();
+const defaultStorage = name => { try { return globalThis[name]; } catch { return null; } };
 const token = value => typeof value === 'string' && /^[a-zA-Z0-9_:.-]{0,80}$/.test(value);
 export const capitalBucket = value => value < 10000 ? 'under-10k' : value < 30000 ? '10k-30k' : value < 100000 ? '30k-100k' : value < 300000 ? '100k-300k' : 'over-300k';
 export const pnlBucket = value => value < -10000 ? 'loss-large' : value < -1000 ? 'loss-medium' : value < 0 ? 'loss-small' : value === 0 ? 'flat' : value < 1000 ? 'gain-small' : value < 10000 ? 'gain-medium' : 'gain-large';
@@ -22,8 +23,8 @@ const remove = (storage, key) => { try { storage?.removeItem(key); } catch {} };
 const stableID = (storage, key) => { let value = get(storage, key); if (!value || !/^[a-zA-Z0-9_-]{8,80}$/.test(value)) { value = uid(); put(storage, key, value); } return value; };
 export class FXTelemetry {
   constructor(options = {}) {
-    this.storage = options.storage ?? globalThis.localStorage;
-    this.sessionStorage = options.sessionStorage ?? globalThis.sessionStorage;
+    this.storage = options.storage ?? defaultStorage('localStorage');
+    this.sessionStorage = options.sessionStorage ?? defaultStorage('sessionStorage');
     this.document = options.document ?? globalThis.document;
     this.window = options.window ?? globalThis.window;
     this.navigator = options.navigator ?? globalThis.navigator;

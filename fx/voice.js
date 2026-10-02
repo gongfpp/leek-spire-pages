@@ -1,4 +1,4 @@
-import {assetURL} from './assets.js?v=da1d043bda91408042db7dae5be3319577d20085';
+import {assetURL} from './assets.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
 
 // Actual short recordings from the official public main PV, never generated speech.
 // Captions stay with their recording, including the PV's amounts, not game balances.
@@ -23,20 +23,20 @@ export class VoicePlayer{
  constructor({makeAudio=()=>new Audio(),onUpdate=()=>{},onPlay=()=>{},onReject=()=>{},lines=VOICE_LINES,now=()=>Date.now(),minGap=8000}={}){
   this.lines=lines;this.audio=makeAudio();this.audio.preload='none';this.audio.volume=.65;
   this.onUpdate=onUpdate;this.onPlay=onPlay;this.onReject=onReject;this.now=now;this.minGap=minGap;
-  this.presentation=null;this.playing=false;this.generation=0;this.sequence={};this.lastMood=null;this.lastRun=null;
+  this.presentation=null;this.playing=false;this.loading=false;this.lastError=null;this.generation=0;this.sequence={};this.lastMood=null;this.lastRun=null;
   this.unlocked=false;this.lastStarted=-Infinity;this.failed=new Set();
-  this.audio.addEventListener('ended',()=>{this.playing=false;this.onUpdate();});
-  this.audio.addEventListener('error',()=>{if(this.presentation){this.failed.add(this.presentation.id);this.onReject(this.presentation);}this.stop();this.onUpdate();});
+  this.audio.addEventListener('ended',()=>{this.playing=false;this.loading=false;this.onUpdate();});
+  this.audio.addEventListener('error',()=>{const line=this.presentation;if(line)this.failed.add(line.id);this.stop();this.lastError='unavailable';if(line)this.onReject(line);this.onUpdate();});
  }
  // Call from an actual pointer/key/replay gesture. Before this, sync performs no play().
- unlock(){if(this.unlocked)return false;this.unlocked=true;this.lastMood=null;return true;}
- stop(){this.generation++;this.audio.pause();this.playing=false;this.presentation=null;}
+ unlock(){if(this.unlocked)return false;this.unlocked=true;this.lastMood=null;this.lastError=null;return true;}
+ stop(){this.generation++;this.audio.pause();this.playing=false;this.loading=false;this.lastError=null;this.presentation=null;}
  async start(line,speechId,emotion){
   if(!this.unlocked||!line||this.failed.has(line.id))return false;
   this.stop();const gen=this.generation;this.audio.src=line.file;this.audio.currentTime=0;
-  this.presentation={...line,mood:emotion,speechId};this.playing=true;this.lastStarted=this.now();this.onUpdate();
-  try{await this.audio.play();if(gen!==this.generation)return false;this.onPlay(line);return true;}
-  catch(error){if(gen===this.generation){this.playing=false;this.presentation=null;if(error?.name==='NotAllowedError')this.unlocked=false;this.onReject(line);this.onUpdate();}return false;}
+  this.presentation={...line,mood:emotion,speechId};this.loading=true;this.lastStarted=this.now();this.onUpdate();
+  try{await this.audio.play();if(gen!==this.generation)return false;this.loading=false;this.playing=true;this.onPlay(line);this.onUpdate();return true;}
+  catch(error){if(gen===this.generation){this.playing=false;this.loading=false;this.presentation=null;this.lastError=error?.name==='NotAllowedError'?'blocked':'unavailable';if(error?.name==='NotAllowedError')this.unlocked=false;this.onReject(line);this.onUpdate();}return false;}
  }
  async play(emotion,speechId){
   if(!this.unlocked)return false;
@@ -50,7 +50,7 @@ export class VoicePlayer{
   const changed=this.lastMood!==emotion||this.lastRun!==run;this.lastMood=emotion;this.lastRun=run;
   if(!enabled){if(this.presentation||this.playing)this.stop();return null;}
   if(changed){this.stop();if(this.unlocked&&this.now()-this.lastStarted>=this.minGap&&this.lines.some(line=>line.moods.includes(emotion)))void this.play(emotion,speechId);}
-  if(this.presentation&&this.presentation.mood===emotion&&(this.presentation.speechId===speechId||this.playing))return this.presentation;
+  if(this.presentation&&this.presentation.mood===emotion&&(this.presentation.speechId===speechId||this.playing||this.loading))return this.presentation;
   return null;
  }
 }

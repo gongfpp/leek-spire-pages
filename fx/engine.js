@@ -1,9 +1,9 @@
-import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {NEWS_CHAINS,PROPS} from './content.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {BLACK_SWANS} from './story-content.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=da1d043bda91408042db7dae5be3319577d20085';
-export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=da1d043bda91408042db7dae5be3319577d20085';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=da1d043bda91408042db7dae5be3319577d20085';
+import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {NEWS_CHAINS,PROPS} from './content.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {BLACK_SWANS} from './story-content.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=7d7fa18e58f70c4a565a64b441bc0a1a39c1e810';
 export const VERSION = 5;
 export const FEE_RATE = .00005;
 export const STOP_OUT_LEVEL = .5;
@@ -323,7 +323,7 @@ export function livingCost(s){
  const base=wealth<20000?Math.max(100,wealth*.015):wealth<100000?500+(wealth-20000)*.02125:Math.min(50000,2200+(wealth-100000)*.002);
  return money(Math.min(wealth,base*(1-(s.livingDiscount||0))));
 }
-function refreshReport(s){if(!s.dayReport)return;const funding=s.externalFunding-s.dayOpeningFunding,costs=s.expenses-s.dayOpeningExpenses;s.dayReport.closing=equity(s);s.dayReport.funding=funding;s.dayReport.costs=costs;s.dayReport.net=equity(s)-s.dayOpening-funding+costs;s.dayReport.externalFunding=s.externalFunding;s.dayReport.tradeNet=s.dayReport.net;s.dayReport.netTradingProfit=s.dayReport.net;}
+function refreshReport(s){if(!s.dayReport||s.dayReport.day!==s.day)return;const funding=s.externalFunding-s.dayOpeningFunding,costs=s.expenses-s.dayOpeningExpenses;s.dayReport.closing=equity(s);s.dayReport.funding=funding;s.dayReport.costs=costs;s.dayReport.net=equity(s)-s.dayOpening-funding+costs;s.dayReport.externalFunding=s.externalFunding;s.dayReport.tradeNet=s.dayReport.net;s.dayReport.netTradingProfit=s.dayReport.net;}
 export function repayFather(s,amount){ensureStory(s);if(!['decision','day_end','resting'].includes(s.phase))throw Error('请等行情暂停');if(!Number.isFinite(amount)||amount<=0||amount>accountMetrics(s).availableMargin||amount>s.family.outstanding)throw Error('归还金额超过可用资金或欠款');const wasInformed=s.family.informed||s.family.discovered;s.cash-=amount;s.externalFunding-=amount;s.family.outstanding-=amount;s.family.repaid+=amount;s.family.lastRepayment={amount,outstanding:s.family.outstanding,wasInformed,day:s.day,beat:s.beat};s.family.informed=true;s.story.queue=s.story.queue.filter(id=>id!=='fatherFound');s.family.trust+=amount/FATHER_SAVINGS;
  const full=s.family.outstanding<.00001;if(full){s.family.outstanding=0;s.effects=s.effects.filter(e=>e.id!=='guilt');s.story.queue=s.story.queue.filter(id=>id!=='fatherFound'&&id!=='repayPartial');}
  queueStory(s,full?'repayFull':'repayPartial');s.emotionBias={mood:full?'determined':'guilty',until:(s.day-1)*4+s.beat+2};mentalState(s);refreshReport(s);return{amount,outstanding:s.family.outstanding,full};}
