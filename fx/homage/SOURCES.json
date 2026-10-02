@@ -1,0 +1,112 @@
+{
+  "investigatedAt": "2026-10-01",
+  "sourceEdition": "author-web-original",
+  "panels": [
+    {
+      "id": "first-day",
+      "file": "demk-first-day.webp",
+      "sourcePage": "2010_R.png",
+      "chapter": 3,
+      "chapterTitle": "結果",
+      "pageIndex": 11,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 298,
+        "height": 305
+      },
+      "character": "福賀くるみ",
+      "sourceScene": "平仓后余悸，仍然发抖；同话前页确认盈利130万円。原作具体第几天未核定。",
+      "gameUse": "首日收盘后的余悸致敬",
+      "mood": [
+        "relieved",
+        "shaken"
+      ],
+      "exactDayOneInSource": false,
+      "path": "dist/fx/homage/demk-first-day.webp",
+      "sourceURL": "http://demk.net/2010_R.png",
+      "chapterURL": "http://demk.net/3.html",
+      "authorIndex": "http://demk.net/fxsensikurumi.html",
+      "attribution": "でむにゃん作者公開Web原作。商業版はでむにゃん原作・炭酸だいすき作画。",
+      "sourceSHA256": "9f85257df4b64f3c6b98ef65e6d95e03329896203bf547faafc416f835ba7670",
+      "sha256": "5426b9effd83289f0b969909ccdb6131405e475d8ea6c12d46eba9a146f665cd",
+      "bytes": 19852,
+      "width": 298,
+      "height": 305,
+      "method": "Chrome单格截图，WebP无损转码；像素与原页同坐标白底透明合成逐像素一致。只保留原画，不经AI/重绘。",
+      "synthetic": false,
+      "pixelVerified": true
+    },
+    {
+      "id": "big-win",
+      "file": "demk-big-win.webp",
+      "sourcePage": "2009_R.png",
+      "chapter": 3,
+      "chapterTitle": "結果",
+      "pageIndex": 10,
+      "rect": {
+        "x": 0,
+        "y": 257,
+        "width": 600,
+        "height": 593
+      },
+      "character": "福賀くるみ",
+      "sourceScene": "久留美盈利130万円后主动确认利益，笑着在电脑前操作。原页上方余额5112640円、口述プラス130万円，截取下面单格。",
+      "gameUse": "爆赚/利润兑现致敬",
+      "mood": [
+        "excited",
+        "relieved"
+      ],
+      "exactDayOneInSource": false,
+      "path": "dist/fx/homage/demk-big-win.webp",
+      "sourceURL": "http://demk.net/2009_R.png",
+      "chapterURL": "http://demk.net/3.html",
+      "authorIndex": "http://demk.net/fxsensikurumi.html",
+      "attribution": "でむにゃん作者公開Web原作。商業版はでむにゃん原作・炭酸だいすき作画。",
+      "sourceSHA256": "89ab734a43ee7785362b71d85998851d8e16372243eadd30de9dfd6e14963fc2",
+      "sha256": "b107e8f96afa224841ead69fa02cb5a7400c81eb3d72bc5132a7f874f26d1e3a",
+      "bytes": 45944,
+      "width": 600,
+      "height": 593,
+      "method": "Chrome单格截图，WebP无损转码；像素与原页同坐标白底透明合成逐像素一致。只保留原画，不经AI/重绘。",
+      "synthetic": false,
+      "pixelVerified": true
+    },
+    {
+      "id": "big-loss",
+      "file": "demk-big-loss.webp",
+      "sourcePage": "007_R.png",
+      "chapter": 1,
+      "chapterTitle": "お祈り",
+      "pageIndex": 9,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 485,
+        "height": 309
+      },
+      "character": "福賀くるみ",
+      "sourceScene": "久留美含亏3501500円，无法接受继续跌价，惊慌、泪眼与发汗。评价损益数字保留，避开右侧邻格。",
+      "gameUse": "爆亏/高杠杆惊慌致敬",
+      "mood": [
+        "panic",
+        "despair"
+      ],
+      "exactDayOneInSource": false,
+      "path": "dist/fx/homage/demk-big-loss.webp",
+      "sourceURL": "http://demk.net/007_R.png",
+      "chapterURL": "http://demk.net/1.html",
+      "authorIndex": "http://demk.net/fxsensikurumi.html",
+      "attribution": "でむにゃん作者公開Web原作。商業版はでむにゃん原作・炭酸だいすき作画。",
+      "sourceSHA256": "84306240a5ab6cb25302e92535649a07f5130c5a14580947c9e134c3eb2732e5",
+      "sha256": "9cde7b2ff3b7ca62e90f4785eb786de5ec5eb717ebfa257bcb5d38045126f2cb",
+      "bytes": 57060,
+      "width": 485,
+      "height": 309,
+      "method": "Chrome单格截图，WebP无损转码；像素与原页同坐标白底透明合成逐像素一致。只保留原画，不经AI/重绘。",
+      "synthetic": false,
+      "pixelVerified": true
+    }
+  ],
+  "sourceVerification": "作者目录明示作:でむにゃん，原Web篇章仍公开；页面和PNG无需登录，未使用付费/认证资源、粉丝图或AI。"
+}
