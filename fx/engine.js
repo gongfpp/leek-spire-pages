@@ -1,9 +1,9 @@
-import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {NEWS_CHAINS,PROPS} from './content.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {BLACK_SWANS} from './story-content.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {ensureStory,checkStories,restrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=42e60038912f95eb620b043e667658eb078c4608';
-export {pendingStory,chooseStory,restrictions,DEBUFFS} from './story.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {NEWS_CHAINS,PROPS} from './content.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {BLACK_SWANS} from './story-content.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {ensureStory,checkStories,restrictions as baseRestrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+export {pendingStory,chooseStory,DEBUFFS} from './story.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
 export const VERSION = 5;
 export const FEE_RATE = .00005;
 export const STOP_OUT_LEVEL = .5;
@@ -160,11 +160,15 @@ function orderStop(s,action){
     const price=pipStopPrice(s.price,action.type==='short'?-1:1,action.stopPips);
     return{stop:1,stopPips:action.stopPips,stopPrice:price};
   }
-  const stop=s.nextStop?Math.min(action.stop,s.nextStop):action.stop;
+  const stop=action.stop;
   return{stop,stopPrice:stop<1&&action.leverage?s.price*(1-(action.type==='short'?-1:1)*stop/action.leverage):null};
 }
 export function positionStopLoss(p){
   return Object.hasOwn(p,'stopPips')?(Number.isFinite(p.stopPrice)?Math.max(0,-p.notional*p.direction*(p.stopPrice/p.entry-1)):null):p.stop<1?p.margin*p.stop:null;
+}
+export function restrictions(s){
+  const limits=baseRestrictions(s),emotion=mood(s),forceNoStop=['ecstatic','despair'].includes(emotion);
+  return {...limits,minLeverage:forceNoStop?25:5,forceNoStop,emotion};
 }
 export function orderPreview(s,action={}){
   const a=accountMetrics(s),limits=restrictions(s),leverage=action.leverage;
@@ -184,7 +188,8 @@ export function orderPreview(s,action={}){
   else if(!['long','short'].includes(action.type)||![5,10,20,25,50,100].includes(leverage)||(Object.hasOwn(action,'stopPips')?![10,30,50,null].includes(action.stopPips):![.25,.5,1].includes(action.stop))||amountMode&&(!Number.isFinite(action.amount)||action.amount<=0)||!amountMode&&(!Number.isFinite(action.stake)||action.stake<.01||action.stake>1))error='订单参数无效';
   else if(limits.noEntry)error='承受力过低，先休息';
   else if(leverage>limits.leverage)error='心理承受力不足，无法使用这个杠杆';
-  else if(Object.hasOwn(action,'stopPips')?action.stopPips===null&&!limits.noStop:action.stop>limits.stop)error='心理承受力不足，需设置止损';
+  else if(leverage<limits.minLeverage)error='当前情绪下杠杆至少 25×';
+  else if(limits.forceNoStop&&(Object.hasOwn(action,'stopPips')?action.stopPips!==null:action.stop!==1))error='极度亢奋或绝望时只能不设止损';
   else if(margin<100)error='保证金至少需要 ¥100';
   else if(margin+openFee>a.availableMargin+1e-7)error='可用保证金不足（需要预留开仓手续费）';
   else if(margin>maxMargin+1e-7)error='总持仓超过当前心理承受力的风险限额';

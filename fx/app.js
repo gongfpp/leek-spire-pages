@@ -1,26 +1,26 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {selectDailyScene} from './daily-scene.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {createShareCard} from './share-card.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {createGameStorage} from './storage.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {runPerformance} from './performance.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {TERMINAL_HELP,OPENING_STORY} from './copy/terminal-help.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {PROP_LINES} from './copy/items.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {UI_COPY} from './copy/ui.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {TRANSITION_COPY} from './copy/transitions.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {setImage} from './assets.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,positionStopLoss,accountMetrics,orderPreview,accountLiquidationEstimate} from './engine.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {GameAudio} from '../audio.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {GameMotion} from '../feedback.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {MOODS, PROPS} from './content.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {mountVoiceLibrary} from './voice-library.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {selectDailyScene} from './daily-scene.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {createShareCard} from './share-card.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {createGameStorage} from './storage.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {runPerformance} from './performance.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {TERMINAL_HELP,OPENING_STORY} from './copy/terminal-help.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {PROP_LINES} from './copy/items.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {UI_COPY} from './copy/ui.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {TRANSITION_COPY} from './copy/transitions.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {setImage} from './assets.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,positionStopLoss,accountMetrics,orderPreview,accountLiquidationEstimate} from './engine.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {GameAudio} from '../audio.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {GameMotion} from '../feedback.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {MOODS, PROPS} from './content.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {mountVoiceLibrary} from './voice-library.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
 
 const $ = id => document.getElementById(id);
 const storage=createGameStorage();
@@ -124,9 +124,9 @@ async function openShare(variant='report'){
   }catch(error){setText('share-status','战报生成失败：'+error.message);}
 }
 function render(){
-  const limit=restrictions(state);stake=Math.min(stake,limit.stake);leverage=Math.min(leverage,limit.leverage);if(![5,10,25,50,100].includes(leverage))leverage=leverage<25?10:25;stop=Math.min(stop,limit.stop??1);if(stopPips===null&&(limit.stop??1)<1)stopPips=30;
+  const mental=mentalState(state),limit=restrictions(state);stake=Math.min(stake,limit.stake);leverage=Math.max(limit.minLeverage,Math.min(leverage,limit.leverage));if(![5,10,25,50,100].includes(leverage))leverage=leverage<25?10:25;if(limit.forceNoStop){stopPips=null;stop=1;}
   const day=state.day,phase=state.phase,position=state.position,marketPlaying=phase==='playing',end=['day_end','resting','ending'].includes(phase),closing=phase==='closing';
-  const account=equity(state),event=currentEvent(state),mental=mentalState(state),em=mood(state),info=moodInfo[em]||['平静','calm'];
+  const account=equity(state),event=currentEvent(state),em=mood(state),info=moodInfo[em]||['平静','calm'];
   const dayNet=account-state.dayOpening-(state.externalFunding-state.dayOpeningFunding)+(state.expenses-state.dayOpeningExpenses);
   const endless=state.mode==='endless',stats=runPerformance(state);
   setText('mode-open',endless?'操盘模式 ▾':'剧情模式 ▾');setText('restart',endless?'重新操盘':'重新开始章节');
@@ -161,6 +161,7 @@ function render(){
   $('percent-field').hidden=orderMode!=='percent';$('amount-field').hidden=orderMode!=='amount';$('order-amount').disabled=!canTrade;$('stake-slider').disabled=!canTrade;$('stake-slider').max=Math.round(limit.stake*100);$('stake-slider').value=Math.round(stake*100);$('stake-slider').setAttribute('aria-valuetext',Math.round(stake*100)+'%');
   for(const b of document.querySelectorAll('[data-order-mode]')){b.setAttribute('aria-pressed',String(b.dataset.orderMode===orderMode));b.disabled=!canTrade;}
   setText('stake-value',`${Math.round(stake*100)}%`);setText('leverage-value',`${leverage}×`);setText('stop-value',stopPips===null?'不预设':`${stopPips} 点`);
+  $('emotion-order-rule').hidden=!limit.forceNoStop;setText('emotion-order-rule',`${info[0]}：只能不设止损，杠杆至少 25×`);
   const preview=orderPreview(state,selectedOrder('long')),shortPreview=orderPreview(state,selectedOrder('short'));
   setText('preview-margin',yen(preview.margin||0));setText('preview-notional',yen(preview.notional||0));setText('preview-fee',yen(preview.openFee||0));setText('preview-debit',yen(preview.totalDebit||0));
   setText('risk-amount',stopPips===null?'不预设':yen(preview.stopLossAmount||0));
@@ -171,13 +172,13 @@ function render(){
   setText('order-validation',!preview.valid&&!shortPreview.valid?(preview.error||'当前不能新开仓'):'');$('order-validation').hidden=preview.valid||shortPreview.valid;
   $('order-validation').classList.toggle('invalid',!preview.valid&&!shortPreview.valid);
   for(const [attr,value] of [['stake',stake],['leverage',leverage],['stop',stop]])for(const button of document.querySelectorAll(`[data-${attr}]`)){button.setAttribute('aria-pressed',String(Number(button.dataset[attr])===value));button.disabled=!canTrade;}
-  for(const id of ['long','short','wait','hold','half','close'])$(id).disabled=!canTrade;for(const b of document.querySelectorAll('[data-stop-pips]')){b.setAttribute('aria-pressed',String(b.dataset.stopPips===(stopPips===null?'none':String(stopPips))));b.disabled=!canTrade||(b.dataset.stopPips==='none'&&(limit.stop??1)<1);}
+  for(const id of ['long','short','wait','hold','half','close'])$(id).disabled=!canTrade;for(const b of document.querySelectorAll('[data-stop-pips]')){b.setAttribute('aria-pressed',String(b.dataset.stopPips===(stopPips===null?'none':String(stopPips))));b.disabled=!canTrade||(limit.forceNoStop&&b.dataset.stopPips!=='none');}
   $('long').disabled ||= !preview.valid;$('short').disabled ||= !shortPreview.valid;
   $('wait').hidden=!!orders.length;
   setText('position-count',`${orders.length} 笔`);setText('floating',signed(metrics.unrealized));$('floating').className=metrics.unrealized>=0?'positive':'negative';
   renderPositions(orders,canTrade);
   renderTools();const limits=restrictions(state);
-  for(const b of document.querySelectorAll('[data-leverage]'))b.disabled ||= Number(b.dataset.leverage)>limits.leverage;
+  for(const b of document.querySelectorAll('[data-leverage]'))b.disabled ||= (Number(b.dataset.leverage)>limits.leverage||Number(b.dataset.leverage)<limits.minLeverage);
   for(const b of document.querySelectorAll('[data-stake]'))b.disabled ||= Number(b.dataset.stake)>limits.stake;
   leverage=Math.min(leverage,limits.leverage);stake=Math.min(stake,limits.stake);
   for(const b of document.querySelectorAll('[data-stop]'))b.disabled ||= Number(b.dataset.stop)>(limits.stop??1);

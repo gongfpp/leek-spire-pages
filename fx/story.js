@@ -1,5 +1,5 @@
-import {ITEM_EVENTS,itemUnlocked} from './item-events.js?v=42e60038912f95eb620b043e667658eb078c4608';
-import {STORIES,getStory} from './story-content.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {ITEM_EVENTS,itemUnlocked} from './item-events.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
+import {STORIES,getStory} from './story-content.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
 export const DEBUFFS={guilt:{name:'父亲的存款',copy:'未还清时心理压力增加 8',stress:8},familyWatch:{name:'父亲开始查账',copy:'心理压力增加 6',stress:6}};
 export function ensureStory(s){
  s.story ||= {seen:[],queue:[],log:[],flags:{}};s.story.seen ||= [];s.story.queue ||= [];s.story.log ||= [];s.story.flags ||= {};s.story.presentedDay ||= 0;
@@ -11,9 +11,9 @@ export function ensureStory(s){
 }
 export function addEffect(s,id,remaining){s.effects ||= [];const effect={id,remaining};const old=s.effects.findIndex(e=>e.id===id);if(old>=0)s.effects[old]=effect;else s.effects.push(effect);return effect;}
 export function restrictions(s){
- const sanity=s.sanity??50;let leverage=sanity<40?25:sanity<65?50:100,stake=sanity<40?.25:sanity<65?.5:1,stop=sanity<40?.25:sanity<65?.5:1,mental=0,stress=0;
+ const sanity=s.sanity??50;let leverage=sanity<40?25:sanity<65?50:100,stake=sanity<40?.25:sanity<65?.5:1,stop=1,mental=0,stress=0;
  for(const e of s.effects||[]){const def=DEBUFFS[e.id];if(!def)continue;mental+=def.mental||0;stress+=def.stress||0;}
- return{leverage,stake,stop,stopMaximum:stop,noStop:stop===1,noEntry:sanity<=5,mental,stress};
+ return{leverage,stake,stop,stopMaximum:stop,noStop:true,noEntry:sanity<=5,mental,stress};
 }
 export function ageEffects(s){const expired=[];s.effects=(s.effects||[]).filter(e=>{if(!DEBUFFS[e.id])return false;if(e.remaining===null)return true;e.remaining--;if(e.remaining<=0){expired.push(e.id);return false;}return true;});return expired;}
 export function queueStory(s,id){ensureStory(s);if(s.mode==='endless'||!STORIES[id]||s.story.seen.includes(id)||s.story.queue.includes(id))return false;s.story.queue.push(id);return true;}

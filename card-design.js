@@ -1,4 +1,4 @@
-import {CARD,CARDS,TRADE_TEXT} from './data.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {CARD,CARDS,TRADE_TEXT} from './data.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
 export const CATEGORIES={买入:{key:'buy',icon:'↑',color:'#f38d80',hint:'按当前点位建立持仓'},卖出:{key:'sell',icon:'↓',color:'#73d6b1',hint:'只卖可用旧仓，遵守 T+1'},防御:{key:'guard',icon:'◇',color:'#83c5f4',hint:'花成本，减少下跌损失'},技巧:{key:'skill',icon:'≋',color:'#c5ceda',hint:'抽牌、留牌或改变判断'},持续:{key:'power',icon:'∞',color:'#c3a0ef',hint:'跨日触发，提前布局'},股息:{key:'yield',icon:'%',color:'#f0cd79',hint:'按持仓收息，空仓无股息'}};
 export const RARITIES={basic:{label:'基础',mark:'·',price:20},common:{label:'普通',mark:'Ⅰ',price:30},uncommon:{label:'罕见',mark:'Ⅱ',price:45},rare:{label:'稀有',mark:'Ⅲ',price:65}};
 const roles={buy:['probe','add','bottom','chase','allin','break','volume','confirm','left','dip','gold','limit','leverage','contrary'],sell:['reduce','stop','profit','empty','cashout'],guard:['panic','cash','value'],skill:['watch','hold','inverse','ignore'],power:['faith'],yield:['bank','coal','dividend']};

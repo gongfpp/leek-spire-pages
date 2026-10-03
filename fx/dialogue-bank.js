@@ -1,1 +1,1 @@
-export {DIALOGUE_BANK} from './copy/script-lines.js?v=42e60038912f95eb620b043e667658eb078c4608';
+export {DIALOGUE_BANK} from './copy/script-lines.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';

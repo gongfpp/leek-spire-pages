@@ -1,4 +1,4 @@
-import {runPerformance} from './performance.js?v=42e60038912f95eb620b043e667658eb078c4608';
+import {runPerformance} from './performance.js?v=9645d7d0bd4195ea72331cc4a4cadf1782175196';
 const finite=(n,fallback=0)=>Number.isFinite(n)?n:fallback;
 const amount=n=>(n<0?'−':'')+'¥'+Math.abs(n).toLocaleString('zh-CN',{maximumFractionDigits:2});
 const signed=n=>(n>0?'+':'')+amount(n);
