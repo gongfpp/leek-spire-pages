@@ -1,4 +1,4 @@
-import {START,CANDLES_PER_BEAT,TICKS_PER_CANDLE,BEATS_PER_DAY,beatsPerDay} from './engine.js?v=6f70e0c664d7edef1bfc803c4656a01056b1edc6';
+import {START,CANDLES_PER_BEAT,TICKS_PER_CANDLE,BEATS_PER_DAY,beatsPerDay} from './engine.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
 
 // Returns ratios as fractions (0.10 = 10%). Closed pnl already includes both fees;
 // external funding, consumption and open floating gains never count as returns.
@@ -18,7 +18,8 @@ export function runPerformance(state){
   const elapsedDays=Math.max(1,elapsedSimulatedDays);
   const completedDays=state.completedDays??Math.max(0,(state.day||1)-1+(dayComplete&&state.ending?.id!=='broke'?1:0));
   const returnRate=totalProfit/startEquity;
+  const winRateTrades=summary?.winRateTrades??trades.length,winningTrades=summary?.winningTrades??trades.filter(t=>t.pnl>0).length;
   return {mode,startEquity,initialEquity:startEquity,elapsedDays,elapsedSimulatedDays,completedCandles,completedDays,daysSurvived:completedDays,
     totalProfit,returnRate,totalReturnRate:returnRate,dailyReturnRate:returnRate/elapsedDays,maxLoss,maxProfit,maxDrawdown,
-    closedTrades:summary?.closedTrades??trades.length};
+    closedTrades:summary?.closedTrades??trades.length,winningTrades,winRateTrades,winRate:winRateTrades?winningTrades/winRateTrades:null};
 }

@@ -1,9 +1,9 @@
-import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=6f70e0c664d7edef1bfc803c4656a01056b1edc6';
-import {NEWS_CHAINS,PROPS} from './content.js?v=6f70e0c664d7edef1bfc803c4656a01056b1edc6';
-import {BLACK_SWANS} from './story-content.js?v=6f70e0c664d7edef1bfc803c4656a01056b1edc6';
-import {ensureStory,checkStories,restrictions as baseRestrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=6f70e0c664d7edef1bfc803c4656a01056b1edc6';
-export {pendingStory,chooseStory,DEBUFFS} from './story.js?v=6f70e0c664d7edef1bfc803c4656a01056b1edc6';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=6f70e0c664d7edef1bfc803c4656a01056b1edc6';
+import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+import {NEWS_CHAINS,PROPS} from './content.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+import {BLACK_SWANS} from './story-content.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+import {ensureStory,checkStories,restrictions as baseRestrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+export {pendingStory,chooseStory,DEBUFFS} from './story.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
 export const VERSION = 5;
 export const FEE_RATE = .00005;
 export const STOP_OUT_LEVEL = .5;
@@ -92,7 +92,7 @@ function historyCandles(seed) {
 export function createGame(seed = Date.now(), {mode = 'story'} = {}) {
   if(!['story','endless'].includes(mode))throw Error('未知游戏模式');
   seed = seed >>> 0;
-  const state = {version: VERSION, mode, startEquity:START, completedCandles:0, completedDays:0, performance:{totalProfit:0,closedTrades:0,maxLoss:0,maxProfit:0,peakEquity:START,maxDrawdown:0}, seed, day: 1, beat: 0, phase: 'decision', price: START_PRICE,
+  const state = {version: VERSION, mode, startEquity:START, completedCandles:0, completedDays:0, performance:{totalProfit:0,closedTrades:0,winningTrades:0,winRateTrades:0,maxLoss:0,maxProfit:0,peakEquity:START,maxDrawdown:0}, seed, day: 1, beat: 0, phase: 'decision', price: START_PRICE,
     cash: mode==='endless'?START:START-LIVING_DAILY, reserve: mode==='endless'?0:LIVING_DAILY, positions: [], position: null, nextOrderId: 1, feesPaid: 0, feeLedger: [], sanity: 50, mentalBoost:0, bonusBeats:0, dayOpening: START, candles: historyCandles(seed),
     script: null, pending: null, history: [], recent: [], chat: {group:[],friend:[]}, promise: null,
     relationship: 0, publicStance: null, promiseNoted:false, dinner:false, skills:{mochiko:false,yasuko:false},
@@ -247,11 +247,17 @@ function closePosition(s, fraction, reason, positionId){
   return s.lastTrade;
 }
 function ensurePerformance(s){
-  if(s.performance)return s.performance;
+  if(s.performance&&s.performance.winRateTrades!==undefined&&s.performance.winningTrades!==undefined)return s.performance;
   const trades=(s.history||[]).filter(t=>t.type!=='open'&&Number.isFinite(t.pnl));
+  if(s.performance){
+    // Old endless saves may have already trimmed earlier trades. Count only
+    // retained evidence, then accumulate future closes without inventing wins.
+    if(s.performance.winRateTrades===undefined||s.performance.winningTrades===undefined){const recorded=trades.filter(t=>t.performanceRecorded);s.performance.winRateTrades=recorded.length;s.performance.winningTrades=recorded.filter(t=>t.pnl>0).length;}
+    return s.performance;
+  }
   let profit=0,peak=START,drawdown=0;
   for(const t of trades){profit+=t.pnl;peak=Math.max(peak,START+profit);drawdown=Math.max(drawdown,1-Math.max(0,START+profit)/peak);}
-  return s.performance={totalProfit:profit,closedTrades:trades.length,maxLoss:Math.min(0,...trades.map(t=>t.pnl)),maxProfit:Math.max(0,...trades.map(t=>t.pnl)),peakEquity:peak,maxDrawdown:drawdown};
+  return s.performance={totalProfit:profit,closedTrades:trades.length,winningTrades:trades.filter(t=>t.pnl>0).length,winRateTrades:trades.length,maxLoss:Math.min(0,...trades.map(t=>t.pnl)),maxProfit:Math.max(0,...trades.map(t=>t.pnl)),peakEquity:peak,maxDrawdown:drawdown};
 }
 function samplePerformance(s){
   const stats=ensurePerformance(s),netEquity=Math.max(0,START+tradingProfit(s));
@@ -271,7 +277,7 @@ function protectBalance(s,trades){
   }
   if(Math.abs(s.cash)<1e-8)s.cash=0;
   const stats=ensurePerformance(s);
-  for(const t of trades)if(!t.performanceRecorded){stats.totalProfit+=t.pnl;stats.closedTrades++;stats.maxLoss=Math.min(stats.maxLoss,t.pnl);stats.maxProfit=Math.max(stats.maxProfit,t.pnl);t.performanceRecorded=true;}
+  for(const t of trades)if(!t.performanceRecorded){stats.totalProfit+=t.pnl;stats.closedTrades++;stats.winRateTrades++;if(t.pnl>0)stats.winningTrades++;stats.maxLoss=Math.min(stats.maxLoss,t.pnl);stats.maxProfit=Math.max(stats.maxProfit,t.pnl);t.performanceRecorded=true;}
   samplePerformance(s);trimEndlessLedgers(s);
 }
 function enforceMargin(s){
@@ -582,6 +588,7 @@ export function restoreGame(raw) {
     if(s.mode==='endless'&&['closing','day_end','resting'].includes(s.phase))return null;
     if(s.mode==='endless'&&s.reserve){s.cash+=s.reserve;s.reserve=0;}
     ensureOrders(s);ensurePerformance(s);
+    if(!Number.isSafeInteger(s.performance.winRateTrades)||s.performance.winRateTrades<0||s.performance.winRateTrades>s.performance.closedTrades||!Number.isSafeInteger(s.performance.winningTrades)||s.performance.winningTrades<0||s.performance.winningTrades>s.performance.winRateTrades)return null;
     if(!Number.isFinite(s.performance.totalProfit)||!Number.isInteger(s.performance.closedTrades)||s.performance.closedTrades<0||!Number.isFinite(s.performance.maxLoss)||s.performance.maxLoss>0||!Number.isFinite(s.performance.maxProfit)||s.performance.maxProfit<0||!Number.isFinite(s.performance.peakEquity)||s.performance.peakEquity<START||!Number.isFinite(s.performance.maxDrawdown)||s.performance.maxDrawdown<0||s.performance.maxDrawdown>1)return null;
     const ids=new Set();
     for(const p of s.positions){
