@@ -1,4 +1,4 @@
-import {equity,tradingProfit,planDay,mentalState,settleDay,beginRest,restoreGame,START,CANDLES_PER_BEAT,BEATS_PER_DAY} from './engine.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+import {equity,tradingProfit,planDay,mentalState,settleDay,beginRest,restoreGame,START,CANDLES_PER_BEAT,BEATS_PER_DAY} from './engine.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
 
 const range=(value,min,max,label,integer=false)=>{
   if(!Number.isFinite(value)||value<min||value>max||integer&&!Number.isInteger(value))throw Error(`${label}需要在 ${min}～${max} 之间${integer?'，且为整数':''}`);

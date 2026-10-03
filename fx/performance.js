@@ -1,4 +1,4 @@
-import {START,CANDLES_PER_BEAT,TICKS_PER_CANDLE,BEATS_PER_DAY,beatsPerDay} from './engine.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+import {START,CANDLES_PER_BEAT,TICKS_PER_CANDLE,BEATS_PER_DAY,beatsPerDay} from './engine.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
 
 // Returns ratios as fractions (0.10 = 10%). Closed pnl already includes both fees;
 // external funding, consumption and open floating gains never count as returns.

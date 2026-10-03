@@ -2,7 +2,7 @@
 export const ITEM_EVENTS={fatherDiscover:['father'],friendStudy:['mochiko'],roommate:['energy']};
 // Kept as an empty compatibility export; unlock conditions are never player copy.
 export const UNLOCK_HINTS={};
-export {ITEM_SCENES} from './copy/scenes.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+export {ITEM_SCENES} from './copy/scenes.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
 export function itemDiscovered(s,id){return !!s.itemDiscoveries?.[id]||itemUnlocked(s,id);}
 export function itemUnlocked(s,id){return id==='father'?!!s.family?.unlocked:!!s.itemUnlocks?.[id];}
 export function discoverItems(s){

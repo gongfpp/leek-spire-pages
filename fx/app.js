@@ -1,27 +1,27 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {selectDailyScene} from './daily-scene.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {createShareCard} from './share-card.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {createGameStorage} from './storage.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {runPerformance} from './performance.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {TERMINAL_HELP,OPENING_STORY} from './copy/terminal-help.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {PROP_LINES} from './copy/items.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {UI_COPY} from './copy/ui.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {TRANSITION_COPY} from './copy/transitions.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {setImage} from './assets.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,positionStopLoss,accountMetrics,orderPreview,accountLiquidationEstimate,enableRealtime,advanceMarket,tradingOpen} from './engine.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {FXAudio} from './audio.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {MarketClock} from './market-clock.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {GameMotion} from '../feedback.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {MOODS, PROPS} from './content.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {mountVoiceLibrary} from './voice-library.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=88d93a74d3ccac11e74e9918fcd7c0383997bcd5';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {selectDailyScene} from './daily-scene.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {createShareCard} from './share-card.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {createGameStorage} from './storage.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {runPerformance} from './performance.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {TERMINAL_HELP,OPENING_STORY} from './copy/terminal-help.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {PROP_LINES} from './copy/items.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {UI_COPY} from './copy/ui.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {TRANSITION_COPY,dailyContinueLabel} from './copy/transitions.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {setImage} from './assets.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,positionStopLoss,accountMetrics,orderPreview,accountLiquidationEstimate,enableRealtime,advanceMarket,tradingOpen} from './engine.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {FXAudio} from './audio.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {MarketClock} from './market-clock.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {GameMotion} from '../feedback.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {MOODS, PROPS} from './content.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {mountVoiceLibrary} from './voice-library.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
 
 const $ = id => document.getElementById(id);
 const storage=createGameStorage();
@@ -320,7 +320,7 @@ function showDayDialog(){
  if(scene?.kind==='turnaround'){setImage($('turnaround-comic'),'./comics/event-turnaround.webp');setText('turnaround-caption',scene.turn.reversal==='profit-to-loss'?TRANSITION_COPY.profitToLoss:TRANSITION_COPY.lossToProfit);}
  if(scene?.kind==='homage'){setImage($('homage-image'),`./homage/demk-${scene.homage}.webp`);$('homage-image').alt=scene.caption;$('homage-source').href=scene.homage==='big-loss'?'http://demk.net/1.html':'http://demk.net/3.html';setText('homage-caption',scene.caption);}
  setText('day-total',yen(r.closing));setText('day-net',`今日交易 ${signed(r.net)} · 生活费 ${yen(r.livingCost||0)} · 交易累计 ${signed(tradingProfit(state))}`);
- setText('next-day',r.closing>=r.opening?TRANSITION_COPY.positive:TRANSITION_COPY.negative);$('day-dialog').showModal();
+ setText('next-day',dailyContinueLabel(r));$('day-dialog').showModal();
 }
 function newChapter(){storage.removeItem(saveKey);marketClock.stop();state=enableRealtime(fresh());telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;stake=.5;leverage=25;stop=.5;stopPips=30;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('last-trade').textContent='';render();if(state.mode==='story')showOpening();marketClock.start();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
 function showProp(id,confirmed=false){
