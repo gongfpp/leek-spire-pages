@@ -1,27 +1,27 @@
-import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {selectDailyScene} from './daily-scene.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {createShareCard} from './share-card.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {createGameStorage} from './storage.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {runPerformance} from './performance.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {TERMINAL_HELP,OPENING_STORY} from './copy/terminal-help.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {PROP_LINES} from './copy/items.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {UI_COPY} from './copy/ui.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {TRANSITION_COPY,dailyContinueLabel} from './copy/transitions.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {setImage} from './assets.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {itemUnlocked,itemDiscovered} from './item-events.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,positionStopLoss,accountMetrics,orderPreview,accountLiquidationEstimate,enableRealtime,advanceMarket,tradingOpen} from './engine.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {FXAudio} from './audio.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {MarketClock} from './market-clock.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {GameMotion} from '../feedback.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {MOODS, PROPS} from './content.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {mountVoiceLibrary} from './voice-library.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {applyDeveloperPatch,developerValues} from './developer.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
-import {comicCaptions,approvedQuote} from './dialogue.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657';
+import {ACHIEVEMENTS,evaluateAchievements,createAchievementToast,renderAchievementBook} from './achievements.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {selectDailyScene} from './daily-scene.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {createShareCard} from './share-card.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {buildShareFile,canShareFile,shareReportFile} from './share-export.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {createGameStorage} from './storage.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {clampOrderAmount,sliderOrderAmount,randomOrderAmount} from './amount-controls.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {runPerformance} from './performance.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {TERMINAL_HELP,OPENING_STORY} from './copy/terminal-help.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {PROP_LINES} from './copy/items.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {UI_COPY} from './copy/ui.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {TRANSITION_COPY,dailyContinueLabel} from './copy/transitions.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {FXLeaderboard,completedLeaderboardScore} from './leaderboard.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {setImage} from './assets.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {itemUnlocked,itemDiscovered} from './item-events.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {createGame, takeAction, advanceTick, nextDay, equity, unrealized, mood, currentEvent, useProp, mentalState, tradingProfit, restoreGame, START, TARGET_PROFIT, settleDay, beginRest, finishCampaign, pendingStory, chooseStory, restrictions, DEBUFFS, repayFather,beatsPerDay,nearStopOrders,topUpMargin,rescueClose,borrowNetwork,repayNetwork,debtSummary,positionsOf,positionUnrealized,positionStopLoss,accountMetrics,orderPreview,accountLiquidationEstimate,enableRealtime,advanceMarket,tradingOpen} from './engine.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {FXAudio} from './audio.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {MarketClock} from './market-clock.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {GameMotion} from '../feedback.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {MOODS, PROPS} from './content.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {VoicePlayer,availableVoices,VOICE_LINES} from './voice.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {mountVoiceLibrary} from './voice-library.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {FXTelemetry,capitalBucket,pnlBucket} from './telemetry.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {applyDeveloperPatch,developerValues} from './developer.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {comicCaptions,approvedQuote} from './dialogue.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
 
 const $ = id => document.getElementById(id);
 const storage=createGameStorage();
@@ -36,7 +36,6 @@ const fresh = (mode=selectedMode) => createGame(crypto.getRandomValues(new Uint3
 const initialSave=storage.getItem(saveKey)||(selectedMode==='story'?storage.getItem('fx-girl-campaign-v2'):null);
 let state=enableRealtime(restoreGame(initialSave)||fresh());
 const firstVisit=!initialSave&&!storage.getItem('fx-girl-mode');
-let orderFormOpen=!positionsOf(state).length;
 let orderMode='percent',orderAmount=10000, shareUrl=null,shareFile=null,shareBusy=false,shareRequest=0;
 const achievementKey='fx-jiuliumei-achievements-v1';
 let achievementProfile;try{achievementProfile=JSON.parse(storage.getItem(achievementKey)||'{}');}catch{achievementProfile={};}
@@ -130,7 +129,7 @@ function finishOpening(){state.openingSeen=true;$('opening-dialog').close();pers
 $('opening-next').onclick=()=>{if(++openingPage>=OPENING_STORY.length)finishOpening();else renderOpening();};$('opening-skip').onclick=finishOpening;$('opening-dialog').addEventListener('cancel',e=>{e.preventDefault();finishOpening();});
 $('mode-open').onclick=()=>$('mode-dialog').showModal();
 for(const b of document.querySelectorAll('[data-play-mode]'))b.onclick=()=>{
-  const mode=b.dataset.playMode;persist();selectedMode=mode;saveKey=saveKeyFor(mode);developerBackupKey=mode==='endless'?'fx-endless-developer-backup-v1':'fx-girl-developer-backup-v3';storage.setItem('fx-girl-mode',mode);const saved=storage.getItem(saveKey);marketClock.stop();state=enableRealtime(restoreGame(saved)||fresh(mode));state.runId||=crypto.randomUUID();telemetry.setTestMode(!!state.developer?.edited);voice.stop();lastMood=null;orderFormOpen=!positionsOf(state).length;leverage=25;stake=.5;stopPips=30;stop=.5;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;$('mode-dialog').close();render();if(mode==='story'&&!state.openingSeen)showOpening();else continueScenes();marketClock.start();
+  const mode=b.dataset.playMode;persist();selectedMode=mode;saveKey=saveKeyFor(mode);developerBackupKey=mode==='endless'?'fx-endless-developer-backup-v1':'fx-girl-developer-backup-v3';storage.setItem('fx-girl-mode',mode);const saved=storage.getItem(saveKey);marketClock.stop();state=enableRealtime(restoreGame(saved)||fresh(mode));state.runId||=crypto.randomUUID();telemetry.setTestMode(!!state.developer?.edited);voice.stop();lastMood=null;leverage=25;stake=.5;stopPips=30;stop=.5;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;$('mode-dialog').close();render();if(mode==='story'&&!state.openingSeen)showOpening();else continueScenes();marketClock.start();
 };
 function checkAchievements(){
   const result=evaluateAchievements(state,achievementProfile);achievementProfile=result.profile;
@@ -185,7 +184,7 @@ function render(){
   $('margin-meter').value=orders.length?Math.min(200,Math.max(0,metrics.marginLevel*100)):200;
   $('margin-level').className=orders.length&&metrics.marginLevel<=1?'negative':'';
   const displayPnl=endless?stats.totalProfit:dayNet;setText('pnl-period',endless?'累计交易收益':'今日收益');setText('day-pnl',signed(displayPnl));$('day-pnl').className=displayPnl>=0?'positive':'negative';
-  $('order-empty').hidden=end||closing||!orderFormOpen;$('order-form-toggle').hidden=end||closing;$('order-form-toggle').disabled=!canTrade;$('order-form-toggle').setAttribute('aria-expanded',String(orderFormOpen));setText('order-form-toggle',orderFormOpen?'收起订单面板':orders.length?'＋ 追加市价单':'＋ 新建市价单');$('position-card').hidden=false;$('position-empty').hidden=!!orders.length;for(const id of ['hold','half','close'])$(id).hidden=!orders.length;
+  $('position-card').hidden=false;$('position-empty').hidden=!!orders.length;for(const id of ['hold','half','close'])$(id).hidden=!orders.length;
   $('percent-field').hidden=orderMode!=='percent';$('amount-field').hidden=orderMode!=='amount';$('order-amount').disabled=!canTrade;$('stake-slider').disabled=!canTrade;$('stake-slider').max=Math.round(limit.stake*100);$('stake-slider').value=Math.round(stake*100);$('stake-slider').setAttribute('aria-valuetext',Math.round(stake*100)+'%');
   for(const b of document.querySelectorAll('[data-order-mode]')){b.setAttribute('aria-pressed',String(b.dataset.orderMode===orderMode));b.disabled=!canTrade;}
   setText('stake-value',`${Math.round(stake*100)}%`);setText('leverage-value',`${leverage}×`);setText('stop-value',stopPips===null?'不预设':`${stopPips} 点`);
@@ -284,13 +283,12 @@ function sendAction(type,positionId=null,sourceButton=null){
   if(['long','short'].includes(type))soundEffect('play',{level:.7});
   try{
     track('trade_attempt',type,{direction:type==='short'?'short':'long',stake:stake*100,leverage,stop:stop*100,equityBucket:capitalBucket(equity(state))});
-    const result=takeAction(state,{...selectedOrder(type),...(positionId?{positionId}:{})});if(result.trade?.type==='open')orderFormOpen=false;if(result.trade?.type==='open')track('trade_open',type,{direction:type==='long'?'long':'short',stake:stake*100,leverage,stop:stop*100});else for(const t of result.trades||[result.trade])trackExit(t);render();
+    const result=takeAction(state,{...selectedOrder(type),...(positionId?{positionId}:{})});if(result.trade?.type==='open')track('trade_open',type,{direction:type==='long'?'long':'short',stake:stake*100,leverage,stop:stop*100});else for(const t of result.trades||[result.trade])trackExit(t);render();
     if(type==='long'||type==='short'){
       const amount=result.trade.margin,label=type==='long'?'做多':'做空';
 
       fly(`${label} ${yen(amount)}`,buttonRect,$('position-card'));impact(label,`${leverage}× · ${yen(amount)}`);
     }else if(result.trade){
-      if(!positionsOf(state).length)orderFormOpen=true;
       const total=tradeTotals(result.trades||[result.trade]),label=positionId?(type==='half'?'本单减半':'本单平仓'):(type==='half'?'全部减半':'全部平仓');
 
       fly(`${label} ${signed(total.pnl)}`,positionRect,$('free-cash'));impact(label,signed(total.pnl),total.pnl>=0?'gain':'loss');
@@ -322,7 +320,7 @@ function showDayDialog(){
  setText('day-total',yen(r.closing));setText('day-net',`今日交易 ${signed(r.net)} · 生活费 ${yen(r.livingCost||0)} · 交易累计 ${signed(tradingProfit(state))}`);
  setText('next-day',dailyContinueLabel(r));$('day-dialog').showModal();
 }
-function newChapter(){storage.removeItem(saveKey);marketClock.stop();state=enableRealtime(fresh());telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderFormOpen=true;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;stake=.5;leverage=25;stop=.5;stopPips=30;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('last-trade').textContent='';render();if(state.mode==='story')showOpening();marketClock.start();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
+function newChapter(){storage.removeItem(saveKey);marketClock.stop();state=enableRealtime(fresh());telemetry.setTestMode(false);voice.stop();state.runId=crypto.randomUUID();lastMood=null;orderMode='percent';orderAmount=10000;$('order-amount').value=orderAmount;stake=.5;leverage=25;stop=.5;stopPips=30;for(const d of document.querySelectorAll('dialog[open]'))d.close();$('last-trade').textContent='';render();if(state.mode==='story')showOpening();marketClock.start();scrollTo({top:0,behavior:fullMotion?'smooth':'instant'});}
 function showProp(id,confirmed=false){
   if(actionBusy||!tradingOpen(state)&&!['day_end','resting'].includes(state.phase))return;
   if(id==='father'&&!confirmed){$('father-take-dialog').showModal();return;}
@@ -354,7 +352,6 @@ $('amount-slider').oninput=()=>selectOrderAmount(sliderOrderAmount(Number($('amo
 $('amount-random').onclick=()=>{selectOrderAmount(randomOrderAmount(maxOrderAmount()));setText('amount-random-status',`随机选择 ${yen(orderAmount)}`);};
 for(const b of document.querySelectorAll('[data-stake],[data-leverage],[data-stop]'))b.addEventListener('click',()=>{if(b.dataset.stake){stake=Number(b.dataset.stake);orderMode='percent';}if(b.dataset.leverage)leverage=Number(b.dataset.leverage);if(b.dataset.stop)stop=Number(b.dataset.stop);render();});
 for(const b of document.querySelectorAll('[data-order-mode]'))b.onclick=()=>{orderMode=b.dataset.orderMode;render();};
-$('order-form-toggle').onclick=()=>{orderFormOpen=!orderFormOpen;render();};
 $('order-amount').oninput=()=>{orderAmount=Number($('order-amount').value);render();};
 $('order-amount').onchange=()=>{if(Number.isFinite(orderAmount))selectOrderAmount(orderAmount);};
 $('position-list').onclick=e=>{const detail=e.target.closest('[data-position-detail]');if(detail){openPositionDetail(detail.dataset.positionDetail);return;}const b=e.target.closest('[data-position-action]');if(b&&!b.disabled)sendAction(b.dataset.positionAction,b.dataset.positionId,b);};
@@ -382,7 +379,7 @@ $('day-dialog').addEventListener('cancel',e=>{e.preventDefault();$('next-day').c
 function pauseAuditions(){for(const player of $('voice-list').querySelectorAll('audio'))player.pause();}
 document.addEventListener('visibilitychange',()=>{audio.sync();if(document.hidden){voice.stop();pauseAuditions();marketClock.stop();persist();}else marketClock.start();marketStatus();});window.addEventListener('pagehide',()=>{marketClock.stop();persist();audio.pause();voice.stop();pauseAuditions();});
 function replaceDeveloperState(next){
-  marketClock.stop();state=enableRealtime(next);orderFormOpen=!positionsOf(state).length;state.runId=state.developer?.edited?crypto.randomUUID():(state.runId||crypto.randomUUID());telemetry.setTestMode(!!state.developer?.edited);voice.stop();lastMood=null;actionBusy=false;
+  marketClock.stop();state=enableRealtime(next);state.runId=state.developer?.edited?crypto.randomUUID():(state.runId||crypto.randomUUID());telemetry.setTestMode(!!state.developer?.edited);voice.stop();lastMood=null;actionBusy=false;
   for(const d of document.querySelectorAll('dialog[open]'))d.close();
   $('last-trade').textContent='';render();continueScenes();marketClock.start();
 }
@@ -426,7 +423,7 @@ function renderRiskAlerts(){
 }
 $('risk-alerts').onclick=e=>{const b=e.target.closest('[data-risk-action]');if(!b||b.disabled)return;const id=b.dataset.riskPosition;
  if(b.dataset.riskAction==='topup'){marginPositionId=id;const p=positionsOf(state).find(p=>p.id===id);if(!p)return;const max=Math.floor(accountMetrics(state).availableMargin);$('margin-amount').max=max;$('margin-amount').value=Math.min(max,1000);$('margin-confirm').disabled=false;setText('margin-error','');setText('margin-description',`#${id} · 可追加 ${yen(max)}。现金转为本单抵押，名义仓位不变，止损容许金额随保证金增加；账户保证金率不变。行情继续播放。`);$('margin-dialog').showModal();}
- else try{const r=rescueClose(state,id);trackExit(r.trade);if(!positionsOf(state).length)orderFormOpen=true;render();toast(`#${id} 平仓 ${signed(r.trade.pnl)}`,r.trade.pnl>=0?'gain':'loss');}catch(error){toast(error.message,'loss');}
+ else try{const r=rescueClose(state,id);trackExit(r.trade);render();toast(`#${id} 平仓 ${signed(r.trade.pnl)}`,r.trade.pnl>=0?'gain':'loss');}catch(error){toast(error.message,'loss');}
 };
 $('margin-max').onclick=()=>{$('margin-amount').value=Math.floor(accountMetrics(state).availableMargin);};
 $('margin-confirm').onclick=()=>{try{const r=topUpMargin(state,marginPositionId,Number($('margin-amount').value));$('margin-dialog').close();render();toast(`#${marginPositionId} 已追加 ${yen(r.amount)}`);}catch(error){setText('margin-error',error.message);}};

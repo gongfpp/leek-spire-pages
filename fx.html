@@ -6,7 +6,7 @@
   <meta name="description" content="持仓穿过连续蜡烛图，读突发消息、管理多笔订单，和久留美一起经历外汇交易日。原创同人风模拟小游戏。">
   <title>FX韭留美 · 今天也要回本</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f16f9f'/%3E%3Ctext x='16' y='24' text-anchor='middle' font-size='25' font-weight='bold' fill='%23231f2d'%3E¥%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./fx/style.css?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657">
+  <link rel="stylesheet" href="./fx/style.css?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c">
 </head>
 <body>
 <header class="topbar">
@@ -20,7 +20,7 @@
   <section class="game-grid" aria-label="外汇交易游戏">
     <aside class="character-card" id="character-card">
       <div class="character-heading"><span>当前表情</span><b id="emotion-label">平静</b><button id="voice-toggle" aria-pressed="false">动画原声 · 开</button></div>
-      <div class="portrait"><img id="portrait" src="./fx/expressions/kurumi-calm.webp?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657" alt="久留美平静地看着屏幕"><span id="impact-stamp" class="impact-stamp" aria-hidden="true"></span><span class="portrait-name">福贺久留美 / 原创同人绘制</span></div>
+      <div class="portrait"><img id="portrait" src="./fx/expressions/kurumi-calm.webp?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c" alt="久留美平静地看着屏幕"><span id="impact-stamp" class="impact-stamp" aria-hidden="true"></span><span class="portrait-name">福贺久留美 / 原创同人绘制</span></div>
       <div class="speech" id="speech" aria-live="polite"></div>
       <div class="voice-caption-row"><p id="voice-state" role="status" hidden></p><p id="voice-caption" lang="ja" hidden></p><button id="voice-replay" aria-label="重播当前心情的日语原声" hidden>↻ 重播</button><button id="voice-library-open">原声目录</button></div>
       <div class="sanity-label"><span>心理承受力 <button class="help-dot" data-help="mental" aria-label="了解心理承受力">?</button></span><b id="sanity-text">50 / 100</b></div><div class="sanity-meter"><span id="sanity-fill"></span></div>
@@ -43,15 +43,16 @@
       <div class="account-row"><span>可用保证金</span><b id="available-margin"></b></div><div class="account-row"><span>持仓保证金</span><b id="used-margin">¥0</b></div>
       <div class="margin-health"><div><span>保证金率 <button class="help-dot" data-help="margin" aria-label="了解保证金率与强平">?</button></span><b id="margin-level"></b></div><meter id="margin-meter" min="0" max="200" low="100" high="150" optimum="200" value="200"></meter></div>
       <div id="account-details" hidden><div class="account-row"><span>现金余额</span><b id="free-cash"></b></div><div class="account-row"><span>生活费预留</span><b id="reserve-amount"></b></div><div class="account-row"><span>借入未还</span><b id="external-funding"></b></div><div class="account-row"><span>累计手续费</span><b id="fees-paid"></b></div></div>
-      <button id="order-form-toggle" class="order-form-toggle" aria-expanded="true">新建市价单</button>
       <div class="order-empty" id="order-empty">
-        <div class="ticket-title">市价订单 <span>JPY / USD</span></div><div class="amount-mode" role="group" aria-label="投资方式"><button data-order-mode="percent" aria-pressed="true">按比例</button><button data-order-mode="amount" aria-pressed="false">按额度</button></div>
+        <div class="ticket-title">市价订单 <span>JPY / USD</span></div>
+        <div class="entry-actions"><button class="long" id="long"><span>↗ 做多</span><small>看日元升值</small></button><button class="short" id="short"><span>↘ 做空</span><small>看日元贬值</small></button></div>
+        <div class="amount-mode" role="group" aria-label="投资方式"><button data-order-mode="percent" aria-pressed="true">按比例</button><button data-order-mode="amount" aria-pressed="false">按额度</button></div>
         <fieldset id="percent-field"><legend>投入剩余保证金 <output id="stake-value">50%</output></legend><div class="segments" id="stakes"><button data-stake="0.1">10%</button><button data-stake="0.25">25%</button><button data-stake="0.5" aria-pressed="true">50%</button><button data-stake="1">全仓</button></div><input id="stake-slider" aria-label="投入比例" type="range" min="1" max="100" step="1" value="50"></fieldset>
         <div id="amount-field" class="amount-field" hidden><div class="amount-heading"><label for="order-amount">投入保证金（¥）</label><button type="button" id="amount-random" title="在当前可开仓额度内随机选择，不会下单" aria-label="骰子：随机额度">🎲 随机额度</button></div><input id="order-amount" type="text" inputmode="decimal" autocomplete="off" value="10000" aria-describedby="amount-limit"><div class="amount-slider-heading"><span>拖动选择额度</span><output id="amount-selected">¥10,000</output></div><input id="amount-slider" aria-label="投入保证金额度" type="range" min="100" max="100000" step="any" value="10000"><div class="amount-slider-bounds"><span>¥100</span><span id="amount-slider-max"></span></div><span class="amount-shortcuts"><button type="button" data-amount-step="-1000">−1千</button><button type="button" data-amount-step="1000">＋1千</button><button type="button" data-amount-step="10000">＋1万</button><button type="button" id="amount-max">最大额度</button></span><small id="amount-limit">保证金额度，含费用预览</small><span id="amount-random-status" class="sr-only" role="status"></span></div><fieldset><legend>杠杆 <button class="help-dot" data-help="leverage" aria-label="了解杠杆">?</button><output id="leverage-value">25×</output></legend><div class="segments" id="leverages"><button data-leverage="5">5×</button><button data-leverage="10">10×</button><button data-leverage="25" aria-pressed="true">25×</button></div><div class="segments high-leverage"><button data-leverage="50">50× · 原作档</button><button data-leverage="100">100× · 原作档</button></div></fieldset>
         <fieldset><legend>止损距离 <button class="help-dot" data-help="stop" aria-label="了解止损点数">?</button><output id="stop-value">30 点</output></legend><div class="segments" id="stops"><button data-stop-pips="10">10 点</button><button data-stop-pips="30" aria-pressed="true">30 点</button><button data-stop-pips="50">50 点</button><button data-stop-pips="none">不设</button></div></fieldset>
         <p id="emotion-order-rule" class="small-print" role="status" hidden></p>
         <div class="order-estimate"><div class="primary-estimate"><span>投入保证金</span><b id="preview-margin"></b></div><div class="primary-estimate"><span>名义仓位 <button class="help-dot" data-help="order" aria-label="了解订单金额">?</button></span><b id="preview-notional"></b></div><div><span>开仓费用</span><b id="preview-fee"></b></div><div id="order-details" hidden><div class="account-row"><span>预计扣款</span><b id="preview-debit"></b></div><div class="account-row"><span>强平价估算（JPY / USD）</span><b id="preview-liquidation"></b></div></div></div><section class="liquidation-estimate"><b>账户强平价估算</b><div><span>本次做多</span><p id="liquidation-long"></p></div><div><span>本次做空</span><p id="liquidation-short"></p></div></section><p class="risk-line">预计止损亏损 <b id="risk-amount"></b></p><p id="order-validation" class="order-validation" role="status"></p>
-        <div class="entry-actions"><button class="long" id="long"><span>↗ 做多</span><small>看日元升值</small></button><button class="short" id="short"><span>↘ 做空</span><small>看日元贬值</small></button></div><button class="quiet" id="wait">空仓观察</button>
+        <button class="quiet" id="wait">空仓观察</button>
       </div>
 
 
@@ -96,6 +97,6 @@
 <dialog id="detail-dialog" class="detail-dialog"><button class="x-close" data-close="detail-dialog" aria-label="关闭扩展说明">×</button><h2 id="detail-title"></h2><div id="detail-copy"></div></dialog>
 <dialog id="mode-dialog" class="mode-dialog"><button class="x-close" data-close="mode-dialog" aria-label="关闭模式选择">×</button><span class="eyebrow">FX韭留美</span><h2>今天怎么交易？</h2><div class="mode-options"><button data-play-mode="story"><b>剧情模式</b><span>从久留美的第一笔交易开始。</span><small>人物故事 · 生活费 · 每日收盘</small></button><button data-play-mode="endless"><b>操盘 · 无尽</b><span>行情不停，看看能活多久。</span><small>连续持仓 · 无收盘结算 · 独立排行榜</small></button></div><p class="small-print">两个模式各自保存进度。</p></dialog>
 <dialog id="opening-dialog" class="opening-dialog"><button id="opening-skip" class="x-close" aria-label="跳过开局故事">×</button><span class="eyebrow" id="opening-count">序章 / 01</span><img id="opening-face" alt="久留美开局故事的表情"><h2 id="opening-title"></h2><p id="opening-copy"></p><div class="opening-links"><a href="https://fxkurumi-info.com/#introduction" target="_blank" rel="noopener">动画故事 ↗</a><a href="https://fxkurumi-info.com/movie/" target="_blank" rel="noopener">官方 PV ↗</a></div><button id="opening-next" class="primary">继续</button></dialog>
-<script type="module" src="./fx/app.js?v=1bc1b4bc071efba3784ae98eb1fac35b090f8657"></script>
+<script type="module" src="./fx/app.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c"></script>
 </body>
 </html>
