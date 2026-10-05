@@ -1,9 +1,9 @@
-import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
-import {NEWS_CHAINS,PROPS} from './content.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
-import {BLACK_SWANS} from './story-content.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
-import {ensureStory,checkStories,restrictions as baseRestrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
-export {pendingStory,chooseStory,DEBUFFS} from './story.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=8f7f3448ba2b52155eb3a84fe2fa0e01e184f22c';
+import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {NEWS_CHAINS,PROPS} from './content.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {BLACK_SWANS} from './story-content.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {ensureStory,checkStories,restrictions as baseRestrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+export {pendingStory,chooseStory,DEBUFFS} from './story.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
 export const VERSION = 5;
 export const FEE_RATE = .00005;
 export const STOP_OUT_LEVEL = .5;
