@@ -1,16 +1,17 @@
-import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-import {NEWS_CHAINS,PROPS} from './content.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-import {BLACK_SWANS} from './story-content.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-import {ensureStory,checkStories,restrictions as baseRestrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-export {pendingStory,chooseStory,DEBUFFS} from './story.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-export const VERSION = 5;
+import {PIP_SIZE,grossPnlAt,pnlCoefficients,positionQuantity,isLegacyPosition} from './market.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {itemUnlocked,discoverItems,itemDiscovered} from './item-events.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {NEWS_CHAINS,PROPS} from './content.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {BLACK_SWANS} from './story-content.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {ensureStory,checkStories,restrictions as baseRestrictions,addEffect,ageEffects,queueStory,pendingStory} from './story.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+export {pendingStory,chooseStory,DEBUFFS} from './story.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {appendDialogue,chooseDialogue,ensureDialogue,updateSpeech,chapterChat} from './dialogue.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+export const VERSION = 6;
 export const FEE_RATE = .00005;
 export const STOP_OUT_LEVEL = .5;
 export const LIVING_DAILY = 2200;
 export const FATHER_SAVINGS = 3000000;
 export const TARGET_PROFIT = 20000000;
-export const START_PRICE = 1 / 150;
+export const START_PRICE = 150;
 export const START = 100000;
 export const CANDLES_PER_BEAT = 4;
 export const BEATS_PER_DAY = 4;
@@ -56,7 +57,7 @@ export function planDay(seed, day, startPrice, rounds = BEATS_PER_DAY) {
       title: beat % 2 === 0 ? chain.lead : reveal,
       copy: beat % 2 === 0 ? chain.leadCopy : detail,
       source: chain.source, time: ['09:10','11:30','15:00','21:30','23:30'][beat]||'00:30',
-      flash: beat % 2 === 0 ? reveal : `${chain.name}：日元成交量恢复正常`,
+      flash: beat % 2 === 0 ? reveal : `${chain.name}：模拟交易活跃度恢复正常`,
       flashCopy: detail});
   }
   let price = startPrice;
@@ -68,7 +69,7 @@ export function planDay(seed, day, startPrice, rounds = BEATS_PER_DAY) {
       const drift = event.bias * phase * (0.00007 + day % 3 * 0.00001);
       const noise = (market() + market() - 1) * 0.00058 * event.vol;
       const shock=swan&&swan.beat===beat&&swan.candle===candle&&swan.tick===tick?swan.delta:0;
-      price = Math.max(.0001, price * (1 + drift + noise + shock));
+      price = Math.max(.001, price * (1 + drift + noise + shock));
       ticks.push(Number(price.toFixed(9)));
     }
     return ticks;
@@ -118,7 +119,8 @@ function ensureOrders(s){
   syncPosition(s);
 }
 function syncPosition(s){s.position=s.positions[0]||null;}
-export function positionUnrealized(s,p){return p?((p.notional??p.margin*p.leverage)*p.direction*(s.price/p.entry-1)||0):0;}
+export function positionUnrealized(s,p){return grossPnlAt(p,s.price);}
+export function positionNetUnrealized(s,p){return p?positionUnrealized(s,p)-(p.openFeeRemaining||0)-money((p.notional??p.margin*p.leverage)*FEE_RATE):0;}
 export function unrealized(s){return positionsOf(s).reduce((sum,p)=>sum+positionUnrealized(s,p),0);}
 export function accountMetrics(s){
   const positions=positionsOf(s),usedMargin=positions.reduce((sum,p)=>sum+p.margin,0),floating=unrealized(s);
@@ -138,23 +140,23 @@ function marginWithinBudget(budget,leverage){
   return margin;
 }
 export function accountLiquidationEstimate(s,extra){
-  const positions=[...positionsOf(s),...(extra?[extra]:[])],used=positions.reduce((sum,p)=>sum+p.margin,0);
-  const slope=positions.reduce((sum,p)=>sum+(p.notional??p.margin*p.leverage)*p.direction/p.entry,0);
-  const required=positions.reduce((sum,p)=>sum+(p.initialMargin??p.margin),0),afterFee=accountMetrics(s).tradingEquity-(extra?fee(extra.margin,extra.leverage):0);
-  const lossThreshold=Math.max(0,s.cash-(extra?extra.margin+fee(extra.margin,extra.leverage):0)+used-STOP_OUT_LEVEL*required);
-  const remainingLoss=Math.max(0,afterFee-STOP_OUT_LEVEL*required);
-  const result={price:null,movePercent:null,lossThreshold,remainingLoss,reason:!positions.length?'empty':Math.abs(slope)<1e-8?'hedged':'unreachable'};
-  if(!positions.length||Math.abs(slope)<1e-8)return result;
-  const constant=s.cash-(extra?extra.margin+fee(extra.margin,extra.leverage):0)+used-positions.reduce((sum,p)=>sum+(p.notional??p.margin*p.leverage)*p.direction,0);
-  const price=(STOP_OUT_LEVEL*positions.reduce((sum,p)=>sum+(p.initialMargin??p.margin),0)-constant)/slope;
-  if(price>0&&Number.isFinite(price))return {...result,price,movePercent:(price/s.price-1)*100,reason:null};
-  return result;
+ const positions=[...positionsOf(s),...(extra?[extra]:[])],used=positions.reduce((n,p)=>n+p.margin,0);
+ const required=positions.reduce((n,p)=>n+(p.initialMargin??p.margin),0),afterFee=accountMetrics(s).tradingEquity-(extra?fee(extra.margin,extra.leverage):0);
+ const balance=s.cash-(extra?extra.margin+fee(extra.margin,extra.leverage):0)+used;
+ const lossThreshold=Math.max(0,balance-STOP_OUT_LEVEL*required),remainingLoss=Math.max(0,afterFee-STOP_OUT_LEVEL*required);
+ const result={price:null,movePercent:null,lossThreshold,remainingLoss,reason:!positions.length?'empty':'unreachable'};
+ if(!positions.length)return result;
+ const terms=positions.map(pnlCoefficients),a=terms.reduce((n,t)=>n+t.linear,0),b=terms.reduce((n,t)=>n+t.reciprocal,0),c=balance-STOP_OUT_LEVEL*required+terms.reduce((n,t)=>n+t.constant,0);
+ if(Math.abs(a)<1e-10&&Math.abs(b)<1e-8)return {...result,reason:'hedged'};
+ let roots=[];
+ if(Math.abs(a)<1e-10){if(Math.abs(c)>1e-10)roots=[-b/c];}
+ else if(Math.abs(b)<1e-8)roots=[-c/a];
+ else {const discriminant=c*c-4*a*b;if(discriminant>=0){const q=-.5*(c+(c>=0?1:-1)*Math.sqrt(discriminant));roots=q?[q/a,b/q]:[-c/(2*a)];}}
+ roots=[...new Set(roots.filter(price=>price>0&&Number.isFinite(price)))].sort((x,y)=>Math.abs(Math.log(x/s.price))-Math.abs(Math.log(y/s.price)));
+ const price=roots[0];return price?{...result,price,prices:roots,movePercent:(price/s.price-1)*100,reason:null}:result;
 }
-export function pipStopPrice(entry,direction,pips){
-  if(pips===null)return null;
-  const usdJpy=1/entry+direction*pips*.01;
-  return usdJpy>0?1/usdJpy:null;
-}
+export function pipStopPrice(entry,direction,pips){if(pips===null)return null;const price=entry-direction*pips*PIP_SIZE;return price>0?price:null;}
+
 function orderStop(s,action){
   if(Object.hasOwn(action,'stopPips')){
     const price=pipStopPrice(s.price,action.type==='short'?-1:1,action.stopPips);
@@ -164,7 +166,7 @@ function orderStop(s,action){
   return{stop,stopPrice:stop<1&&action.leverage?s.price*(1-(action.type==='short'?-1:1)*stop/action.leverage):null};
 }
 export function positionStopLoss(p){
-  return Object.hasOwn(p,'stopPips')?(Number.isFinite(p.stopPrice)?Math.max(0,-p.notional*p.direction*(p.stopPrice/p.entry-1)):null):p.stop<1?p.margin*p.stop:null;
+  return Object.hasOwn(p,'stopPips')?(Number.isFinite(p.stopPrice)?Math.max(0,-grossPnlAt(p,p.stopPrice)):null):p.stop<1?p.margin*p.stop:null;
 }
 export function restrictions(s){
   const limits=baseRestrictions(s),emotion=mood(s),forceNoStop=['ecstatic','despair'].includes(emotion);
@@ -180,13 +182,14 @@ export function orderPreview(s,action={}){
   const amountMode=Object.hasOwn(action,'amount');
   const margin=amountMode?money(action.amount):marginWithinBudget(a.availableMargin*(action.stake||0),leverage||0);
   const openFee=fee(margin,leverage||0),closeFee=openFee,stopConfig=orderStop(s,action);
-  const result={valid:false,error:null,margin,notional:margin*(leverage||0),openFee,closeFee,totalDebit:margin+openFee,maxMargin,
+  const result={valid:false,error:null,margin,notional:margin*(leverage||0),quantity:margin*(leverage||0)/s.price,openFee,closeFee,totalDebit:margin+openFee,maxMargin,
     ...stopConfig,stopLossAmount:stopConfig.stopPrice?Math.max(0,-margin*leverage*(action.type==='short'?-1:1)*(stopConfig.stopPrice/s.price-1)):null,
     liquidationPrice:null,liquidationBasis:'account',riskPercent:a.tradingEquity>0?(a.usedMargin+margin)/Math.max(1,a.tradingEquity-openFee)*100:0,
     availableMargin:a.availableMargin,feeRate:FEE_RATE,stopOutLevel:STOP_OUT_LEVEL};
   let error=null;
   if(!tradingOpen(s))error='当前市场已休市';
   else if(!['long','short'].includes(action.type)||![5,10,20,25,50,100].includes(leverage)||(Object.hasOwn(action,'stopPips')?![10,30,50,null].includes(action.stopPips):![.25,.5,1].includes(action.stop))||amountMode&&(!Number.isFinite(action.amount)||action.amount<=0)||!amountMode&&(!Number.isFinite(action.stake)||action.stake<.01||action.stake>1))error='订单参数无效';
+  else if(Object.hasOwn(action,'stopPips')&&action.stopPips!==null&&!Number.isFinite(stopConfig.stopPrice))error='止损点数超出有效报价范围';
   else if(limits.noEntry)error='承受力过低，先休息';
   else if(leverage>limits.leverage)error='心理承受力不足，无法使用这个杠杆';
   else if(leverage<limits.minLeverage)error='当前情绪下杠杆至少 25×';
@@ -217,16 +220,17 @@ export function mentalState(s, sample=false){
   return {value:s.sanity,totalDrawdown,recentDrawdown,exposure};
 }
 function experience(s, entry) {
+  entry={day:s.day,beat:s.beat,...entry};
   if(entry.reversal){s.dayMoments ||= [];s.dayMoments.push({...entry,day:s.day,beat:s.beat});s.dayMoments=s.dayMoments.slice(-40);}
   s.recent.unshift(entry);
   s.recent = s.recent.slice(0, 5);
-  s.lastReaction = {type: entry.type, day: s.day, beat: s.beat, risk:entry.risk||0,pnl:entry.pnl??null,positionId:entry.positionId||null,reversal:entry.reversal||null};
+  s.lastReaction = {type: entry.type, day: s.day, beat: s.beat, risk:entry.risk||0,pnl:entry.pnl??null,positionId:entry.positionId||null,direction:entry.direction??null,reversal:entry.reversal||null};
 }
 function closePosition(s, fraction, reason, positionId){
   ensureOrders(s);
   const p=positionId?s.positions.find(p=>p.id===positionId):s.positions[0];
   if(!p||fraction<=0||fraction>1)throw Error('没有可平仓位');
-  const before=equity(s),margin=p.margin*fraction,raw=positionUnrealized(s,p)*fraction;
+  const before=equity(s),margin=p.margin*fraction,raw=positionUnrealized(s,p)*fraction,quantity=isLegacyPosition(p)?null:positionQuantity(p)*fraction;
   const peakUnrealized=p.maxUnrealized*fraction,openFee=p.openFeeRemaining*fraction,closeFee=money((p.notional??p.margin*p.leverage)*fraction*FEE_RATE);
   let pnl=raw-openFee-closeFee;
   let lossReduction=0;
@@ -237,7 +241,7 @@ function closePosition(s, fraction, reason, positionId){
   if(p.margin<.00001||fraction===1)s.positions=s.positions.filter(order=>order!==p);
   syncPosition(s);
   s.lastTrade={type:reason,positionId:p.id,direction:p.direction,margin,leverage:p.leverage,entry:p.entry,exit:s.price,
-    grossPnl:raw,lossReduction,protection:lossReduction>0,openFee,closeFee,fee:openFee+closeFee,feeAllocation:{open:openFee,close:closeFee},nearMiss:!!p.nearMiss,maxUnrealized:peakUnrealized,pnl,day:s.day,beat:Math.min(s.beat,beatsPerDay(s)-1)};
+    pnlModel:p.pnlModel||'usd-jpy-v6',quantity,grossPnl:raw,lossReduction,protection:lossReduction>0,openFee,closeFee,fee:openFee+closeFee,feeAllocation:{open:openFee,close:closeFee},nearMiss:!!p.nearMiss,maxUnrealized:peakUnrealized,pnl,day:s.day,beat:Math.min(s.beat,beatsPerDay(s)-1)};
   s.history.push(s.lastTrade);
   const impact=pnl/Math.max(1000,before);
   s.heat=Math.max(0,Math.min(5,(s.heat||0)+(pnl>0?1:-1)));
@@ -303,7 +307,7 @@ export function mood(s) {
   if (latest?.type==='despair' || weighted<-.17) return 'despair';
   if (s.sanity<25) return 'anxious';
   if (latest?.type==='ecstatic' && weighted>0 || tradingProfit(s)>START*.15&&s.heat>=3) return 'ecstatic';
-  if(positionsOf(s).some(p=>p.risk>=20||positionUnrealized(s,p)<-p.margin*.22))return 'nervous';
+  if(positionsOf(s).some(p=>p.risk>=20||positionNetUnrealized(s,p)<-p.margin*.22))return 'nervous';
   if (latest?.day===s.day&&latest?.type==='regretful') return 'regretful';
   if (latest?.day===s.day&&latest?.type==='relieved') return 'relieved';
   if (s.emotionBias?.until>(s.day-1)*4+s.beat) return s.emotionBias.mood;
@@ -427,11 +431,11 @@ export function takeAction(s,action){
   const before=equity(s);let trade=null,trades=[];
   if(action.type==='long'||action.type==='short'){
     const {margin,openFee}=preview;s.cash-=margin+openFee;if(Math.abs(s.cash)<1e-8)s.cash=0;s.feesPaid+=openFee;s.feeLedger.push({day:s.day,beat:s.beat,positionId:'order-'+s.nextOrderId,side:'open',amount:openFee});
-    const p={id:'order-'+s.nextOrderId++,direction:action.type==='long'?1:-1,entry:s.price,margin,initialMargin:margin,notional:margin*action.leverage,leverage:action.leverage,
+    const p={id:'order-'+s.nextOrderId++,direction:action.type==='long'?1:-1,entry:s.price,pnlModel:'usd-jpy-v6',margin,initialMargin:margin,notional:margin*action.leverage,leverage:action.leverage,
       ...orderStop(s,action),risk:margin/Math.max(1,accountMetrics(s).tradingEquity+margin)*action.leverage,
       openFee,openFeeRemaining:openFee,maxUnrealized:0,nearMiss:false,day:s.day,beat:s.beat};
     s.positions.push(p);syncPosition(s);s.nextStop=null;
-    s.lastTrade={type:'open',positionId:p.id,direction:p.direction,margin,leverage:p.leverage,entry:p.entry,openFee,fee:openFee,day:s.day,beat:s.beat};
+    s.lastTrade={type:'open',positionId:p.id,direction:p.direction,margin,leverage:p.leverage,entry:p.entry,pnlModel:p.pnlModel,quantity:positionQuantity(p),openFee,fee:openFee,day:s.day,beat:s.beat};
     trade=s.lastTrade;trades=[trade];
     if(action.leverage>=50){s.stress+=action.leverage===100?8:4;s.restRecovery=Math.max(0,(s.restRecovery||0)-4);}
     s.heat=Math.min(5,s.heat+(action.leverage>=50?2:1));
@@ -458,7 +462,7 @@ export function advanceMarket(s){
 function appendChatAfterBeat(s){
   const first=s.candles.at(-CANDLES_PER_BEAT),delta=s.price/(first?.open||s.price)-1;
   appendDialogue(s,'group','group.market.'+(Math.abs(delta)<.0005?'flat':delta>0?'up':'down'));
-  if(s.publicStance?.day===s.day&&s.publicStance.beat===s.beat-1){
+  if(s.publicStance?.day===s.day&&s.publicStance.beat===s.beat-1&&Math.abs(delta)>=.0005){
     const correct=s.publicStance.direction===(delta>=0?1:-1);
     appendDialogue(s,'group','group.stance.'+(correct?'correct':'wrong'));
   }
@@ -515,11 +519,11 @@ export function advanceTick(s) {
   s.price=price;candle.close=price;candle.high=Math.max(candle.high,price);candle.low=Math.min(candle.low,price);
   ensureOrders(s);const exits=[];
   for(const pos of s.positions){
-   const unreal=positionUnrealized(s,pos),last=pos.lastDirectionalFloating??pos.lastFloating??0;pos.maxUnrealized=Math.max(pos.maxUnrealized,unreal);
+   const unreal=positionNetUnrealized(s,pos),last=pos.lastDirectionalFloating??pos.lastFloating??0;pos.maxUnrealized=Math.max(pos.maxUnrealized,unreal);
    const meaningful=Math.max(5,(pos.notional||0)*.00003);
    if(unreal<-pos.margin*.65)pos.nearMiss=true;
-   if(last>meaningful&&unreal<-meaningful){pos.profitToLoss=true;experience(s,{type:'stunned',impact:unreal/Math.max(1000,equity(s)),risk:pos.risk,positionId:pos.id,reversal:'profit-to-loss',pnl:unreal});}
-   if(last<-meaningful&&unreal>meaningful){pos.recoveredFromLoss=true;experience(s,{type:'relieved',impact:unreal/Math.max(1000,equity(s)),risk:pos.risk,positionId:pos.id,reversal:'loss-to-profit',pnl:unreal});}
+   if(last>meaningful&&unreal<-meaningful){pos.profitToLoss=true;experience(s,{type:'stunned',impact:unreal/Math.max(1000,equity(s)),risk:pos.risk,positionId:pos.id,direction:pos.direction,reversal:'profit-to-loss',pnl:unreal});}
+   if(last<-meaningful&&unreal>meaningful){pos.recoveredFromLoss=true;experience(s,{type:'relieved',impact:unreal/Math.max(1000,equity(s)),risk:pos.risk,positionId:pos.id,direction:pos.direction,reversal:'loss-to-profit',pnl:unreal});}
    pos.lastFloating=unreal;if(Math.abs(unreal)>meaningful)pos.lastDirectionalFloating=unreal;
   }
   exits.push(...enforceMargin(s));
@@ -577,11 +581,12 @@ export function restoreGame(raw) {
     let s=JSON.parse(raw);const oldVersion=s?.version;
     if(s&&[2,3].includes(s.version)&&Number.isFinite(s.cash)&&s.cash<0)return null;
     if(s&&Number.isFinite(s.cash)&&s.cash<0&&s.cash>=-1e-8)s.cash=0;
-    if(!s||![2,3,4,VERSION].includes(s.version)||!Number.isFinite(s.seed)||!Number.isFinite(s.price)||s.price<=0||!Number.isFinite(s.cash)||!Array.isArray(s.candles)||!s.script?.tracks||!['decision','playing','closing','day_end','resting','ending','bankrupt'].includes(s.phase))return null;
+    if(!s||![2,3,4,5,VERSION].includes(s.version)||!Number.isFinite(s.seed)||!Number.isFinite(s.price)||s.price<=0||!Number.isFinite(s.cash)||!Array.isArray(s.candles)||!s.script?.tracks||!['decision','playing','closing','day_end','resting','ending','bankrupt'].includes(s.phase))return null;
     if(s.phase==='playing'&&(!s.pending||!Number.isInteger(s.pending.beat)||!Number.isInteger(s.pending.candle)||!Number.isInteger(s.pending.tick)))return null;
     if(s.version===2){delete s.positions;s=migrateV2(s);}
     if(s.version<4){delete s.positions;s.version=VERSION;}
     if(oldVersion<5){s.nextStop=null;s.version=VERSION;s.mentalBoost ||= 0;s.bonusBeats ||= 0;s.itemDiscoveries={...s.itemUnlocks};s.effects=(s.effects||[]).filter(e=>['guilt','familyWatch'].includes(e.id));}
+    if(oldVersion<6){migrateInverseQuotes(s);s.version=VERSION;}
     if(!s.mode)s.mode='story';if(!['story','endless'].includes(s.mode))return null;
     s.startEquity ??= START;s.completedCandles ??= Math.max(0,(s.day-1)*16+s.beat*4+(s.pending?.candle||0));s.completedDays ??= Math.max(0,s.day-1+(s.mode==='story'&&['day_end','resting','ending'].includes(s.phase)&&s.beat>=beatsPerDay(s)&&equity(s)>=MIN_EQUITY?1:0));
     if(!Number.isSafeInteger(s.completedCandles)||s.completedCandles<0||!Number.isSafeInteger(s.completedDays)||s.completedDays<0)return null;
@@ -592,7 +597,7 @@ export function restoreGame(raw) {
     if(!Number.isFinite(s.performance.totalProfit)||!Number.isInteger(s.performance.closedTrades)||s.performance.closedTrades<0||!Number.isFinite(s.performance.maxLoss)||s.performance.maxLoss>0||!Number.isFinite(s.performance.maxProfit)||s.performance.maxProfit<0||!Number.isFinite(s.performance.peakEquity)||s.performance.peakEquity<START||!Number.isFinite(s.performance.maxDrawdown)||s.performance.maxDrawdown<0||s.performance.maxDrawdown>1)return null;
     const ids=new Set();
     for(const p of s.positions){
-      if(typeof p.id!=='string'||ids.has(p.id)||![1,-1].includes(p.direction)||!Number.isFinite(p.entry)||p.entry<=0||!Number.isFinite(p.margin)||p.margin<=0||!Number.isFinite(p.leverage)||p.leverage<=0||p.leverage>100||!Number.isFinite(p.notional)||p.notional<=0||![.25,.5,1].includes(p.stop)||(Object.hasOwn(p,'stopPips')&&![10,30,50,null].includes(p.stopPips))||(p.stopPrice!==undefined&&p.stopPrice!==null&&(!Number.isFinite(p.stopPrice)||p.stopPrice<=0))||!Number.isFinite(p.openFeeRemaining)||p.openFeeRemaining<0)return null;
+      if(![undefined,'usd-jpy-v6','legacy-inverse-v5'].includes(p.pnlModel)||typeof p.id!=='string'||ids.has(p.id)||![1,-1].includes(p.direction)||!Number.isFinite(p.entry)||p.entry<=0||!Number.isFinite(p.margin)||p.margin<=0||!Number.isFinite(p.leverage)||p.leverage<=0||p.leverage>100||!Number.isFinite(p.notional)||p.notional<=0||![.25,.5,1].includes(p.stop)||(Object.hasOwn(p,'stopPips')&&![10,30,50,null].includes(p.stopPips))||(p.stopPrice!==undefined&&p.stopPrice!==null&&(!Number.isFinite(p.stopPrice)||p.stopPrice<=0))||!Number.isFinite(p.openFeeRemaining)||p.openFeeRemaining<0)return null;
       ids.add(p.id);
     }
     // In cross margin, realizing the losing hedge can make cash negative while
@@ -632,4 +637,45 @@ function migrateV2(s){
   if(s.promise)appendDialogue(s,'friend','friend.remind.'+(s.promise==='small'?'small':'break_even'));
   if(s.dayReport){s.dayReport.funding=0;s.dayReport.externalFunding=0;for(const t of s.dayReport.trades||[])convertTrade(t);convertTrade(s.dayReport.peak);}
   return s;
+}
+
+// Re-express old quotes without changing their original economic settlement.
+function migrateInverseQuotes(s){
+ const inv=n=>Number.isFinite(n)&&n>0?1/n:n;s.price=inv(s.price);
+ for(const c of s.candles){const high=c.high;c.open=inv(c.open);c.close=inv(c.close);c.high=inv(c.low);c.low=inv(high);}
+ s.script.tracks=s.script.tracks.map(b=>b.map(c=>c.map(inv)));
+ // Cached headlines used inverse-price wording too. Refresh only known event
+ // copy; never regenerate the materialized path, timing, or variant outcome.
+ for(const [i,e] of (s.script.events||[]).entries()){
+  const chain=CHAINS.find(c=>c.id===e.id);
+  if(chain&&VARIANTS.includes(e.variant)){
+   const [title,copy]=chain[e.variant];
+   Object.assign(e,{bias:chain.bias,title:i%2?title:chain.lead,copy:i%2?copy:chain.leadCopy,source:chain.source,flash:i%2?chain.name+'：模拟交易活跃度恢复正常':title,flashCopy:copy});
+  }else {if(Number.isFinite(e.bias))e.bias=-e.bias;for(const key of ['title','copy','flash','flashCopy'])if(typeof e[key]==='string')e[key]='旧 JPY/USD 视角（涨为日元升值）：'+e[key];}
+ }
+ for(const e of [s.script.swan,s.lastEvent])if(e?.id){const canonical=BLACK_SWANS.find(c=>c.id===e.id);if(canonical)Object.assign(e,{title:canonical.title,copy:canonical.copy,name:canonical.name});else if(e.swan||e===s.script.swan){for(const key of ['title','copy'])if(typeof e[key]==='string')e[key]='旧 JPY/USD 视角（涨为日元升值）：'+e[key];}}
+ if(s.lastEvent&&!s.lastEvent.swan){const e=s.script.events[Math.min(s.pending?.beat??s.beat,s.script.events.length-1)];if(e)Object.assign(s.lastEvent,{title:e.flash,copy:e.flashCopy,chain:e.chain});}
+
+ for(const e of [s.script.swan,s.lastEvent])if(e&&Number.isFinite(e.delta))e.delta=1/(1+e.delta)-1;
+ if(s.pending?.startPrice)s.pending.startPrice=inv(s.pending.startPrice);
+ if(s.publicStance?.direction)s.publicStance.direction*=-1;
+ if(s.publicMarketSpeaker?.direction)s.publicMarketSpeaker.direction*=-1;
+ if(['long','short'].includes(s.intent))s.intent=s.intent==='long'?'short':'long';
+ const seen=new Set();
+ const convert=p=>{
+  if(!p||seen.has(p))return;seen.add(p);
+  if(p.direction===1||p.direction===-1)p.direction*=-1;
+  for(const k of ['entry','exit','stopPrice'])if(p[k])p[k]=inv(p[k]);
+  if(p.entry){p.pnlModel='legacy-inverse-v5';p.quantity=null;
+   if(Number.isFinite(p.margin)){const costs=(p.openFeeRemaining||0)+money((p.notional??p.margin*p.leverage)*FEE_RATE);
+    for(const k of ['lastFloating','lastDirectionalFloating'])if(Number.isFinite(p[k]))p[k]-=costs;
+    if(Number.isFinite(p.maxUnrealized))p.maxUnrealized=Math.max(0,p.maxUnrealized-costs);
+   }
+  }
+ };
+ for(const p of s.positions||[])convert(p);convert(s.position);
+ for(const t of s.history||[])convert(t);convert(s.lastTrade);
+ for(const t of s.dayReport?.trades||[])convert(t);convert(s.dayReport?.peak);
+ for(const e of [...(s.recent||[]),...(s.dayMoments||[]),...(s.dayReport?.moments||[]),s.lastReaction]){if(e?.observedMove)e.observedMove=1/(1+e.observedMove)-1;if(e?.direction===1||e?.direction===-1)e.direction*=-1;}
+ s.archivedQuoteChat=s.chat;s.chat={group:[],friend:[]};s.speech=null;s.dialogueMemory=null;chapterChat(s);s.quoteMigration={from:'JPY/USD',to:'USD/JPY',legacySettlement:true};
 }

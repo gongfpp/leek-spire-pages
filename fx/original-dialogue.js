@@ -1,5 +1,6 @@
-import {ORIGINAL_DIALOGUE_BANK} from './copy/original-lines.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {ORIGINAL_DIALOGUE_BANK} from './copy/original-lines.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
 export {ORIGINAL_DIALOGUE_BANK};
+// All market/stance/swan directions refer to the USD/JPY quote, not yen strength.
 // Only public, already-rendered market observations are read here. Never inspect script/tracks.
 function marketMove(s){
   const open=s.candles?.at(-4)?.open;
@@ -10,13 +11,13 @@ function eligible(gate,s,f){
   if(!gate)return true;
   if(gate.startsWith('used.')){const id=gate.slice(5);return s.itemsUsed?.[id]===true||s.skills?.[id]===true;}
   if(gate.startsWith('promise.'))return s.promise===gate.slice(8);
-  const move=marketMove(s);
+  const move=marketMove(s),profit=Number.isFinite(f.netProfit)?f.netProfit:f.profit;
   switch(gate){
     case 'laterDay':return s.day>1;
     case 'dinner':return s.dinner===true;
-    case 'profit':return f.profit>0||f.unrealized>0;
-    case 'netLoss':return f.profit< -1;
-    case 'netFlat':return Number.isFinite(f.profit)&&Math.abs(f.profit)<=1;
+    case 'profit':return profit>0||f.unrealized>0;
+    case 'netLoss':return profit< -1;
+    case 'netFlat':return Number.isFinite(profit)&&Math.abs(profit)<=1;
     case 'held':return !!f.p;
     case 'loss':return f.loss===true;
     case 'receipt':return s.itemsUsed?.receipt===true&&s.lastTrade?.type==='receipt'&&s.lastTrade.day===s.day&&s.lastTrade.beat===Math.min(s.beat,3)&&s.lastTrade.pnl>0;
@@ -24,7 +25,7 @@ function eligible(gate,s,f){
     case 'stance.short':return s.publicStance?.day===s.day&&s.publicStance?.beat===s.beat&&s.publicStance.direction===-1;
     case 'stance.correct':case 'stance.wrong':{
       const stance=s.publicStance;
-      if(move===null||stance?.day!==s.day||stance?.beat!==s.beat-1||![1,-1].includes(stance.direction))return false;
+      if(move===null||Math.abs(move)<.0005||stance?.day!==s.day||stance?.beat!==s.beat-1||![1,-1].includes(stance.direction))return false;
       const correct=stance.direction===(move>=0?1:-1);return gate==='stance.correct'?correct:!correct;
     }
     case 'market.up':return move!==null&&move>=.0005;

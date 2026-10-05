@@ -7,7 +7,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "安子",
-        "刚结束的这段，日元向上。"
+        "刚结束的这段，美元兑日元报价向上。"
       ],
       [
         "久留美",
@@ -61,7 +61,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "安子",
-        "刚结束的这段，日元往下。"
+        "刚结束的这段，美元兑日元报价往下。"
       ],
       [
         "久留美",
@@ -953,7 +953,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "久留美",
-        "我这一回看日元往下走。先把话放这儿。"
+        "我这一回做空美元，看日元升值。先把话放这儿。"
       ],
       [
         "安子",
@@ -1088,7 +1088,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "安子",
-        "刚结束这一段，日元往上走了。"
+        "刚结束这一段，美元兑日元报价往上走了。"
       ],
       [
         "久留美",
@@ -1115,7 +1115,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "安子",
-        "这一段日元下来了。"
+        "这一段美元兑日元报价下来了。"
       ],
       [
         "久留美",
@@ -1169,7 +1169,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "久留美",
-        "日元刚才突然跳上去了！我差点以为图没接好。"
+        "美元兑日元报价刚才突然跳上去了！我差点以为图没接好。"
       ],
       [
         "安子",
@@ -1196,7 +1196,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "安子",
-        "突发消息出来后，日元刚才急跌了。"
+        "突发消息出来后，美元兑日元报价刚才急跌了。"
       ],
       [
         "久留美",
@@ -1462,7 +1462,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "久留美",
-        "别跌，别跌……"
+        "别再亏了，别再亏了……"
       ]
     ]
   },
@@ -1492,7 +1492,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "久留美",
-        "怎么又往下了。"
+        "怎么又不顺了。"
       ]
     ]
   },
@@ -1503,7 +1503,7 @@ export const ORIGINAL_DIALOGUE_BANK = [
     "lines": [
       [
         "久留美",
-        "刚才就该卖的。"
+        "刚才就该收手的。"
       ]
     ]
   },

@@ -1,5 +1,6 @@
-import {runPerformance} from './performance.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-import {ACHIEVEMENTS,achievementProgress} from './achievements.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {grossPnlAt} from './market.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {runPerformance} from './performance.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {ACHIEVEMENTS,achievementProgress} from './achievements.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
 const finite=(n,fallback=0)=>Number.isFinite(n)?n:fallback;
 const amount=n=>(n<0?'−':'')+'¥'+Math.abs(n).toLocaleString('zh-CN',{maximumFractionDigits:2});
 const signed=n=>(n>0?'+':'')+amount(n);
@@ -7,7 +8,7 @@ const records=s=>(s.history||[]).filter(t=>t.type!=='open'&&Number.isFinite(t.pn
 // Completed-trade net P/L, live mark-to-market P/L and debt are deliberately separate.
 export function buildShareSummary(state={},options={}) {
   const positions=Array.isArray(state.positions)?state.positions:state.position?[state.position]:[];
-  const floating=finite(options.unrealized,positions.reduce((sum,p)=>sum+finite(p.unrealized,finite(p.notional,finite(p.margin)*finite(p.leverage))*finite(p.direction)*(finite(state.price)/finite(p.entry,1)-1)),0));
+  const floating=finite(options.unrealized,positions.reduce((sum,p)=>sum+finite(p.unrealized,finite(grossPnlAt(p,state.price))),0));
   const realized=records(state), day=Math.max(1,Math.floor(finite(state.day,1))), candidate=options.report===null?null:options.report||state.dayReport;
   const report=['day_end','resting','ending'].includes(state.phase)&&candidate?.day===day?candidate:null;
   const eq=finite(options.equity,Math.max(0,finite(state.cash)+finite(state.reserve)+positions.reduce((sum,p)=>sum+finite(p.margin),0)+floating));
@@ -79,7 +80,7 @@ export async function createShareCard(state,options={}) {
    label('净交易收益 · 开平费用已扣除',48,1092,25,ink);label('借款、消费、生活费与浮盈不计入收益率',48,1139,23);label(`累计手续费 ${amount(s.feesPaid)}`,48,1200,23);label(`未还借款 ${amount(s.debt)}`,48,1244,23);
  }else{
    const rows=records(state).slice(-4);if(!rows.length)label('暂无已平仓订单',48,1100,23);
-   rows.forEach((t,i)=>{const y=1094+i*48;label('#'+(t.positionId||i+1),48,y,20,ink);label((t.direction===1?'日元多单':'日元空单')+' · '+Number(finite(t.leverage).toFixed(1))+'×',310,y,22,ink);ctx.textAlign='right';num(signed(t.pnl),1032,y,26,t.pnl>=0?green:red);ctx.textAlign='left';});
+   rows.forEach((t,i)=>{const y=1094+i*48;label('#'+(t.positionId||i+1),48,y,20,ink);label((t.direction===1?'美元多单':'美元空单')+' · '+Number(finite(t.leverage).toFixed(1))+'×',310,y,22,ink);ctx.textAlign='right';num(signed(t.pnl),1032,y,26,t.pnl>=0?green:red);ctx.textAlign='left';});
    label(`今日生活费 ${amount(s.livingCost)} · 累计手续费 ${amount(s.feesPaid)}`,48,1310,22);
  }
  rule(1346);num('已完成成就',48,1394,27);label(`${s.completedAchievements.length} / ${ACHIEVEMENTS.length}`,930,1394,22,darkPink);

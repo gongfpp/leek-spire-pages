@@ -1,3 +1,4 @@
+import {grossPnlAt} from './market.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
 // Names are game adaptations of verified scenes, not quotations or official achievements.
 const define = (id, name, description, badge, sourceNote, goal = 1) =>
   Object.freeze({id, name, description, badge, sourceNote, goal});
@@ -5,7 +6,7 @@ export const ACHIEVEMENTS = Object.freeze([
   define('first-profit','确认利益','完成第一笔手续费后仍盈利的平仓。','利','Web 第 3 话：久留美确认盈利。'),
   define('million-thirty','一百三十万的余震','累计已实现净收益达到 ¥1,300,000。','130','Web 第 3 话：盈利一百三十万后仍然发抖。',1300000),
   define('liquidated','祈祷没有成交价','第一次因保证金不足被强制平仓。','祈','Web 第 1 话：巨亏中祈求上涨；触发条件为游戏改写。'),
-  define('hold-loss','关掉屏幕也在跌','选择继续持有后，实际播放至少一根 K 线，仍持有亏损超过保证金 25% 的订单。','暗','Web 第 2–3 话：久留美回避屏幕，行情仍然在动。'),
+  define('hold-loss','关掉屏幕仍在亏','选择继续持有后，实际播放至少一根 K 线，仍持有亏损超过保证金 25% 的订单。','暗','Web 第 2–3 话：久留美回避屏幕，行情仍然在动。'),
   define('hundred-times','杠杆把心跳放大','实际持有 100× 仓位经历一次行情变化。','100','Web 第 1 话的高杠杆亏损情境改写。'),
   define('father-funds','柜子里的三百万','实际取用父亲的 ¥3,000,000 存款。','柜','Web 第 1 话：取用家中存款；具体借款账本为游戏设计。'),
   define('tell-everything','今晚把事情说清楚','实际向朋友披露欠款，或在父亲发现前主动归还一笔。','话','Web 第 3 话：想向父亲坦白；本作加入实际披露与还款。'),
@@ -20,7 +21,7 @@ export const ACHIEVEMENTS = Object.freeze([
 const finite = (n, fallback=0) => Number.isFinite(n) ? n : fallback;
 const positions = s => Array.isArray(s.positions) ? s.positions : s.position ? [s.position] : [];
 const closed = s => (s.history || []).filter(t => t.type !== 'open' && Number.isFinite(t.pnl));
-const pnl = (s,p) => finite(p.unrealized,finite(p.notional,finite(p.margin)*finite(p.leverage))*finite(p.direction)*(finite(s.price)/finite(p.entry,1)-1));
+const pnl = (s,p) => finite(p.unrealized,finite(grossPnlAt(p,s.price)));
 function evidence(s) {
   const trades=closed(s), active=positions(s), realized=trades.reduce((sum,t)=>sum+t.pnl,0);
   return {

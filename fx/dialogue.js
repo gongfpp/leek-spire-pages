@@ -1,23 +1,30 @@
-import {DIALOGUE_BANK} from './dialogue-bank.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
-import {ORIGINAL_DIALOGUE_BANK,originalCandidates} from './original-dialogue.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {DIALOGUE_BANK} from './dialogue-bank.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {grossPnlAt} from './market.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
+import {ORIGINAL_DIALOGUE_BANK,originalCandidates} from './original-dialogue.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
 
-export const DIALOGUE_VERSION=6;
+export const DIALOGUE_VERSION=7;
 const quotes=new Map(DIALOGUE_BANK.flatMap(q=>[[q.id,q],[q.alias,q]]));
 const n=value=>Number.isFinite(value)?value:0;
 const money=value=>Math.round(n(value)).toLocaleString('zh-CN');
 const empty=()=>({id:null,lines:[]});
+// Match the net P&L shown for each order, including a migrated inverse contract.
+// Account equity still uses gross floating P&L: opening fees already left cash.
+const estimatedCloseFee=p=>Math.round(n(p.notional??n(p.margin)*n(p.leverage))*.00005*100)/100;
+const netUnrealized=(p,price)=>n(grossPnlAt(p,price))-n(p.openFeeRemaining)-estimatedCloseFee(p);
 export function dialogueFacts(s){
   const positions=Array.isArray(s.positions)&&s.positions.length?s.positions:s.position?[s.position]:[];
-  const p=positions[0],unrealized=positions.reduce((sum,p)=>sum+n(p.notional??n(p.margin)*n(p.leverage))*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1),0);
-  const equity=Math.max(0,n(s.cash)+positions.reduce((sum,p)=>sum+n(p.margin),0)+unrealized)+n(s.reserve);
+  const p=positions[0],grossUnrealized=positions.reduce((sum,p)=>sum+n(grossPnlAt(p,s.price)),0);
+  const unrealized=positions.reduce((sum,p)=>sum+netUnrealized(p,s.price),0);
+  const equity=Math.max(0,n(s.cash)+positions.reduce((sum,p)=>sum+n(p.margin),0)+grossUnrealized)+n(s.reserve);
   const profit=equity-100000-n(s.externalFunding)+n(s.expenses)-n(s.developer?.profitOffset);
+  const netProfit=profit-positions.reduce((sum,p)=>sum+estimatedCloseFee(p),0);
   const trades=(s.history||[]).filter(t=>Number.isFinite(t.pnl));
-  const loss=profit<-.01||unrealized<-.01||trades.some(t=>t.pnl<-.01);
+  const loss=netProfit<-.01||unrealized<-.01||trades.some(t=>t.pnl<-.01);
   const bigLoss=profit<=-30000||(s.recent||[]).some(t=>n(t.pnl)<0&&n(t.impact)<=-.07)||trades.some(t=>t.pnl<=-30000);
   const recent=s.recent?.[0];
   const flat=!!recent&&!p&&recent.day===s.day&&n(recent.impact)===0&&!n(recent.pnl)&&Number.isFinite(recent.observedMove);
   const payment=s.family?.lastRepayment;
-  return {p,unrealized,equity,profit,loss,bigLoss,flat,observedMove:flat?recent.observedMove:0,payment};
+  return {p,unrealized,equity,profit,netProfit,loss,bigLoss,flat,observedMove:flat?recent.observedMove:0,payment};
 }
 function permitted(q,s){
   const f=dialogueFacts(s),family=s.family||{},disclosed=s.disclosures||{},alias=q.alias;
@@ -27,9 +34,9 @@ function permitted(q,s){
   const currentDisclosure=key=>disclosed[key]?.day===s.day&&disclosed[key]?.beat===s.beat;
   switch(alias){
     case 'Q01':case 'Q02':return f.profit<20000000;
-    case 'Q03':return f.profit>0||f.unrealized>0;
+    case 'Q03':return f.netProfit>0||f.unrealized>0;
     case 'Q04':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>p.leverage===100);
-    case 'Q05':case 'Q10':return f.unrealized>0||f.profit>0||(s.lastTrade?.pnl>0&&s.lastTrade.day===s.day);
+    case 'Q05':case 'Q10':return f.unrealized>0||f.netProfit>0||(s.lastTrade?.pnl>0&&s.lastTrade.day===s.day);
     case 'Q06':return !!f.p&&f.unrealized<0;
     case 'Q07':return f.loss;
     case 'Q08':return f.flat&&f.observedMove>=.004;
@@ -37,11 +44,11 @@ function permitted(q,s){
     case 'Q11':return true;
     case 'Q12':return f.p?.direction===1||s.intent==='long';
     case 'Q13':return s.publicMarketSpeaker?.direction===1&&s.publicMarketSpeaker?.losing===true;
-    case 'Q15':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>n(p.maxUnrealized)>0&&n(p.notional??n(p.margin)*n(p.leverage))*n(p.direction)*(n(s.price)/Math.max(Number.EPSILON,n(p.entry))-1)<=0);
+    case 'Q15':return (s.positions?.length?s.positions:s.position?[s.position]:[]).some(p=>n(p.maxUnrealized)>0&&netUnrealized(p,s.price)<=0);
     case 'Q16':return s.ending?.id==='crisis'||s.pendingEnding==='crisis';
     case 'Q17':return !!f.p&&(n(s.sanity)<=20||(s.positions?.length?s.positions:[f.p]).some(p=>n(p.risk)>=25));
     case 'Q18':return (s.history||[]).some(t=>t.day<s.day&&t.pnl<=-30000);
-    case 'Q19':return currentDisclosure('greed')&&(f.unrealized>0||f.profit>0||(s.lastTrade?.pnl>0&&s.lastTrade.day===s.day));
+    case 'Q19':return currentDisclosure('greed')&&(f.unrealized>0||f.netProfit>0||(s.lastTrade?.pnl>0&&s.lastTrade.day===s.day));
     case 'Q20':case 'Q21':case 'Q22':return !!disclosed.debt&&hasDebt;
     case 'Q23':case 'Q24':return false; // No approved prerequisite scene exists yet.
     case 'Q25':return !!disclosed.debt&&hasDebt&&family.opposed===true;

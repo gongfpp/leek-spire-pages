@@ -1,4 +1,4 @@
-import {assetURL} from './assets.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {assetURL} from './assets.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
 
 function volume(value,fallback){return Number.isFinite(Number(value))?Math.max(0,Math.min(1,Number(value))):fallback;}
 

@@ -1,4 +1,4 @@
-import {equity,tradingProfit,planDay,mentalState,settleDay,beginRest,restoreGame,START,CANDLES_PER_BEAT,BEATS_PER_DAY} from './engine.js?v=8bd148e8f3204d5942611a3e07d66648e5f58ce6';
+import {equity,tradingProfit,planDay,mentalState,settleDay,beginRest,restoreGame,START,CANDLES_PER_BEAT,BEATS_PER_DAY} from './engine.js?v=fea4705c1a6785b93918ade2c6a531970e49bb4b';
 
 const range=(value,min,max,label,integer=false)=>{
   if(!Number.isFinite(value)||value<min||value>max||integer&&!Number.isInteger(value))throw Error(`${label}需要在 ${min}～${max} 之间${integer?'，且为整数':''}`);
@@ -12,7 +12,7 @@ export function applyDeveloperPatch(current,patch){
   if(current.phase==='playing'&&!(current.realtime&&current.marketPaused)||current.position)throw Error('请先平仓并等行情暂停，再修改数据');
   const v={...developerValues(current),...patch};
   range(v.cash,0,1e10,'可用资金');range(v.reserve,0,1e8,'备用金');range(v.profit,-1e10,1e10,'交易净收益');
-  range(v.day,1,10000,'日期',true);range(v.beat,0,3,'决策段',true);range(v.price,.000001,100,'价格');
+  range(v.day,1,10000,'日期',true);range(v.beat,0,3,'决策段',true);range(v.price,.001,100000,'USD/JPY 报价（日元/美元）');
   range(v.stress,0,100,'压力');range(v.debt,0,3000000,'父亲欠款');
   if(v.sanity!==null)range(v.sanity,0,100,'心理承受力');
   if(!['decision','closing','day_end','resting'].includes(v.phase))throw Error('请选择有效阶段');
