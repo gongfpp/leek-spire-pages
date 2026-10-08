@@ -1,3 +1,35 @@
 {
-  "sourceCommit": "fea4705c1a6785b93918ade2c6a531970e49bb4b"
+  "game": "leek-spire",
+  "title": "韭菜尖塔 · A 股卡牌游戏",
+  "sourceCommit": "82ac3ff11395dbeeecb02c3d06dcb66bd310dc05",
+  "staticPages": true,
+  "telemetry": "disabled-no-service",
+  "feedback": "https://leek-spire.gongfpp.chatgpt.site/",
+  "files": {
+    "app.js": "4a91985ce13f94012fb48ac10523e3d6ae2ac301d375f72740b696f312ecf6d0",
+    "assets/audio/CREDITS.txt": "1ea21ebc608b090e6f021396c814b1d7ffe74cc14cf6c4ea7c86471e61f8a58d",
+    "assets/audio/KENNEY-LICENSE.txt": "3d9c53acb6e236d760da14030f54bc53e1d8c2599f78470c36b96fddcde09221",
+    "assets/audio/card-place-1.mp3": "7031cfaea46891eade0892a4648d53ab863bf2e1807ce558f3a324ecf00f9083",
+    "assets/audio/card-place-2.mp3": "d5e7db22b0e53d108d0656f88de650f952f1a67287c108a18867f2045fdbc9cf",
+    "assets/audio/card-shuffle.mp3": "dfdaea6d14f9ad3b53b1adb03f280e42382d6d5a56795ee93cc723ea88b48bab",
+    "assets/audio/card-slide-1.mp3": "cd6efcb4c9470fddd1ac135727290804246ce9d7a94582c81a5f68e0c6865703",
+    "assets/audio/cards-pack-open-1.mp3": "76cc1d3423ceb4743faa7b6177623ace07d4b9bf1e1799784290733df76602a1",
+    "assets/audio/chips-handle-5.mp3": "b42ce8f41050d00cb9e28ccc0fca4959551fbafea798f9649a3a960a09341a5a",
+    "assets/audio/chips-stack-1.mp3": "b0a76ba68e3a49f49428582106ca5a17c287fc8e658e194509b6a822e6ef0e79",
+    "assets/audio/dice-throw-1.mp3": "97d1496fa5d49ae0a18b35f1c72da1bcde25481d3361c48970f3a913a2cad933",
+    "audio.js": "f46d1537586e9b0d5f92818f6d0fa6cf7707bdd3affc5bcc654c04f86935f130",
+    "card-design.js": "a569924ba20de32c2f55c0d91ab8a094ca799da8fe0bed49a8c3171502a95aa0",
+    "data.js": "ed615f66e811aad8344f6e60b6cd9f3a1ce68577e544bacddba5950fe2eb460a",
+    "deployment-config.js": "21129aaa764c0bba7a20dee1e492738422e264e345f3b144b6a0f261977a78dd",
+    "engine.js": "40413a6b82994d74fb0ca72cb28b537c8edadf8268b6d834dcd1b50ce0a45582",
+    "feedback.js": "cc650c85def9fa26a2eac9c5d9e28a6713b839f6c845d97553284a3216c9c70f",
+    "index.html": "43d47e1f32745c16a840b4a3d3f8c176dc33de963d0d67337c11a732be4104ac",
+    "live-market.js": "1a51edf2ddb151960ecc88b4fe69065664fcbe63620577ba735234434878cb53",
+    "market-chart.js": "5623c49d53fa429448c9f212ccbfd12a98453364116bd2d180e4963b0b863036",
+    "progression.js": "7133badfdb460b9eee9938ab4b8ffece0633ea9ce95dabbad790b5a23c2556ff",
+    "settlement.js": "daf0e544f3754727ad315e5c29f062ff17c64920a959d8cc9743877cef57099f",
+    "style.css": "a11d7e1dfaf812db265c0534210b68a8351aeb238bee310d29d00c4b584cae98",
+    "telemetry.js": "d3d9ed346746e9e72c8937ed84d4026e8eaba2337075227c11e41e369e42b57e",
+    "trading.js": "2e35fb02732accae79db512e5c185026ceb37f722e1e998f4004c85d0f556106"
+  }
 }
