@@ -1,6 +1,6 @@
 {
   "game": "leek-spire",
-  "title": "\u97ed\u83dc\u5c16\u5854 \u00b7 A \u80a1\u5361\u724c\u6e38\u620f",
+  "title": "韭菜尖塔 · A 股卡牌游戏",
   "sourceCommit": "82ac3ff11395dbeeecb02c3d06dcb66bd310dc05",
   "staticPages": true,
   "telemetry": "disabled-no-service",
@@ -23,7 +23,7 @@
     "deployment-config.js": "21129aaa764c0bba7a20dee1e492738422e264e345f3b144b6a0f261977a78dd",
     "engine.js": "40413a6b82994d74fb0ca72cb28b537c8edadf8268b6d834dcd1b50ce0a45582",
     "feedback.js": "cc650c85def9fa26a2eac9c5d9e28a6713b839f6c845d97553284a3216c9c70f",
-    "index.html": "43d47e1f32745c16a840b4a3d3f8c176dc33de963d0d67337c11a732be4104ac",
+    "index.html": "b855c6ce4a28d6f602634c987ba3012f7804dca3361d44c3df395931ed77f83c",
     "live-market.js": "1a51edf2ddb151960ecc88b4fe69065664fcbe63620577ba735234434878cb53",
     "market-chart.js": "5623c49d53fa429448c9f212ccbfd12a98453364116bd2d180e4963b0b863036",
     "progression.js": "7133badfdb460b9eee9938ab4b8ffece0633ea9ce95dabbad790b5a23c2556ff",
