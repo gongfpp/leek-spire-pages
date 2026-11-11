@@ -1,6 +1,6 @@
 {
   "game": "leek-spire",
-  "title": "韭菜尖塔 · A 股卡牌游戏",
+  "title": "\u97ed\u83dc\u5c16\u5854 \u00b7 A \u80a1\u5361\u724c\u6e38\u620f",
   "sourceCommit": "82ac3ff11395dbeeecb02c3d06dcb66bd310dc05",
   "staticPages": true,
   "telemetry": "disabled-no-service",
@@ -31,5 +31,6 @@
     "style.css": "a11d7e1dfaf812db265c0534210b68a8351aeb238bee310d29d00c4b584cae98",
     "telemetry.js": "d3d9ed346746e9e72c8937ed84d4026e8eaba2337075227c11e41e369e42b57e",
     "trading.js": "2e35fb02732accae79db512e5c185026ceb37f722e1e998f4004c85d0f556106"
-  }
+  },
+  "visitorFooterSourceCommit": "1daf7c1ce4bd7f42e0bad727a30f826e6b5f37ce"
 }
