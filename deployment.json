@@ -23,7 +23,7 @@
     "deployment-config.js": "21129aaa764c0bba7a20dee1e492738422e264e345f3b144b6a0f261977a78dd",
     "engine.js": "40413a6b82994d74fb0ca72cb28b537c8edadf8268b6d834dcd1b50ce0a45582",
     "feedback.js": "cc650c85def9fa26a2eac9c5d9e28a6713b839f6c845d97553284a3216c9c70f",
-    "index.html": "b855c6ce4a28d6f602634c987ba3012f7804dca3361d44c3df395931ed77f83c",
+    "index.html": "5a815928d96e9db46cb459f122f3e24a1c1bc53d76296415857f3659ac34f973",
     "live-market.js": "1a51edf2ddb151960ecc88b4fe69065664fcbe63620577ba735234434878cb53",
     "market-chart.js": "5623c49d53fa429448c9f212ccbfd12a98453364116bd2d180e4963b0b863036",
     "progression.js": "7133badfdb460b9eee9938ab4b8ffece0633ea9ce95dabbad790b5a23c2556ff",
@@ -32,5 +32,13 @@
     "telemetry.js": "d3d9ed346746e9e72c8937ed84d4026e8eaba2337075227c11e41e369e42b57e",
     "trading.js": "2e35fb02732accae79db512e5c185026ceb37f722e1e998f4004c85d0f556106"
   },
-  "visitorFooterSourceCommit": "2260bfd5b714d2683a68da50fe067980f2c0e517"
+  "visitorFooterSourceCommit": "2260bfd5b714d2683a68da50fe067980f2c0e517",
+  "web_page_events": {
+    "site": "leek-spire",
+    "client_sha256": "fc1953ec845b25ba5017fd3889c2426b2e3b4c6f87fbe9cb40eb8e69819009af",
+    "source_commit": "838735a648eb1cdd78928e14bcffa74b76ea5666",
+    "base_runtime_unchanged": true,
+    "channel": "github-pages",
+    "scope": "outer-page-only"
+  }
 }
